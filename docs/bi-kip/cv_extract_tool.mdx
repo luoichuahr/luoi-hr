@@ -1,0 +1,215 @@
+---
+sidebar_position: 1
+title: CV Extract Tool — Tự động đọc CV bằng AI
+description: Hướng dẫn xây dựng tool tự động trích xuất thông tin ứng viên từ CV PDF/Word thành Google Sheets dùng Google Apps Script + Gemini AI.
+tags: [google-apps-script, gemini, google-drive, automation, tuyển-dụng]
+---
+
+import PromptBlock from '@site/src/components/PromptBlock';
+import Callout from '@site/src/components/Callout';
+
+# CV Extract Tool — Tự động đọc CV bằng AI
+
+**CV Extract Tool** là giải pháp kết hợp sức mạnh lưu trữ của **Google Drive** và trí tuệ nhân tạo từ **Google Gemini** để giải quyết bài toán xử lý hồ sơ ứng viên thủ công. Công cụ này tự động chuyển đổi các file CV định dạng PDF hoặc Word thành dữ liệu bảng tính có cấu trúc.
+
+**Kết quả:** Giảm tới **80% thời gian xử lý hành chính**, giúp HR tập trung vào đánh giá chuyên môn và phỏng vấn.
+
+### Những hỗ trợ đột phá cho quy trình tuyển dụng
+
+- **Tự động trích xuất thông tin:** AI tự "đọc" và bóc tách Họ tên, SĐT, Email, Vị trí ứng tuyển — không cần copy-paste thủ công.
+- **Xử lý CV định dạng phức tạp:** Hỗ trợ OCR để đọc được CV dạng ảnh quét hoặc layout nhiều cột (Marketing, Kỹ thuật...).
+- **Chỉ quét file mới:** Hệ thống nhận diện và bỏ qua những CV đã quét trước đó — không bao giờ trùng lặp dữ liệu.
+- **Cơ sở dữ liệu tập trung:** Toàn bộ thông tin ứng viên + link CV trực tiếp được lưu đồng bộ vào một Google Sheets duy nhất.
+
+---
+
+## Bước 1 — Chuẩn bị hệ thống lưu trữ
+
+### Tạo Folder Google Drive và lấy Folder ID
+
+1. Truy cập [Google Drive](https://drive.google.com), tạo thư mục mới (ví dụ: `CV_Tuyen_Dung`). Đây là nơi bạn tải lên toàn bộ file PDF/Docx của ứng viên.
+2. Mở thư mục vừa tạo → nhìn lên thanh địa chỉ (URL). Chuỗi ký tự sau đoạn `folders/` chính là **Folder ID** (ví dụ: `1AUvjH1WNlN...`).
+
+### Tạo file Google Sheets để chứa dữ liệu
+
+1. Tạo một file **Google Sheets** mới trong Google Drive.
+2. Thiết lập tiêu đề 5 cột đầu tiên như sau để code chạy đúng định dạng:
+
+| Cột A | Cột B | Cột C | Cột D | Cột E |
+|-------|-------|-------|-------|-------|
+| Họ tên | Số điện thoại | Email | Vị trí ứng tuyển | **Link CV** |
+
+<Callout type="warn" title="Quan trọng — Cột E: Link CV">
+  Cột E là cột hệ thống dùng để kiểm tra file nào đã quét rồi. Không được xóa hoặc đổi thứ tự cột này.
+</Callout>
+
+---
+
+## Bước 2 — Thiết lập kết nối AI và quyền truy cập
+
+### Lấy Gemini API Key
+
+1. Truy cập [Google AI Studio](https://aistudio.google.com/).
+2. Đăng nhập bằng tài khoản Google.
+3. Nhấn **"Get API Key"** ở thanh menu bên trái.
+4. Chọn **"Create API key in new project"**. Sao chép và lưu lại key này.
+
+### Thiết lập Google Apps Script và Drive API
+
+1. Mở file Google Sheets vừa tạo → vào menu **Extensions → Apps Script**.
+2. Ở cột bên trái, nhấn dấu **(+)** cạnh chữ **Services**.
+3. Tìm và chọn **Drive API**.
+
+<Callout type="warn" title="Chọn đúng version Drive API">
+  Phải chọn **Version v2** rồi nhấn Add. Nếu chọn v3, lệnh OCR sẽ bị lỗi.
+</Callout>
+
+---
+
+## Bước 3 — Mã nguồn (Chỉ quét file mới)
+
+Code được tối ưu để **chỉ phát hiện và xử lý những file mới** — tiết kiệm lượt gọi API và tránh lỗi quá tải (429).
+
+Copy toàn bộ đoạn code dưới vào cửa sổ Apps Script, **xóa code mặc định** rồi dán vào:
+
+```javascript
+// ============================================
+// CONFIGURATION — CHỈ THAY ĐỔI 2 DÒNG NÀY
+// ============================================
+const FOLDER_ID = 'FOLDER_ID_CUA_BAN';       // Dán Folder ID từ Bước 1
+const GEMINI_API_KEY = 'GEMINI_KEY_CUA_BAN'; // Dán API Key từ Bước 2
+// ============================================
+
+function onOpen() {
+  SpreadsheetApp.getUi().createMenu('🚀 HR TOOL')
+    .addItem('Quét CV mới bổ sung', 'traCuuVaTrichXuatCV')
+    .addToUi();
+}
+
+function traCuuVaTrichXuatCV() {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  const folder = DriveApp.getFolderById(FOLDER_ID);
+  const files = folder.getFiles();
+
+  // Lấy toàn bộ danh sách URL đã có trong Sheet để so sánh nhanh
+  const processedUrls = getProcessedUrls(sheet);
+  let newFilesCount = 0;
+
+  while (files.hasNext()) {
+    let file = files.next();
+    let fileUrl = file.getUrl();
+
+    // Nếu URL đã tồn tại trong Sheet → bỏ qua ngay
+    if (processedUrls.indexOf(fileUrl) > -1) {
+      console.log("Bỏ qua file cũ: " + file.getName());
+      continue;
+    }
+
+    try {
+      console.log("--- ĐANG XỬ LÝ FILE MỚI: " + file.getName() + " ---");
+      let text = "";
+
+      if (file.getMimeType() === MimeType.PDF) {
+        // Dùng OCR để đọc PDF (kể cả CV dạng ảnh scan)
+        let resource = {
+          title: 'Temp_OCR_' + file.getName(),
+          mimeType: MimeType.GOOGLE_DOCS
+        };
+        let tempFile = Drive.Files.copy(resource, file.getId(), { ocr: true });
+        let tempDoc = DocumentApp.openById(tempFile.id);
+        text = tempDoc.getBody().getText();
+        Drive.Files.remove(tempFile.id); // Xóa file tạm sau khi đọc xong
+      } else {
+        text = DocumentApp.openById(file.getId()).getBody().getText();
+      }
+
+      if (text) {
+        let data = callGeminiFinal(text);
+        sheet.appendRow([data.hoTen, data.sdt, data.email, data.viTri, fileUrl]);
+        newFilesCount++;
+        SpreadsheetApp.flush();
+        Utilities.sleep(2000); // Nghỉ 2 giây để tránh rate limit
+      }
+    } catch (e) {
+      console.error("Lỗi file " + file.getName() + ": " + e.message);
+    }
+  }
+
+  SpreadsheetApp.getUi().alert(newFilesCount > 0
+    ? 'Hoàn thành! Đã thêm ' + newFilesCount + ' CV mới.'
+    : 'Không có CV mới nào cần xử lý.'
+  );
+}
+
+// Lấy danh sách URL đã có trong Sheet (cột E)
+function getProcessedUrls(sheet) {
+  const lastRow = sheet.getLastRow();
+  if (lastRow < 2) return [];
+  return sheet.getRange(2, 5, lastRow - 1, 1).getValues().flat();
+}
+
+function callGeminiFinal(cvText) {
+  // Tự động tìm model Gemini có sẵn và hỗ trợ generateContent
+  const listUrl = "https://generativelanguage.googleapis.com/v1beta/models?key=" + GEMINI_API_KEY;
+  const listRes = UrlFetchApp.fetch(listUrl, { muteHttpExceptions: true });
+  const modelsData = JSON.parse(listRes.getContentText());
+
+  let validModel = "";
+  if (modelsData.models) {
+    const found = modelsData.models.find(m =>
+      m.supportedGenerationMethods.includes("generateContent")
+    );
+    if (found) validModel = found.name;
+  }
+  if (!validModel) validModel = "models/gemini-1.5-flash";
+
+  const url = "https://generativelanguage.googleapis.com/v1beta/" + validModel
+    + ":generateContent?key=" + GEMINI_API_KEY;
+
+  const prompt = `Trích xuất thông tin CV (đặc biệt tìm kỹ SĐT và Email) thành JSON: {hoTen, sdt, email, viTri}. Chỉ trả về JSON thuần. Nội dung:\n` + cvText;
+
+  const options = {
+    method: "post",
+    contentType: "application/json",
+    payload: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }),
+    muteHttpExceptions: true
+  };
+
+  const response = UrlFetchApp.fetch(url, options);
+  if (response.getResponseCode() !== 200) {
+    throw new Error("Lỗi API " + response.getResponseCode());
+  }
+
+  const json = JSON.parse(response.getContentText());
+  let resultText = json.candidates[0].content.parts[0].text;
+  resultText = resultText.replace(/```json/gi, "").replace(/```/gi, "").trim();
+  return JSON.parse(resultText);
+}
+```
+
+### Prompt AI trích xuất CV
+
+Đây là prompt gửi đến Gemini AI bên trong hàm `callGeminiFinal`. Bạn có thể tùy chỉnh nếu muốn thêm trường thông tin:
+
+<PromptBlock
+  title="Prompt trích xuất CV → JSON"
+  lang="text"
+  code={`Trích xuất thông tin CV (đặc biệt tìm kỹ SĐT và Email) thành JSON: {hoTen, sdt, email, viTri}. Chỉ trả về JSON thuần. Nội dung:\n[Nội dung CV dán vào đây]`}
+/>
+
+<Callout type="tip" title="Tuỳ chỉnh thêm trường thông tin">
+  Muốn thêm trường như `namKinhNghiem`, `trinhDoHocVan`? Sửa dòng JSON trong prompt thành `{"{hoTen, sdt, email, viTri, namKinhNghiem}"}` và cập nhật `sheet.appendRow(...)` tương ứng.
+</Callout>
+
+---
+
+## Bước 4 — Hướng dẫn vận hành
+
+1. **Cập nhật cấu hình:** Thay `FOLDER_ID_CUA_BAN` và `GEMINI_KEY_CUA_BAN` ở 2 dòng đầu code bằng giá trị thật.
+2. **Lưu và reload:** Nhấn biểu tượng đĩa mềm (Ctrl+S) để lưu → F5 lại file Google Sheets.
+3. **Cấp quyền lần đầu:** Google sẽ yêu cầu xác thực tài khoản. Nhấn **Advanced → Go to... (unsafe) → Allow**.
+4. **Dùng hàng ngày:** Bỏ file CV mới vào folder Drive → nhấn menu **🚀 HR TOOL → Quét CV mới bổ sung**. Hệ thống tự bỏ qua file cũ đã quét trước đó.
+
+<Callout type="info" title="Hệ thống chỉ quét file mới">
+  Mỗi lần chạy, tool so sánh URL file với cột E trong Sheets. File nào đã có link → bỏ qua. Bạn có thể nhấn nút bao nhiêu lần cũng được mà không lo trùng dữ liệu.
+</Callout>

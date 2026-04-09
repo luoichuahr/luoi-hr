@@ -8,6 +8,32 @@
 
 ---
 
+## v0.5 — Bài viết CV Extract Tool (2026-04-09)
+
+### Quyết định nội dung
+- `[CONTENT]` **Tạo bài hướng dẫn CV Extract Tool tại `docs/bi-kip/cv_extract_tool.mdx`**
+  - Nội dung: Google Drive + Gemini AI tự động trích xuất thông tin CV thành Google Sheets
+  - Tạo thư mục mới `docs/bi-kip/` + `_category_.json`
+  - Dùng PromptBlock cho Gemini AI prompt (component đã có sẵn)
+  - Format MDX (.mdx) để hỗ trợ import React component PromptBlock
+  - Lý do: Tái sử dụng component PromptBlock thay vì markdown code block thuần
+
+---
+
+## v0.2 — QA/QC Skill (2026-04-09)
+
+### Quyết định kiến trúc
+- `[ARCH]` Tạo **QA/QC Skill** tại `.claude/skills/qa/`
+  - Lý do: cần kiểm tra code tự động trước mỗi lần push — tránh bug lên Vercel
+  - Scope: Build & Deploy + Components UI + Code Quality + Performance
+  - Cross-platform: script tự detect Windows (win32) vs Mac (darwin), không hỏi user
+  - Output: file `QA_REPORT.md` lưu vào root project
+  - Gồm 2 file: `SKILL.md` (hướng dẫn Claude) + `scripts/qa_runner.js` (Node.js script)
+  - Block policy: chỉ block khi `npm run build` fail, các lỗi khác warn thôi
+  - Trigger: gọi thủ công ("chạy QA", "kiểm tra code", "qa")
+
+---
+
 ## v0.1 — Khởi tạo dự án (2025-04)
 
 ### Quyết định kiến trúc
@@ -89,4 +115,103 @@
 - `[CONTENT]` **Hai cách thực hiện:** gõ từng dòng (an toàn) vs copy/paste (nhanh)
 - `[CONTENT]` **Giải thích từng lệnh là dùng để làm gì** với ví dụ hộp thư/bưu điện
 - `[CONTENT]` **Hướng dẫn tạo GitHub Personal Access Token** (vì GitHub không chấp nhận mật khẩu thường)
-- `[CONTENT]` **Khắc phục lỗi thường gặp** (not a git repository, remote already exists, etc.)
+- `[CONTENT]` **Khắc phục lỗi thường gặp** (Author identity unknown, LF/CRLF warning, not a git repository, etc.)
+- `[CONTENT]` **Bước 0 bắt buộc:** Setup `git config user.name` + `user.email` TRƯỚC khi commit (lỗi newbie hay gặp)
+
+### Update SKILL_website.md — Đồng nhất với huong-dan-website-tu-dong.html
+- `[CONTENT]` **Viết lại SKILL_website.md với 4 bước RÕNG, giống file HTML**
+  - **Bước 1:** Cài Node.js & Git
+  - **Bước 2:** Tạo Docusaurus project
+  - **Bước 3:** Đẩy lên GitHub (Git Config + Commit + Push)
+  - **Bước 4:** Kết nối Vercel → Live trong 2 phút
+- `[CONTENT]` **Thêm troubleshooting chi tiết** cho mỗi bước Git (Author identity, remote already exists, LF/CRLF, v.v.)
+- `[CONTENT]` **Giữ WORKFLOW B, C, D** như cũ (thêm bài, sửa component, debug)
+- **Lý do:** Newbie bị confuse vì SKILL_website.md ghi "Bước 8-13" nhưng HTML ghi "Bước 1-4" → Giờ cả 2 file cùng cấu trúc 4 bước rõ ràng
+
+---
+
+## v0.4 — Landing Page Redesign: Hybrid SaaS + Docs (2026-04-09)
+
+### Quyết định kiến trúc (ARCH)
+- `[ARCH]` **Hybrid approach: Custom landing page (src/pages/index.jsx) + Docusaurus docs**
+  - Lý do: Docusaurus theme mặc định "nhàm", user muốn modern SaaS feel (Hero + Features + Testimonials) nhưng vẫn giữ docs area clean
+  - Bác bỏ: Pure Next.js (overkill, không cần), Pure Docusaurus (không đủ marketing feel)
+  - Giải pháp: Tạo landing page riêng ở `src/pages/index.jsx` với components custom, `/docs` folder giữ nguyên documentation style
+
+- `[ARCH]` **Component architecture: 7 reusable components, mỗi ≤ 200 lines**
+  1. **Hero** (70 lines) — SaaS-style hero, CTA buttons, headline: "Xây dựng HR Agent trong 10 phút với AI"
+  2. **Features3Column** (85 lines) — 3 feature cards: "Tạo JD", "KPI tự động", "AI Agent"
+  3. **Testimonials** (100 lines) — testimonial grid/carousel, quotes từ users
+  4. **TrustIndicators** (75 lines) — social proof: "Dành cho HRBP • Recruiter • C&B • SME"
+  5. **LeadForm** (100 lines) — form 3 field (Name, Zalo/Email, Position) → POST Google Form
+  6. **PromptBlock** (80 lines) — reusable dark code block + Copy button
+  7. **Callout** (60 lines) — reusable warn/tip/info alerts
+
+- `[ARCH]` **Styling: CSS Modules + Infima (NOT adding Tailwind)**
+  - Lý do: Docusaurus 3.x ships with Infima, project đã dùng CSS Modules
+  - Scoped styles prevent naming conflicts, không cần compile step thêm
+  - Google Fonts: Be Vietnam Pro (import trong custom.css)
+
+- `[ARCH]` **No new dependencies**
+  - Docusaurus 3.10.0 (already)
+  - React 19 (bundled)
+  - clsx v2.0.0 (already)
+  - CSS Modules (built-in)
+
+### Quyết định giao diện (DESIGN)
+- `[DESIGN]` **Landing page sections: Hero → Features → Testimonials → Trust indicators → Form → CTA cards**
+  - Hero: "Xây dựng HR Agent trong 10 phút với AI" + CTA "Bắt đầu miễn phí" & "Xem demo"
+  - Features: 3 columns (JD, KPI, Agent) với icons + descriptions
+  - Testimonials: User quotes + position + avatar placeholders
+  - Trust: "Dành cho HRBP, Recruiter, C&B, SME", social proof stats
+  - Form: Email lead capture (name, zalo/email, position)
+  - CTA cards: "Trải nghiệm miễn phí" + "Dịch vụ Setup A-Z"
+
+- `[DESIGN]` **Color & Typography**
+  - Primary: #10B981 (green CTA buttons) — already in custom.css
+  - Secondary: #0F172A (dark blue for PromptBlock/code blocks)
+  - Font: Be Vietnam Pro (Google Fonts import)
+  - Tone: Modern SaaS for landing + Academic clean for docs
+
+- `[DESIGN]` **Responsive: Mobile-first**
+  - Hero: stacked on mobile, side-by-side on desktop
+  - Features: 1-column on mobile, 3-column on desktop
+  - Testimonials: carousel/grid responsive
+
+### Quyết định nội dung (CONTENT)
+- `[CONTENT]` **Vietnamese UI text** — tất cả buttons, headings, placeholder text tiếng Việt
+- `[CONTENT]` **Google Form integration**
+  - LeadForm component POST to Google Form (action URL → env variable)
+  - Success message: "✓ Đã gửi! Lười Chúa sẽ liên hệ sớm." (1.8s delay then hide)
+- `[CONTENT]` **PromptBlock & Callout examples bên trong landing**
+  - PromptBlock có sample prompt từ File 1
+  - Callout component dùng trong feature descriptions
+
+### Implementation Plan
+- Phase 0: Update CHANGELOG + docusaurus.config.js + custom.css (15 min)
+- Phase 1: 5 small wins (Hero, Features, LeadForm, PromptBlock, Callout) — mỗi < 30 min ✓ testable independently
+- Phase 2: Testimonials + TrustIndicators assembly
+- Phase 3: Full landing assembly + verify + deploy
+
+**Estimated time:** ~2h 43m total (Haiku sufficient, ~15.3k tokens)
+
+### Files to modify/create
+- ✅ Update: `/CHANGELOG.md` (this file — recording decisions)
+- ✅ Update: `docusaurus.config.js` (title, tagline, font imports)
+- ✅ Update: `src/css/custom.css` (Be Vietnam Pro, CSS vars)
+- 🆕 Create: `src/pages/index.jsx` (landing page orchestrator, rename from .js)
+- 🆕 Create: `src/components/Hero/index.jsx` + `styles.module.css`
+- 🆕 Create: `src/components/Features3Column/index.jsx` + `styles.module.css`
+- 🆕 Create: `src/components/Testimonials/index.jsx` + `styles.module.css`
+- 🆕 Create: `src/components/TrustIndicators/index.jsx` + `styles.module.css`
+- 🆕 Create: `src/components/LeadForm/index.jsx` + `styles.module.css`
+- 🆕 Create: `src/components/PromptBlock/index.jsx`
+- 🆕 Create: `src/components/Callout/index.jsx`
+
+### Backlog (not in this sprint)
+- [ ] A/B test hero copy ("10 phút" vs "15 phút")
+- [ ] Optimize SEO (meta descriptions, OG tags)
+- [ ] Add video hero background or animated hero image
+- [ ] Setup Zalo webhook → auto-reply form submissions
+- [ ] Dark mode testing & refinement
+- [ ] Analytics (Google Analytics on landing)
