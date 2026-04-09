@@ -18,7 +18,11 @@ Trước khi làm bất cứ việc gì, đọc theo thứ tự:
 
 ## WORKFLOW A — Setup dự án từ đầu (làm 1 lần)
 
-### Bước 1: Kiểm tra & cài môi trường
+⏱️ **Tổng thời gian: ~10 phút setup + 1 phút push + 2 phút deploy = 13 phút từ zero đến live!**
+
+---
+
+### 🎯 Bước 1: Cài Node.js & Git
 
 **Kiểm tra đã cài chưa:**
 ```bash
@@ -30,9 +34,14 @@ git --version  # Cần >= 2.x
 - **Node.js:** https://nodejs.org — chọn bản **LTS** (bên trái)
 - **Git:** https://git-scm.com — tải về cài mặc định
 
-> Sau cài xong, mở terminal mới và chạy lại `node -v` + `git --version` để confirm
+> Sau cài xong, **mở terminal mới** và chạy lại `node -v` + `git --version` để confirm
 
-### Bước 2: Tạo Docusaurus project
+---
+
+### 🎯 Bước 2: Tạo Docusaurus project
+
+Mở terminal, chọn thư mục bạn muốn lưu project (ví dụ Desktop), rồi chạy:
+
 ```bash
 cd Desktop
 npx create-docusaurus@latest luoi-hr classic
@@ -40,172 +49,133 @@ cd luoi-hr
 ```
 
 #### ❓ Terminal hỏi: "Use TypeScript?"
-
 **👉 Chọn: NO (JavaScript)**
 
 **Vì sao?**
 - Lười HR là documentation website, không phải complex app
 - JavaScript đơn giản hơn, setup nhanh hơn
 - Đủ dùng cho dự án này, không cần type-safety
-- Nếu sau này cần TypeScript, có thể nâng cấp (khó nhưng possible)
 
 | Chọn | JavaScript | TypeScript |
 |------|-----------|-----------|
 | **Setup** | Ngay lập tức, không compile | Cần compile .ts → .js |
 | **Độ phức tạp** | Đơn giản | Phức tạp hơn |
-| **Khi nào dùng** | ✅ Lười HR (website đơn giản) | ❌ Complex app với nhiều logic |
+| **Khi nào dùng** | ✅ Lười HR (website đơn giản) | ❌ Complex app |
 
-**→ Khuyến nghị:** Nếu bạn không quen TypeScript, chọn **NO** để tập trung vào content!
-
-### Bước 3: Cài font Be Vietnam Pro
-Mở file `src/css/custom.css`, thêm vào đầu file:
-```css
-@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600&display=swap');
-
-:root {
-  --ifm-font-family-base: 'Be Vietnam Pro', sans-serif;
-  --ifm-color-primary: #10B981;
-  --ifm-color-primary-dark: #059669;
-  --ifm-color-primary-darker: #047857;
-  --ifm-color-primary-darkest: #065F46;
-  --ifm-color-primary-light: #34D399;
-  --ifm-color-primary-lighter: #6EE7B7;
-  --ifm-color-primary-lightest: #A7F3D0;
-  --ifm-background-color: #F8FAFC;
-  --ifm-navbar-background-color: #FFFFFF;
-}
-```
-
-### Bước 4: Tạo cấu trúc thư mục bài viết
+#### ✅ Kiểm tra Docusaurus chạy được:
 ```bash
-mkdir -p docs/nhap-mon
-mkdir -p docs/build-tools
-mkdir -p docs/skills-agent
-mkdir -p docs/theo-vi-tri
-mkdir -p src/components/PromptBlock
-mkdir -p src/components/Callout
-mkdir -p src/components/LeadForm
+npm start
 ```
 
-### Bước 5: Config docusaurus.config.js
-Thay thế nội dung file với config chuẩn dự án:
-```js
-// docusaurus.config.js — MAX 100 dòng
-const config = {
-  title: 'Lười HR',
-  tagline: 'AI cho dân nhân sự — lười mà hiệu quả',
-  favicon: 'img/favicon.ico',
-  url: 'https://luoi-hr.vercel.app',
-  baseUrl: '/',
-  organizationName: 'luoi-hr',
-  projectName: 'luoi-hr',
-  onBrokenLinks: 'throw',
-  onBrokenMarkdownLinks: 'warn',
-  i18n: { defaultLocale: 'vi', locales: ['vi'] },
-  presets: [['classic', {
-    docs: {
-      sidebarPath: './sidebars.js',
-      routeBasePath: '/',
-    },
-    blog: false,
-    theme: { customCss: './src/css/custom.css' },
-  }]],
-  themeConfig: {
-    navbar: {
-      title: 'Lười HR 🦥',
-      items: [
-        { href: 'https://zalo.me/0xxx', label: '💬 Zalo', position: 'right' },
-      ],
-    },
-    footer: { style: 'light', copyright: 'Lười HR © 2025' },
-    colorMode: { defaultMode: 'light', disableSwitch: false },
-  },
-};
-module.exports = config;
-```
+Trình duyệt sẽ tự mở `http://localhost:3000` — đây là website của bạn chạy trên máy (chưa ai xem được). Bước tiếp theo sẽ đưa nó lên internet.
 
-### Bước 6: Tạo component PromptBlock
+---
+
+### 🎯 Bước 3: Đẩy lên GitHub — Setup Git + Push
+
+#### 3.1: Setup Git Config (BẮT BUỘC làm 1 lần)
+
+**Nói cho Git biết tên + email của bạn:**
+
 ```bash
-# Tạo file src/components/PromptBlock/index.jsx
-```
-Nội dung (MAX 80 dòng):
-```jsx
-import React, { useState } from 'react';
-import styles from './styles.module.css';
-
-export default function PromptBlock({ title = 'Prompt — copy & dùng ngay', code }) {
-  const [copied, setCopied] = useState(false);
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(code);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1800);
-  };
-
-  return (
-    <div className={styles.block}>
-      <div className={styles.header}>
-        <span className={styles.label}>{title}</span>
-        <button className={styles.copyBtn} onClick={handleCopy}>
-          {copied ? '✓ Đã copy' : 'Copy Prompt'}
-        </button>
-      </div>
-      <pre className={styles.code}>{code}</pre>
-    </div>
-  );
-}
+git config --global user.name "Tên của bạn"
+git config --global user.email "email@example.com"
 ```
 
-```css
-/* src/components/PromptBlock/styles.module.css */
-.block { background: #0F172A; border-radius: 10px; padding: 16px 20px; margin: 16px 0; position: relative; }
-.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-.label { font-size: 11px; color: #64748B; letter-spacing: .5px; text-transform: uppercase; }
-.copyBtn { background: #10B981; color: white; border: none; border-radius: 6px; padding: 5px 12px; font-size: 12px; cursor: pointer; }
-.copyBtn:hover { background: #059669; }
-.code { font-family: 'Courier New', monospace; font-size: 13px; color: #E2E8F0; margin: 0; white-space: pre-wrap; line-height: 1.7; }
+Ví dụ:
+```bash
+git config --global user.name "Tran An Duc"
+git config --global user.email "anhductran@gmail.com"
 ```
 
-### Bước 7: Tạo component Callout
-```jsx
-// src/components/Callout/index.jsx — MAX 60 dòng
-import React from 'react';
-import styles from './styles.module.css';
+> 💡 Làm 1 lần duy nhất. Lần sau Git sẽ tự ghi nhớ.
 
-const CONFIG = {
-  warn:  { icon: '⚠️', className: 'warn' },
-  tip:   { icon: '💡', className: 'tip'  },
-  info:  { icon: 'ℹ️', className: 'info' },
-};
+---
 
-export default function Callout({ type = 'tip', title, children }) {
-  const { icon, className } = CONFIG[type] || CONFIG.tip;
-  return (
-    <div className={`${styles.callout} ${styles[className]}`}>
-      <span className={styles.icon}>{icon}</span>
-      <div>
-        {title && <div className={styles.title}>{title}</div>}
-        <div className={styles.body}>{children}</div>
-      </div>
-    </div>
-  );
-}
-```
+#### 3.2: Tạo repo trên GitHub
 
-### Bước 8: Kết nối GitHub và Vercel
+1. Truy cập: https://github.com/new
+2. Điền:
+   - **Repository name:** `luoi-hr`
+   - **Description:** `AI cho dân nhân sự — lười mà hiệu quả`
+   - **Public** (để mọi người có thể xem)
+3. Click **"Create repository"**
+
+GitHub sẽ cho bạn các lệnh. **Đừng copy lệnh của GitHub** — hãy làm theo dưới đây (chi tiết hơn):
+
+---
+
+#### 3.3: Push code từ máy lên GitHub
+
+**Dừng `npm start`** (Ctrl + C), rồi chạy:
+
 ```bash
 git init
 git add .
-git commit -m "init: Lười HR website"
+git commit -m "init: thiết lập dự án Lười HR"
 git branch -M main
-git remote add origin https://github.com/USERNAME/luoi-hr.git
+git remote add origin https://github.com/YOUR_USERNAME/luoi-hr.git
 git push -u origin main
 ```
-Sau đó: vercel.com → Import repo → Deploy (Vercel tự nhận Docusaurus)
+
+**Thay `YOUR_USERNAME` bằng username GitHub của bạn**, ví dụ:
+```bash
+git remote add origin https://github.com/luoichuahr/luoi-hr.git
+```
+
+#### ⚠️ Nếu lỗi từng bước:
+
+| Lỗi | Nguyên nhân | Fix |
+|-----|------------|-----|
+| **"Author identity unknown"** | Git chưa biết tên/email | Làm lại 3.1 (`git config --global user.name` + `user.email`) |
+| **"remote origin already exists"** | URL đã được liên kết rồi | `git remote remove origin` → rồi `git remote add origin` lại |
+| **"LF will be replaced by CRLF"** (warning) | Git xử lý line break khác nhau | Không cần lo — Git tự xử lý |
+| **"fatal: not a git repository"** | Chưa chạy `git init` | Chạy `git init` lại |
+
+#### ✅ Thành công khi thấy:
+```
+To https://github.com/luoichuahr/luoi-hr.git
+ * [new branch]      main -> main
+branch 'main' set up to track 'origin/main'.
+```
+
+---
+
+### 🎯 Bước 4: Kết nối Vercel — Website live trong 2 phút!
+
+1. Truy cập: https://vercel.com
+2. Click **"Add New Project"**
+3. Click **"Import Git Repository"**
+4. **Paste GitHub URL:**
+   ```
+   https://github.com/YOUR_USERNAME/luoi-hr.git
+   ```
+5. Vercel tự nhận ra Docusaurus → Click **"Deploy"**
+6. Chờ ~1-2 phút → Website live tại:
+   ```
+   luoi-hr.vercel.app
+   ```
+
+#### ✅ Setup xong rồi!
+
+**Từ đây, mỗi khi bạn push code mới lên GitHub, Vercel tự động build và deploy lại.**
 
 ---
 
 ## WORKFLOW B — Thêm bài viết mới
+
+Sau khi setup xong, workflow của bạn rất đơn giản:
+
+1. **Đưa nội dung bài mới cho Claude Cowork**
+2. **Claude tạo file .md + commit**
+3. **Bạn mở terminal → `git push` (1 lần, ~3 giây)**
+4. **Vercel tự detect push → build & deploy → Bài live trong ~1 phút**
+
+> ⚠️ **Tại sao Claude không tự push?**
+> Claude chạy trong sandbox Linux, không có quyền truy cập vào GitHub credentials
+> đang lưu trên máy Windows của bạn (Git Credential Manager). Bước push phải làm
+> từ terminal trên máy bạn. Không cần nhập username/password — Git tự lấy từ
+> Windows Credential Manager. Chỉ cần gõ `git push` là xong.
 
 ### Template bài viết chuẩn
 ```markdown
@@ -251,11 +221,19 @@ Dùng backtick template string để giữ xuống dòng]`}
 ```
 
 ### Lệnh sau khi tạo file xong
+
+**Claude tự làm:**
 ```bash
 git add docs/[thu-muc]/[ten-bai].md
 git commit -m "content: thêm bài [tên bài ngắn]"
+# Claude commit xong, báo bạn push
+```
+
+**Bạn mở terminal Windows, gõ 1 lệnh:**
+```bash
 git push
-# Vercel tự deploy trong ~30 giây
+# Không cần nhập gì thêm — Git tự dùng credentials đã lưu
+# Vercel tự deploy trong ~1 phút sau khi push xong
 ```
 
 ---

@@ -51,6 +51,48 @@ C:\Users\LAP062\Downloads\luoi-hr>
 
 ---
 
+## ⚙️ Setup Git Config (LÀM MỘT LẦN DÙNG MÃI)
+
+**Trước khi chạy `git commit`, bạn cần nói cho Git biết tên và email của bạn**
+
+### Bước 0a: Thiết lập tên
+Gõ:
+```bash
+git config --global user.name "Tên của bạn"
+```
+
+Thay `"Tên của bạn"` bằng tên thực, ví dụ:
+```bash
+git config --global user.name "Tran An Duc"
+```
+
+Nhấn **Enter**
+
+*(Không có tin nhắn = thành công)*
+
+---
+
+### Bước 0b: Thiết lập email
+Gõ:
+```bash
+git config --global user.email "email@example.com"
+```
+
+Thay `"email@example.com"` bằng email GitHub của bạn, ví dụ:
+```bash
+git config --global user.email "anhductran@gmail.com"
+```
+
+Nhấn **Enter**
+
+*(Không có tin nhắn = thành công)*
+
+---
+
+✅ **Hoàn thành:** Từ giờ mỗi khi bạn commit, Git sẽ biết là bạn rồi
+
+---
+
 ## 🚀 Thực hiện các lệnh Git
 
 ### ⚡ Lựa chọn 1: Gõ từng dòng một (AN TOÀN, DỄ HIỂU)
@@ -158,9 +200,11 @@ Máy sẽ hỏi **username và password GitHub**. Gõ:
 
 ---
 
-#### ⚡ Lựa chọn 2: Copy/Paste tất cả lệnh (NHANH nhưng cần cẩn thận)
+### ⚡ Lựa chọn 2: Copy/Paste tất cả lệnh (NHANH nhưng cần cẩn thận)
 
-Nếu bạn quen rồi, có thể copy toàn bộ lệnh này vào Terminal:
+**Đầu tiên, làm Bước 0a + 0b (Git Config) phía trên TRƯỚC**
+
+Rồi copy toàn bộ lệnh này vào Terminal:
 
 1. **Copy** toàn bộ block bên dưới
 2. **Paste** vào Terminal (Chuột phải → Paste, hoặc `Ctrl+Shift+V`)
@@ -265,6 +309,19 @@ Sau khi hoàn thành, kiểm tra trên GitHub:
 ---
 
 ## 🆘 Nếu có lỗi
+
+### Lỗi: "Author identity unknown"
+- **Nguyên nhân:** Git chưa biết tên + email của bạn
+- **Cách sửa:** 
+  ```bash
+  git config --global user.name "Tên bạn"
+  git config --global user.email "email@example.com"
+  ```
+  Rồi chạy `git commit` lại
+
+### ⚠️ Warning: "LF will be replaced by CRLF"
+- **Điều này có nguy hiểm không?** Không, đây chỉ là Git tự động xử lý line break khác nhau giữa Windows vs Mac/Linux
+- **Bạn cần làm gì?** Không cần làm gì, Git tự xử lý ✅
 
 ### Lỗi: "fatal: not a git repository"
 - **Nguyên nhân:** Bạn chưa chạy `git init`

@@ -1,0 +1,83 @@
+.callout {
+  padding: 16px;
+  margin: 20px 0;
+  border-left: 4px solid;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.icon {
+  font-size: 1.25rem;
+  display: inline-flex;
+  align-items: center;
+}
+
+.title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.content {
+  margin: 0;
+  padding-left: 34px;
+  margin-top: 4px;
+}
+
+/* Type: info (blue) */
+.info {
+  background: #eff6ff;
+  border-color: #3b82f6;
+  color: #1e40af;
+}
+
+.info .title {
+  color: #1e40af;
+}
+
+/* Type: tip (green) */
+.tip {
+  background: #f0fdf4;
+  border-color: #10B981;
+  color: #15803d;
+}
+
+.tip .title {
+  color: #15803d;
+}
+
+/* Type: warn (yellow) */
+.warn {
+  background: #fffbeb;
+  border-color: #f59e0b;
+  color: #92400e;
+}
+
+.warn .title {
+  color: #92400e;
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+  .callout {
+    padding: 12px;
+    margin: 16px 0;
+  }
+
+  .content {
+    padding-left: 30px;
+    font-size: 0.9rem;
+  }
+
+  .title {
+    font-size: 0.95rem;
+  }
+}

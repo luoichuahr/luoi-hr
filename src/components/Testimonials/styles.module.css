@@ -1,0 +1,90 @@
+.testimonials {
+  padding: 80px 20px;
+  background: #f9fafb;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.title {
+  text-align: center;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 60px 0;
+  letter-spacing: -0.5px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 32px;
+}
+
+.card {
+  padding: 32px;
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  border-color: #10B981;
+  box-shadow: 0 10px 24px rgba(16, 185, 129, 0.1);
+  transform: translateY(-4px);
+}
+
+.stars {
+  font-size: 1rem;
+  margin-bottom: 16px;
+  letter-spacing: 2px;
+}
+
+.quote {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #334155;
+  margin: 0 0 20px 0;
+  font-style: italic;
+}
+
+.author {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin: 0 0 4px 0;
+}
+
+.position {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .testimonials {
+    padding: 60px 20px;
+  }
+
+  .title {
+    font-size: 1.75rem;
+    margin-bottom: 40px;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .card {
+    padding: 20px;
+  }
+
+  .quote {
+    font-size: 0.9rem;
+  }
+}
