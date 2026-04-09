@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tạo website tự động với Claude Cowork — Lười HR</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600&display=swap');
+
+  :root {
+    --green: #10B981;
+    --green-light: #D1FAE5;
+    --green-dark: #065F46;
+    --slate: #1E293B;
+    --slate-mid: #475569;
+    --slate-light: #94A3B8;
+    --bg: #F8FAFC;
+    --bg-white: #FFFFFF;
+    --border: #E2E8F0;
+    --yellow-bg: #FEFCE8;
+    --yellow-border: #FDE047;
+    --yellow-text: #713F12;
+    --code-bg: #0F172A;
+    --code-text: #E2E8F0;
+    --radius: 10px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Be Vietnam Pro', sans-serif;
+    background: var(--bg);
+    color: var(--slate);
+    line-height: 1.7;
+    font-size: 15px;
+  }
+
+  /* Layout */
+  .wrapper { display: flex; min-height: 100vh; }
+
+  /* Sidebar */
+  .sidebar {
+    width: 260px;
+    min-width: 260px;
+    background: var(--bg-white);
+    border-right: 1px solid var(--border);
+    padding: 0;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+  }
+
+  .brand {
+    padding: 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .brand-icon {
+    width: 36px; height: 36px;
+    background: var(--green);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+
+  .brand-name { font-weight: 600; font-size: 16px; color: var(--slate); }
+  .brand-sub { font-size: 11px; color: var(--slate-light); }
+
+  .nav-section { padding: 16px 0 8px; }
+
+  .nav-label {
+    padding: 0 20px 8px;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--slate-light);
+    letter-spacing: .8px;
+    text-transform: uppercase;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 20px;
+    font-size: 13px;
+    color: var(--slate-mid);
+    cursor: pointer;
+    text-decoration: none;
+    transition: background .15s;
+  }
+
+  .nav-item:hover { background: var(--bg); color: var(--slate); }
+
+  .nav-item.active {
+    background: var(--green-light);
+    color: var(--green-dark);
+    font-weight: 500;
+  }
+
+  .nav-dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--border);
+    flex-shrink: 0;
+  }
+
+  .nav-item.active .nav-dot { background: var(--green); }
+
+  /* Main */
+  .main { flex: 1; max-width: 780px; padding: 40px 48px 120px; }
+
+  /* Breadcrumb */
+  .breadcrumb {
+    font-size: 12px;
+    color: var(--slate-light);
+    margin-bottom: 16px;
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+
+  /* Badges */
+  .badge-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+
+  .badge {
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-weight: 500;
+  }
+
+  .badge-level { background: var(--yellow-bg); color: var(--yellow-text); border: 1px solid var(--yellow-border); }
+  .badge-time { background: var(--green-light); color: var(--green-dark); }
+  .badge-tool { background: #EFF6FF; color: #1D4ED8; }
+
+  /* Typography */
+  h1 { font-size: 28px; font-weight: 600; color: var(--slate); line-height: 1.3; margin-bottom: 10px; }
+  .subtitle { font-size: 16px; color: var(--slate-mid); margin-bottom: 24px; line-height: 1.6; }
+  h2 { font-size: 20px; font-weight: 600; color: var(--slate); margin: 36px 0 12px; padding-top: 8px; border-top: 1px solid var(--border); }
+  h3 { font-size: 16px; font-weight: 600; color: var(--slate); margin: 24px 0 10px; }
+  p { color: var(--slate-mid); margin-bottom: 14px; }
+
+  /* Step indicator */
+  .step-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 28px 0 12px;
+  }
+
+  .step-num {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: var(--green);
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .step-title { font-size: 17px; font-weight: 600; color: var(--slate); }
+  .step-sub { font-size: 12px; color: var(--slate-light); font-weight: 400; }
+
+  /* Code block */
+  .code-block {
+    background: var(--code-bg);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin: 12px 0 20px;
+    position: relative;
+  }
+
+  .code-label {
+    font-size: 10px;
+    color: #64748B;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    font-family: monospace;
+  }
+
+  .code-block code {
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    color: var(--code-text);
+    display: block;
+    line-height: 1.8;
+    white-space: pre;
+  }
+
+  .code-block code .comment { color: #64748B; }
+  .code-block code .cmd { color: #34D399; }
+  .code-block code .str { color: #FCA5A5; }
+
+  .copy-btn {
+    position: absolute;
+    top: 12px; right: 12px;
+    background: #1E293B;
+    color: #94A3B8;
+    border: 1px solid #334155;
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 11px;
+    cursor: pointer;
+    font-family: 'Be Vietnam Pro', sans-serif;
+    transition: all .15s;
+  }
+
+  .copy-btn:hover { background: #334155; color: white; }
+
+  /* Callout */
+  .callout {
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    margin: 16px 0;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .callout-warn { background: var(--yellow-bg); border: 1px solid var(--yellow-border); }
+  .callout-tip { background: var(--green-light); border: 1px solid #6EE7B7; }
+  .callout-info { background: #EFF6FF; border: 1px solid #BFDBFE; }
+
+  .callout-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+
+  .callout-body { font-size: 13px; line-height: 1.6; }
+  .callout-warn .callout-body { color: var(--yellow-text); }
+  .callout-tip .callout-body { color: var(--green-dark); }
+  .callout-info .callout-body { color: #1E40AF; }
+  .callout-title { font-weight: 600; margin-bottom: 3px; }
+
+  /* Result box */
+  .result-box {
+    background: var(--bg-white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin: 12px 0;
+  }
+
+  .result-title { font-size: 13px; font-weight: 600; color: var(--slate); margin-bottom: 6px; }
+  .result-url {
+    font-family: monospace;
+    font-size: 13px;
+    color: var(--green);
+    background: var(--green-light);
+    padding: 6px 12px;
+    border-radius: 6px;
+    display: inline-block;
+  }
+
+  /* Visual flow */
+  .flow {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin: 20px 0;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .flow-box {
+    background: var(--bg-white);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--slate);
+    text-align: center;
+    min-width: 90px;
+  }
+
+  .flow-box.green { background: var(--green-light); border-color: #6EE7B7; color: var(--green-dark); }
+  .flow-arrow { color: var(--slate-light); font-size: 18px; padding: 0 4px; }
+
+  /* Divider */
+  hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+
+  /* Conversion */
+  .conversion-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 24px 0; }
+
+  .conv-card {
+    background: var(--bg-white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+  }
+
+  .conv-card-title { font-size: 15px; font-weight: 600; color: var(--slate); margin-bottom: 8px; }
+  .conv-card-text { font-size: 13px; color: var(--slate-mid); line-height: 1.6; margin-bottom: 14px; }
+
+  .qr-placeholder {
+    width: 80px; height: 80px;
+    border: 2px dashed var(--border);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; color: var(--slate-light);
+    margin-bottom: 10px;
+  }
+
+  .btn-green {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: var(--green);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 18px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    font-family: 'Be Vietnam Pro', sans-serif;
+    text-decoration: none;
+  }
+
+  .btn-green:hover { background: #059669; }
+
+  /* Lead form */
+  .lead-form {
+    background: var(--bg-white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin: 24px 0;
+  }
+
+  .form-title { font-size: 15px; font-weight: 600; color: var(--slate); margin-bottom: 4px; }
+  .form-sub { font-size: 12px; color: var(--slate-light); margin-bottom: 14px; }
+
+  .form-row { display: flex; gap: 8px; margin-bottom: 8px; }
+
+  .form-input {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 13px;
+    font-family: 'Be Vietnam Pro', sans-serif;
+    color: var(--slate);
+    background: var(--bg);
+  }
+
+  .form-input:focus { outline: none; border-color: var(--green); }
+
+  .form-submit {
+    background: var(--green);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Be Vietnam Pro', sans-serif;
+    white-space: nowrap;
+  }
+
+  /* FAB */
+  .fab {
+    position: fixed;
+    bottom: 24px; right: 24px;
+    background: var(--green);
+    color: white;
+    border: none;
+    border-radius: 24px;
+    padding: 12px 20px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 16px rgba(16,185,129,.35);
+    font-family: 'Be Vietnam Pro', sans-serif;
+    text-decoration: none;
+    z-index: 100;
+  }
+
+  .fab:hover { background: #059669; }
+
+  /* Table of contents */
+  .toc {
+    background: var(--bg-white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin: 24px 0;
+  }
+
+  .toc-title { font-size: 12px; font-weight: 600; color: var(--slate-light); text-transform: uppercase; letter-spacing: .6px; margin-bottom: 10px; }
+  .toc a { display: flex; align-items: center; gap: 8px; padding: 5px 0; font-size: 13px; color: var(--slate-mid); text-decoration: none; }
+  .toc a:hover { color: var(--green); }
+  .toc-num { font-size: 11px; color: var(--slate-light); min-width: 20px; }
+</style>
+</head>
+<body>
+
+<div class="wrapper">
+
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <div class="brand">
+      <div class="brand-icon">🦥</div>
+      <div>
+        <div class="brand-name">Lười HR</div>
+        <div class="brand-sub">AI cho dân nhân sự</div>
+      </div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label">Nhập môn</div>
+      <a href="#" class="nav-item"><div class="nav-dot"></div>Bắt đầu từ đây</a>
+      <a href="#" class="nav-item"><div class="nav-dot"></div>Claude vs Gemini</a>
+      <a href="#" class="nav-item"><div class="nav-dot"></div>Viết prompt hiệu quả</a>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label">Build Tools & Web</div>
+      <a href="#" class="nav-item active"><div class="nav-dot"></div>Tạo website tự động</a>
+      <a href="#" class="nav-item"><div class="nav-dot"></div>Build HR Agent</a>
+      <a href="#" class="nav-item"><div class="nav-dot"></div>Kết nối Google Sheet</a>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label">Skills cho Agent</div>
+      <a href="#" class="nav-item"><div class="nav-dot"></div>Tạo JD tự động</a>
+      <a href="#" class="nav-item"><div class="nav-dot"></div>Viết Offer trong 5s</a>
+      <a href="#" class="nav-item"><div class="nav-dot"></div>Agent viết KPI</a>
+      <a href="#" class="nav-item"><div class="nav-dot"></div>Tạo thông báo nội bộ</a>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label">Theo vị trí</div>
+      <a href="#" class="nav-item"><div class="nav-dot"></div>HRBP Nhàn Tênh</a>
+      <a href="#" class="nav-item"><div class="nav-dot"></div>Tuyển Dụng Thảnh Thơi</a>
+      <a href="#" class="nav-item"><div class="nav-dot"></div>C&B Tự Động Hóa</a>
+    </div>
+  </nav>
+
+  <!-- Main content -->
+  <main class="main">
+
+    <div class="breadcrumb">
+      <span>Build Tools & Web</span>
+      <span>›</span>
+      <span style="color:#1E293B">Tạo website tự động với Claude Cowork</span>
+    </div>
+
+    <div class="badge-row">
+      <span class="badge badge-level">⚡ Newbie thân thiện</span>
+      <span class="badge badge-time">🕐 Đọc 15 phút · Làm 1 buổi</span>
+      <span class="badge badge-tool">Claude Cowork</span>
+      <span class="badge badge-tool">GitHub</span>
+      <span class="badge badge-tool">Vercel</span>
+    </div>
+
+    <h1>Tạo website tự động với Claude Cowork</h1>
+    <p class="subtitle">
+      Bạn chỉ cần đưa nội dung cho Claude — nó tự tạo file, đẩy lên GitHub, Vercel tự publish.
+      Thêm bài mới sau này cũng vậy: nói là xong, không cần đụng code.
+    </p>
+
+    <!-- Flow tổng quan -->
+    <div class="flow">
+      <div class="flow-box">📝 Bạn viết nội dung</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">🤖 Claude tạo file</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">🐙 GitHub lưu</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box green">🌐 Live trên web</div>
+    </div>
+
+    <!-- TOC -->
+    <div class="toc">
+      <div class="toc-title">Nội dung bài này</div>
+      <a href="#phan1"><span class="toc-num">1</span> Hiểu 3 công cụ cần dùng (5 phút)</a>
+      <a href="#phan2"><span class="toc-num">2</span> Setup 1 lần duy nhất (30 phút)</a>
+      <a href="#phan3"><span class="toc-num">3</span> Thêm bài mới bằng Claude Cowork (2 phút/bài)</a>
+      <a href="#phan4"><span class="toc-num">4</span> Gắn tên miền riêng (tùy chọn)</a>
+    </div>
+
+    <!-- PHẦN 1 -->
+    <h2 id="phan1">Phần 1 — Hiểu 3 công cụ cần dùng</h2>
+
+    <p>Trước khi làm, bạn cần hiểu mỗi thứ làm gì. Đọc xong 3 dòng này là đủ:</p>
+
+    <div class="result-box">
+      <div class="result-title">🔨 Docusaurus — thợ xây nhà</div>
+      <p style="margin:6px 0 0;font-size:13px;color:#475569">Đọc các file bài viết (.md) của bạn → tạo ra website hoàn chỉnh (HTML, CSS, JS). Chạy trên máy tính của bạn, chưa ai xem được từ internet.</p>
+    </div>
+
+    <div class="result-box">
+      <div class="result-title">🐙 GitHub — kho lưu trữ</div>
+      <p style="margin:6px 0 0;font-size:13px;color:#475569">Lưu toàn bộ code lên cloud. Khi bạn "push" code lên đây, Vercel sẽ tự biết và deploy ngay.</p>
+    </div>
+
+    <div class="result-box">
+      <div class="result-title">🚀 Vercel — mảnh đất + địa chỉ nhà</div>
+      <p style="margin:6px 0 0;font-size:13px;color:#475569">Nhận website từ GitHub → đặt lên server → cấp địa chỉ URL để cả thế giới vào được. Free. Tự động. Không cần làm gì thêm sau khi setup.</p>
+    </div>
+
+    <div class="callout callout-tip">
+      <div class="callout-icon">💡</div>
+      <div class="callout-body">
+        <div class="callout-title">Tóm lại trong 1 câu</div>
+        Docusaurus xây nhà → GitHub giữ bản vẽ → Vercel đặt nhà lên mảnh đất có địa chỉ. Thiếu 1 trong 3 là không xong.
+      </div>
+    </div>
+
+    <!-- PHẦN 2 -->
+    <h2 id="phan2">Phần 2 — Setup 1 lần duy nhất</h2>
+
+    <p>Phần này bạn làm <strong>1 lần duy nhất</strong>. Sau đó mọi bài mới đều do Claude Cowork làm hết.</p>
+
+    <!-- Bước 1 -->
+    <div class="step-header">
+      <div class="step-num">1</div>
+      <div>
+        <div class="step-title">Cài Node.js và Git</div>
+        <div class="step-sub">Công cụ nền tảng — cài 1 lần, dùng mãi mãi</div>
+      </div>
+    </div>
+
+    <p>Vào 2 link này, tải về và cài như phần mềm bình thường (Next, Next, Finish):</p>
+
+    <div class="result-box">
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div><strong style="font-size:13px">Node.js:</strong> <span style="font-family:monospace;font-size:12px;color:#10B981">https://nodejs.org</span> — tải bản LTS (bên trái)</div>
+        <div><strong style="font-size:13px">Git:</strong> <span style="font-family:monospace;font-size:12px;color:#10B981">https://git-scm.com</span> — tải về cài mặc định</div>
+      </div>
+    </div>
+
+    <p>Kiểm tra đã cài xong chưa — mở terminal (Windows: nhấn <code style="background:#F1F5F9;padding:2px 6px;border-radius:4px;font-size:12px">Windows + R</code>, gõ <code style="background:#F1F5F9;padding:2px 6px;border-radius:4px;font-size:12px">cmd</code>) rồi gõ:</p>
+
+    <div class="code-block">
+      <div class="code-label">Terminal — kiểm tra cài đặt</div>
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      <code><span class="cmd">node -v</span>     <span class="comment"># Phải hiện ra v20.x.x gì đó</span>
+<span class="cmd">git --version</span> <span class="comment"># Phải hiện ra git version 2.x.x</span></code>
+    </div>
+
+    <div class="callout callout-warn">
+      <div class="callout-icon">⚠️</div>
+      <div class="callout-body">
+        <div class="callout-title">Lưu ý chống ngáo</div>
+        Nếu terminal báo lỗi "not recognized" — đóng terminal, mở lại, gõ lại. Cài xong phải mở terminal mới thì nó mới nhận.
+      </div>
+    </div>
+
+    <!-- Bước 2 -->
+    <div class="step-header">
+      <div class="step-num">2</div>
+      <div>
+        <div class="step-title">Tạo project Docusaurus</div>
+        <div class="step-sub">Bộ khung website — chạy 1 lệnh là xong</div>
+      </div>
+    </div>
+
+    <p>Mở terminal, chọn thư mục bạn muốn lưu project (ví dụ Desktop), rồi chạy lệnh này:</p>
+
+    <div class="code-block">
+      <div class="code-label">Terminal</div>
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      <code><span class="comment"># Di chuyển vào Desktop (hoặc thư mục bạn muốn)</span>
+<span class="cmd">cd Desktop</span>
+
+<span class="comment"># Tạo project — đặt tên tùy bạn, ví dụ "luoi-hr"</span>
+<span class="cmd">npx create-docusaurus@latest luoi-hr classic</span>
+
+<span class="comment"># Chờ 1-2 phút... khi xong thì vào thư mục vừa tạo</span>
+<span class="cmd">cd luoi-hr</span>
+
+<span class="comment"># Chạy thử trên máy để xem</span>
+<span class="cmd">npm start</span></code>
+    </div>
+
+    <p>Trình duyệt sẽ tự mở <code style="background:#F1F5F9;padding:2px 6px;border-radius:4px;font-size:12px">http://localhost:3000</code> — đây là website của bạn chạy trên máy, chưa ai xem được. Bước tiếp theo sẽ đưa nó lên internet.</p>
+
+    <!-- Bước 3 -->
+    <div class="step-header">
+      <div class="step-num">3</div>
+      <div>
+        <div class="step-title">Đẩy lên GitHub</div>
+        <div class="step-sub">3 click + 3 lệnh — làm 1 lần</div>
+      </div>
+    </div>
+
+    <p>Vào <strong>github.com</strong>, đăng ký tài khoản nếu chưa có, rồi tạo repo mới:</p>
+
+    <div class="result-box">
+      <div style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:#475569">
+        <div>① Nhấn nút <strong>New repository</strong> (góc trên phải)</div>
+        <div>② Đặt tên: <code style="background:#F1F5F9;padding:1px 6px;border-radius:4px">luoi-hr</code></div>
+        <div>③ Chọn <strong>Public</strong> → nhấn <strong>Create repository</strong></div>
+        <div>④ GitHub sẽ hiện ra các lệnh — copy phần "push an existing repository"</div>
+      </div>
+    </div>
+
+    <div class="code-block">
+      <div class="code-label">Terminal — trong thư mục luoi-hr</div>
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      <code><span class="cmd">git init</span>
+<span class="cmd">git add .</span>
+<span class="cmd">git commit -m "first commit"</span>
+<span class="cmd">git branch -M main</span>
+<span class="cmd">git remote add origin https://github.com/TEN_BAN/luoi-hr.git</span>
+<span class="cmd">git push -u origin main</span>
+
+<span class="comment"># Thay TEN_BAN bằng username GitHub của bạn</span></code>
+    </div>
+
+    <!-- Bước 4 -->
+    <div class="step-header">
+      <div class="step-num">4</div>
+      <div>
+        <div class="step-title">Kết nối Vercel — website live trong 2 phút</div>
+        <div class="step-sub">Chỉ cần làm 1 lần, sau đó tự động mãi mãi</div>
+      </div>
+    </div>
+
+    <div class="result-box">
+      <div style="display:flex;flex-direction:column;gap:8px;font-size:13px;color:#475569">
+        <div>① Vào <strong>vercel.com</strong> → đăng nhập bằng tài khoản GitHub</div>
+        <div>② Nhấn <strong>Add New Project</strong></div>
+        <div>③ Chọn repo <code style="background:#F1F5F9;padding:1px 6px;border-radius:4px">luoi-hr</code> vừa tạo → nhấn <strong>Import</strong></div>
+        <div>④ Vercel tự nhận ra là Docusaurus → nhấn <strong>Deploy</strong></div>
+        <div>⑤ Chờ ~1 phút → website live tại <code style="background:#D1FAE5;padding:1px 6px;border-radius:4px;color:#065F46">luoi-hr.vercel.app</code></div>
+      </div>
+    </div>
+
+    <div class="callout callout-tip">
+      <div class="callout-icon">✅</div>
+      <div class="callout-body">
+        <div class="callout-title">Setup xong rồi — từ đây Claude Cowork làm hết</div>
+        Mỗi khi bạn push code mới lên GitHub, Vercel tự động build và deploy lại. Bạn không cần vào Vercel nữa.
+      </div>
+    </div>
+
+    <!-- PHẦN 3 -->
+    <h2 id="phan3">Phần 3 — Thêm bài mới bằng Claude Cowork</h2>
+
+    <p>Đây là phần hay nhất. Sau khi setup xong, workflow của bạn chỉ còn thế này:</p>
+
+    <div class="step-header">
+      <div class="step-num">1</div>
+      <div>
+        <div class="step-title">Mở Claude Cowork, kết nối vào máy tính</div>
+        <div class="step-sub">Cowork nhìn thấy màn hình và điều khiển máy bạn</div>
+      </div>
+    </div>
+
+    <p>Vào <strong>claude.ai → Cowork</strong>, cho phép kết nối màn hình. Cowork sẽ thấy toàn bộ thư mục project trên máy bạn.</p>
+
+    <div class="step-header">
+      <div class="step-num">2</div>
+      <div>
+        <div class="step-title">Đưa nội dung bài mới cho Claude</div>
+        <div class="step-sub">Paste nội dung vào chat, Claude tự làm phần còn lại</div>
+      </div>
+    </div>
+
+    <div class="code-block">
+      <div class="code-label">Prompt mẫu — paste vào Claude Cowork</div>
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      <code><span class="str">Đây là nội dung bài hướng dẫn tạo skill KPI:
+[paste nội dung vào đây]
+
+Hãy:
+1. Tạo file docs/bi-kip/tao-skill-kpi.md với nội dung trên
+2. Format đúng chuẩn Docusaurus (có frontmatter, heading)
+3. Thêm Prompt Block cho mỗi prompt trong bài
+4. git add, commit, push lên GitHub
+</span></code>
+    </div>
+
+    <div class="step-header">
+      <div class="step-num">3</div>
+      <div>
+        <div class="step-title">Ngồi uống cafe, đợi 2 phút</div>
+        <div class="step-sub">Claude tạo file → push GitHub → Vercel tự deploy</div>
+      </div>
+    </div>
+
+    <div class="result-box">
+      <div class="result-title">🎉 Kết quả</div>
+      <div style="margin-top:8px">
+        <div class="result-url">luoi-hr.vercel.app/bi-kip/tao-skill-kpi</div>
+      </div>
+      <p style="margin:10px 0 0;font-size:13px;color:#475569">Bài mới live trên web. Sidebar tự cập nhật. Không cần sửa gì thêm.</p>
+    </div>
+
+    <div class="callout callout-info">
+      <div class="callout-icon">ℹ️</div>
+      <div class="callout-body">
+        <div class="callout-title">Cowork cần gì để hoạt động trơn tru?</div>
+        Git đã config username/email (làm 1 lần), SSH key đã kết nối GitHub, terminal đang ở đúng thư mục project. Nếu chưa có, nhờ Claude Chat hướng dẫn setup — chỉ mất 5 phút.
+      </div>
+    </div>
+
+    <!-- PHẦN 4 -->
+    <h2 id="phan4">Phần 4 — Gắn tên miền riêng (tùy chọn)</h2>
+
+    <p>Muốn có địa chỉ <code style="background:#F1F5F9;padding:2px 6px;border-radius:4px;font-size:12px">luoihr.com</code> thay vì <code style="background:#F1F5F9;padding:2px 6px;border-radius:4px;font-size:12px">luoi-hr.vercel.app</code>:</p>
+
+    <div class="result-box">
+      <div style="display:flex;flex-direction:column;gap:8px;font-size:13px;color:#475569">
+        <div>① Mua tên miền tại <strong>namecheap.com</strong> hoặc <strong>inet.vn</strong> (~200k/năm)</div>
+        <div>② Vào Vercel → Project Settings → Domains → Add Domain</div>
+        <div>③ Gõ tên miền của bạn → Vercel sẽ cho bạn 2 dòng DNS để copy</div>
+        <div>④ Paste 2 dòng đó vào DNS settings của nhà cung cấp tên miền</div>
+        <div>⑤ Chờ 5-30 phút → tên miền hoạt động</div>
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- Conversion -->
+    <h2 style="border-top:none;margin-top:0">Làm được rồi? Còn muốn đi tiếp không?</h2>
+
+    <div class="conversion-grid">
+      <div class="conv-card">
+        <div class="conv-card-title">☕ Ủng hộ Lười Chúa</div>
+        <div class="conv-card-text">Bài này giúp ích cho bạn? Mời Lười Chúa ly cafe để có sức ra bí kíp tiếp nhé!</div>
+        <div class="qr-placeholder">QR Momo</div>
+        <div style="font-size:11px;color:#94A3B8">Scan để ủng hộ · không bắt buộc</div>
+      </div>
+      <div class="conv-card">
+        <div class="conv-card-title">🚀 Setup A-Z cùng Lười Chúa</div>
+        <div class="conv-card-text">Không muốn tự setup? Để Lười Chúa cầm tay chỉ việc qua Zalo — từ cài Git đến website live, 1 buổi là xong.</div>
+        <a href="#" class="btn-green">💬 Nhắn Zalo gọi Lười Chúa</a>
+      </div>
+    </div>
+
+    <!-- Lead form -->
+    <div class="lead-form">
+      <div class="form-title">📋 Để lại thông tin — Lười Chúa sẽ liên hệ lại</div>
+      <div class="form-sub">Điền form, Lười Chúa tư vấn miễn phí 15 phút. Dữ liệu lưu về Google Sheet riêng, không spam.</div>
+      <div class="form-row">
+        <input class="form-input" type="text" placeholder="Họ tên bạn">
+        <input class="form-input" type="text" placeholder="Số Zalo hoặc Email">
+      </div>
+      <div class="form-row">
+        <input class="form-input" type="text" placeholder="Bạn đang làm vị trí gì? (HRBP, Recruiter, C&B...)" style="flex:2">
+        <button class="form-submit" onclick="this.textContent='✓ Đã gửi!'">Gửi →</button>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- FAB -->
+<a href="#" class="fab">💬 Zalo: Cần làm hộ?</a>
+
+<script>
+function copyCode(btn) {
+  const block = btn.parentElement.querySelector('code');
+  const text = block.innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Đã copy';
+    setTimeout(() => btn.textContent = 'Copy', 1800);
+  });
+}
+</script>
+
+</body>
+</html>
