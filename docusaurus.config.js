@@ -5,7 +5,7 @@ const config = {
   title: 'Lười HR — AI cho dân Nhân Sự',
   tagline: 'Lazy, not stupid. Dùng AI để làm việc nhanh hơn.',
   favicon: 'img/favicon.ico',
-  future: { v4: true },
+
   url: 'https://luoi-hr.vercel.app',
   baseUrl: '/',
   organizationName: 'luoichuahr',

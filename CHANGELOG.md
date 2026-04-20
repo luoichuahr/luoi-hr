@@ -8,6 +8,30 @@
 
 ---
 
+## v0.6 — Landing Page Redesign: Dribbble Visual + Agent Positioning (2026-04-20)
+
+### Quyết định giao diện
+- `[DESIGN]` **Redesign Hero section theo Dribbble "AI HR Management" style (Caliber Design)**
+  - Bỏ: gradient xám nhạt, placeholder text, headline technical "Xây dựng HR Agent 10 phút"
+  - Mới: cream background (#FAFAF8), chat mockup live demo, sparkle decorations, floating cards
+  - Headline mới: "Tạo cho bản thân 1 Agent làm hết mọi thứ trong nhân sự"
+  - Lý do: Dribbble design mạnh ở human element + social proof in hero + section diversity — học visual, giữ personality Lười HR
+  - Thêm: eyebrow badge (green pill), audience tags (HRBP/Recruiter/C&B/HRM), star rating + user count ngay trong hero
+  - Thêm: animated typing dots trong chat mockup → cảm giác Agent đang làm việc thật
+
+- `[DESIGN]` **Rewrite Features3Column → AgentSkills (30 Skills grid)**
+  - Bỏ: 3 feature card generic (JD, KPI, AI Agent)
+  - Mới: 6 category × 5-6 skills = 30 skills hiển thị dạng card grid
+  - Stats strip 4 con số: 30 Skills · 0 Dòng code · 10' Setup · 24/7 hoạt động
+  - Lý do: người HR nhìn vào biết ngay Agent làm được việc của mình, không phải generic SaaS
+
+### Quyết định kiến trúc
+- `[ARCH]` Không thêm dependency mới — decorative elements dùng CSS + Unicode characters (✦)
+- `[ARCH]` Chat mockup dùng pure JSX + CSS module, không dùng ảnh/SVG external
+- `[ARCH]` Giữ nguyên file name Features3Column để không phải sửa import trong index.jsx
+
+---
+
 ## v0.5 — Bài viết CV Extract Tool (2026-04-09)
 
 ### Quyết định nội dung

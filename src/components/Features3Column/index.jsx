@@ -1,42 +1,96 @@
 import React from 'react';
 import styles from './styles.module.css';
 
-export default function Features3Column() {
-  const features = [
-    {
-      icon: '⚡',
-      title: 'Tạo JD trong 10 giây',
-      description:
-        'Tự động tạo mô tả công việc chuẩn chỉnh chỉ với 1 prompt',
-    },
-    {
-      icon: '📊',
-      title: 'Xây dựng KPI tự động',
-      description:
-        'Thiết kế KPI theo từng vị trí HR chỉ trong vài phút',
-    },
-    {
-      icon: '🤖',
-      title: 'AI Agent theo vai trò',
-      description:
-        'Tạo agent riêng cho HRBP, Recruiter, C&B và nhiều hơn nữa',
-    },
-  ];
+// 30 skills theo 6 nghiệp vụ HR — mỗi category agent đều thành thạo
+const SKILL_CATEGORIES = [
+  {
+    cat: '🎯 Tuyển dụng',
+    items: ['Viết JD', 'Lọc & chấm CV', 'Câu hỏi phỏng vấn', 'Scorecard ứng viên', 'Tin đăng tuyển', 'Email chăm sóc ứng viên'],
+  },
+  {
+    cat: '📋 Onboarding',
+    items: ['Checklist nhận việc', 'Plan 30/60/90 ngày', 'Email chào mừng', 'Assign buddy & mentor', 'KPI tuần đầu'],
+  },
+  {
+    cat: '💰 C&B',
+    items: ['Thư Offer chuẩn', 'Phân tích band lương', 'Cấu trúc thưởng', 'Mô hình phúc lợi', 'Equity & ESOP'],
+  },
+  {
+    cat: '📈 Performance',
+    items: ['KPI framework', 'Review template', 'Calibration prep', 'PIP action plan', '360° feedback'],
+  },
+  {
+    cat: '📢 Truyền thông HR',
+    items: ['Thông báo nội bộ', 'Draft policy', 'Email toàn công ty', 'Employer branding post'],
+  },
+  {
+    cat: '📊 Báo cáo & Phân tích',
+    items: ['Headcount snapshot', 'Attrition report', 'Diversity metrics', 'Flight risk analysis', 'Monthly HR report'],
+  },
+];
 
+// Stats 4 con số — thay thế TrustIndicators cũ
+const STATS = [
+  { n: '30',   l: 'Skills sẵn có' },
+  { n: '0',    l: 'Dòng code cần biết' },
+  { n: "10'",  l: 'Setup xong' },
+  { n: '24/7', l: 'Agent hoạt động' },
+];
+
+export default function AgentSkills() {
   return (
-    <section className={styles.features}>
+    <section id="skills" className={styles.section}>
       <div className={styles.container}>
-        <h2 className={styles.title}>Những tính năng mạnh mẽ</h2>
 
-        <div className={styles.grid}>
-          {features.map((feature, idx) => (
-            <div key={idx} className={styles.card}>
-              <div className={styles.icon}>{feature.icon}</div>
-              <h3 className={styles.cardTitle}>{feature.title}</h3>
-              <p className={styles.cardDesc}>{feature.description}</p>
+        {/* Stats strip — 4 con số ấn tượng */}
+        <div className={styles.statsRow}>
+          {STATS.map(({ n, l }) => (
+            <div key={l} className={styles.stat}>
+              <div className={styles.statNum}>{n}</div>
+              <div className={styles.statLabel}>{l}</div>
             </div>
           ))}
         </div>
+
+        {/* Section header */}
+        <div className={styles.header}>
+          <div className={styles.eyebrow}>Agent của bạn thành thạo</div>
+          <h2 className={styles.title}>
+            30 Nghiệp vụ nhân sự{' '}
+            <span className={styles.titleAccent}>từ A đến Z</span>
+          </h2>
+          <p className={styles.sub}>
+            Giao bất kỳ task HR nào — Agent biết làm tất cả. Không gì không thể.
+          </p>
+        </div>
+
+        {/* Skills grid — 6 categories */}
+        <div className={styles.grid}>
+          {SKILL_CATEGORIES.map(({ cat, items }) => (
+            <div key={cat} className={styles.card}>
+              <div className={styles.cardCat}>{cat}</div>
+              <ul className={styles.list}>
+                {items.map((item) => (
+                  <li key={item} className={styles.item}>
+                    <span className={styles.check}>✓</span>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+
+        {/* CTA cuối section */}
+        <div className={styles.footer}>
+          <a href="/docs" className={styles.cta}>
+            Bắt đầu xây Agent của bạn →
+          </a>
+          <p className={styles.footerNote}>
+            Miễn phí · Không cần credit card · Setup trong 10 phút
+          </p>
+        </div>
+
       </div>
     </section>
   );

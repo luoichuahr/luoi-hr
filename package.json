@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "docusaurus": "docusaurus",
+    "postinstall": "node scripts/patch-webpack.js",
     "start": "docusaurus start",
     "build": "docusaurus build",
     "swizzle": "docusaurus swizzle",
@@ -15,7 +16,6 @@
   },
   "dependencies": {
     "@docusaurus/core": "3.10.0",
-    "@docusaurus/faster": "3.10.0",
     "@docusaurus/preset-classic": "3.10.0",
     "@mdx-js/react": "^3.0.0",
     "clsx": "^2.0.0",
