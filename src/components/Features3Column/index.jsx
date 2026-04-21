@@ -31,10 +31,10 @@ const SKILL_CATEGORIES = [
 
 // Stats 4 con số — thay thế TrustIndicators cũ
 const STATS = [
-  { n: '30',   l: 'Skills sẵn có' },
+  { n: '30+',  l: 'Skills sẵn có' },
   { n: '0',    l: 'Dòng code cần biết' },
-  { n: "10'",  l: 'Setup xong' },
-  { n: '24/7', l: 'Agent hoạt động' },
+  { n: '5-10', l: 'Phút setup xong' },
+  { n: '24/7', l: 'Hoạt động liên tục' },
 ];
 
 export default function AgentSkills() {
@@ -55,9 +55,9 @@ export default function AgentSkills() {
         {/* Section header */}
         <div className={styles.header}>
           <div className={styles.eyebrow}>Agent của bạn thành thạo</div>
-          <h2 className={styles.title}>
-            30 Nghiệp vụ nhân sự{' '}
-            <span className={styles.titleAccent}>từ A đến Z</span>
+          <h2 className={styles.title} style={{ whiteSpace: 'nowrap' }}>
+            Hơn 30 nghiệp vụ nhân sự{' '}
+            <span className={styles.titleAccent}>từ A-Z</span>
           </h2>
           <p className={styles.sub}>
             Giao bất kỳ task HR nào — Agent biết làm tất cả. Không gì không thể.
@@ -87,7 +87,7 @@ export default function AgentSkills() {
             Bắt đầu xây Agent của bạn →
           </a>
           <p className={styles.footerNote}>
-            Miễn phí · Không cần credit card · Setup trong 10 phút
+            Dễ dàng · Không cần biết code
           </p>
         </div>
 

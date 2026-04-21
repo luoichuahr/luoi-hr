@@ -8,6 +8,22 @@
 
 ---
 
+## v1.1 — UI Refresh: Hero animated + FloatingContact (2026-04-21)
+
+### Quyết định thiết kế
+- `[DESIGN]` **Hero headline + subtitle** — đổi sang "HR Agent / giúp bạn làm mọi thứ / trong nhân sự", subtitle nhấn đủ 4 nghiệp vụ chính
+- `[DESIGN]` **Chat mockup animated** — typewriter loop 3 kịch bản (JD → KPI → Onboarding), dùng useState/useEffect, không thêm dependency
+- `[DESIGN]` **Xóa floating cards** Hero ("JD viết xong", "30 skills sẵn sàng") — giảm noise, tập trung vào chat demo
+- `[DESIGN]` **CTA "Xem 30+ Skills"** — thêm dấu + để trung thực hơn về số lượng
+- `[DESIGN]` **Stats bar**: 30 → 30+, 10' → 5-10 / "Phút setup xong", "Agent hoạt động" → "Hoạt động liên tục"
+- `[DESIGN]` **Section title**: "30 Nghiệp vụ..." → "Hơn 30 nghiệp vụ nhân sự từ A-Z" + nowrap
+- `[DESIGN]` **Footer note**: bỏ "Miễn phí · credit card" → "Dễ dàng · Không cần biết code" (đúng với audience)
+- `[DESIGN]` **LeadForm thu nhỏ**: max-width 380px, padding 24px — form gọn hơn, không chiếm quá nhiều viewport
+- `[ARCH]` **FloatingContact component** — 2 nút LinkedIn + Zalo cố định góc dưới phải; Zalo mobile mở app, desktop hiện QR popup
+- `[CONTENT]` **Sửa typo** Testimonials: "sủa" → "sửa"
+
+---
+
 ## v1.0 — Analytics Agent + Google Analytics 4 (2026-04-21)
 
 ### Quyết định kiến trúc

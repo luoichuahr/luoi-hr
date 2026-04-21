@@ -4,13 +4,13 @@
 }
 
 .container {
-  max-width: 600px;
+  max-width: 380px;
   margin: 0 auto;
 }
 
 .formWrapper {
   background: white;
-  padding: 40px;
+  padding: 24px;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
   border: 1px solid #e2e8f0;

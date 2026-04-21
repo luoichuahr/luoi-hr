@@ -5,6 +5,7 @@ import Features3Column from '@site/src/components/Features3Column';
 import Testimonials from '@site/src/components/Testimonials';
 import TrustIndicators from '@site/src/components/TrustIndicators';
 import LeadForm from '@site/src/components/LeadForm';
+import FloatingContact from '@site/src/components/FloatingContact';
 
 export default function Home() {
   return (
@@ -17,6 +18,7 @@ export default function Home() {
       <Testimonials />
       <TrustIndicators />
       <LeadForm />
+      <FloatingContact />
     </Layout>
   );
 }

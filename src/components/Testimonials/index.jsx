@@ -11,7 +11,7 @@ export default function Testimonials() {
     },
     {
       quote:
-        'Template JD rất chi tiết và chuẩn. Không cần sủa gì mà ứng viên hiểu ngay.',
+        'Template JD rất chi tiết và chuẩn. Không cần sửa gì mà ứng viên hiểu ngay.',
       author: 'Minh Anh',
       position: 'Recruiter - Startup Tech',
     },
