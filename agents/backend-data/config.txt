@@ -1,0 +1,3 @@
+SPREADSHEET_ID=1lCad18H_1rIOL5YQP2xBOTn1aY1f_ItKCA_6R5BYCvk
+SHEET_NAME=Lười HR — Leads
+CREDENTIALS_PATH=C:\Users\LAP062\Downloads\luoi-hr\agents\backend-data\google-credentials.json

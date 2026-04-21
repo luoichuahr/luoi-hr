@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lười HR — Agent Architecture Diagram</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #020617;
+      color: #e2e8f0;
+      font-family: 'JetBrains Mono', monospace;
+      min-height: 100vh;
+      padding: 28px 24px;
+    }
+
+    /* ── Header ── */
+    .header { text-align: center; margin-bottom: 24px; }
+    .badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3);
+      border-radius: 20px; padding: 6px 18px; margin-bottom: 14px;
+      font-size: 11px; color: #34d399;
+    }
+    .pulse {
+      width: 8px; height: 8px; background: #10B981; border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%,100%{ opacity:1; transform:scale(1); }
+      50%{ opacity:0.5; transform:scale(1.25); }
+    }
+    .header h1 { font-size: 22px; font-weight: 700; color: #f1f5f9; margin-bottom: 6px; }
+    .header p  { font-size: 12px; color: #64748b; }
+
+    /* ── Diagram container ── */
+    .diagram-wrap {
+      background: rgba(15,23,42,0.8);
+      border: 1px solid #1e293b;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 24px;
+      overflow-x: auto;
+    }
+
+    /* ── Summary cards ── */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .card {
+      background: rgba(15,23,42,0.8);
+      border: 1px solid #1e293b;
+      border-radius: 8px;
+      padding: 16px;
+    }
+    .card-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .dot-green  { background: #34d399; }
+    .dot-cyan   { background: #22d3ee; }
+    .dot-amber  { background: #fbbf24; }
+    .card h3 { font-size: 11px; font-weight: 600; color: #e2e8f0; }
+    .card ul { list-style: none; }
+    .card ul li { font-size: 10px; color: #94a3b8; padding: 2px 0; }
+
+    footer { text-align: center; font-size: 10px; color: #334155; padding-top: 8px; }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════ HEADER ═══════════════════════════════════ -->
+<div class="header">
+  <div class="badge">
+    <div class="pulse"></div>
+    Lười HR · Multi-Agent System · v0.8
+  </div>
+  <h1>🦥 Kiến Trúc Hệ Thống Agents</h1>
+  <p>6 AI agents · Docusaurus 3.x + GitHub + Vercel · Tự động hóa 2 bài/tuần</p>
+</div>
+
+<!-- ═══════════════════════════════════ DIAGRAM ═══════════════════════════════════ -->
+<div class="diagram-wrap">
+<svg viewBox="0 0 1120 800" xmlns="http://www.w3.org/2000/svg" width="100%">
+  <defs>
+    <!-- Grid -->
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1e293b" stroke-width="0.5"/>
+    </pattern>
+
+    <!-- Arrow markers -->
+    <marker id="arr-slate"  markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0,10 3.5,0 7" fill="#64748b"/>
+    </marker>
+    <marker id="arr-cyan"   markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0,10 3.5,0 7" fill="#22d3ee"/>
+    </marker>
+    <marker id="arr-green"  markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0,10 3.5,0 7" fill="#34d399"/>
+    </marker>
+    <marker id="arr-rose"   markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0,10 3.5,0 7" fill="#fb7185"/>
+    </marker>
+    <marker id="arr-amber"  markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0,10 3.5,0 7" fill="#fbbf24"/>
+    </marker>
+    <marker id="arr-orange" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0,10 3.5,0 7" fill="#fb923c"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1120" height="800" fill="#020617"/>
+  <rect width="1120" height="800" fill="url(#grid)"/>
+
+  <!-- ══════════════════════ ARROWS (behind boxes) ══════════════════════ -->
+
+  <!-- Tally/Make → Backend Agent (data feed, going up) -->
+  <line x1="150" y1="430" x2="150" y2="383" stroke="#fbbf24" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+  <text x="160" y="410" fill="#fbbf24" font-size="8" font-family="JetBrains Mono">leads data</text>
+
+  <!-- SEO Agent → Content Agent (keywords) -->
+  <line x1="260" y1="188" x2="388" y2="188" stroke="#22d3ee" stroke-width="1.5" marker-end="url(#arr-cyan)"/>
+  <text x="286" y="181" fill="#22d3ee" font-size="8" font-family="JetBrains Mono">keywords</text>
+
+  <!-- Backend Agent → Content Agent (insights + content gaps) -->
+  <path d="M 260 318 C 330 318 340 218 388 208" stroke="#34d399" stroke-width="1.5" fill="none" marker-end="url(#arr-green)"/>
+  <text x="275" y="280" fill="#34d399" font-size="8" font-family="JetBrains Mono">insights +</text>
+  <text x="275" y="291" fill="#34d399" font-size="8" font-family="JetBrains Mono">content gaps</text>
+
+  <!-- Content Agent → Andy Review (draft) -->
+  <line x1="510" y1="263" x2="510" y2="308" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr-slate)"/>
+  <text x="520" y="290" fill="#94a3b8" font-size="8" font-family="JetBrains Mono">draft bài</text>
+
+  <!-- Andy Review → QA Agent (approved, diagonal) -->
+  <path d="M 600 338 C 670 338 700 205 758 190" stroke="#94a3b8" stroke-width="1.5" fill="none" marker-end="url(#arr-slate)"/>
+  <text x="638" y="302" fill="#94a3b8" font-size="8" font-family="JetBrains Mono">approved ✓</text>
+
+  <!-- QA → Content Agent (FAIL, dashed rose) -->
+  <path d="M 758 185 C 720 175 680 175 618 185" stroke="#fb7185" stroke-width="1.3" fill="none" stroke-dasharray="4,3" marker-end="url(#arr-rose)"/>
+  <text x="678" y="163" fill="#fb7185" font-size="8" font-family="JetBrains Mono">✗ fail → revise</text>
+
+  <!-- QA Agent → GitHub (pass) -->
+  <line x1="858" y1="248" x2="858" y2="288" stroke="#34d399" stroke-width="1.5" marker-end="url(#arr-green)"/>
+  <text x="868" y="272" fill="#34d399" font-size="8" font-family="JetBrains Mono">✓ pass</text>
+
+  <!-- GitHub → Vercel (auto deploy) -->
+  <line x1="858" y1="368" x2="858" y2="408" stroke="#fbbf24" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+  <text x="868" y="392" fill="#fbbf24" font-size="8" font-family="JetBrains Mono">git push</text>
+
+  <!-- Vercel → Frontend Agent (deployed) -->
+  <line x1="858" y1="488" x2="858" y2="528" stroke="#22d3ee" stroke-width="1.5" marker-end="url(#arr-cyan)"/>
+  <text x="868" y="511" fill="#22d3ee" font-size="8" font-family="JetBrains Mono">deployed</text>
+
+  <!-- Frontend Agent → Content Agent (feedback, long curve, bi-weekly) -->
+  <path d="M 758 570 C 700 570 660 620 550 620 C 430 620 410 380 500 365" stroke="#22d3ee" stroke-width="1.1" fill="none" stroke-dasharray="5,3" marker-end="url(#arr-cyan)"/>
+  <text x="565" y="636" fill="#22d3ee" font-size="8" font-family="JetBrains Mono" text-anchor="middle">audit feedback (2 tuần/lần)</text>
+
+  <!-- Andy → Social Media (publish captions) -->
+  <path d="M 510 378 L 510 415" stroke="#64748b" stroke-width="1.2" fill="none" stroke-dasharray="4,3" marker-end="url(#arr-slate)"/>
+  <text x="520" y="400" fill="#64748b" font-size="8" font-family="JetBrains Mono">post captions</text>
+
+  <!-- ══════════════════════ BOXES ══════════════════════ -->
+
+  <!-- ──── ARCHITECT OVERSIGHT BAR ──── -->
+  <!-- opaque bg first to mask any arrows -->
+  <rect x="38" y="28" width="1044" height="58" rx="8" fill="#020617"/>
+  <rect x="38" y="28" width="1044" height="58" rx="8"
+        fill="rgba(120,53,15,0.12)" stroke="#fbbf24" stroke-width="1.5" stroke-dasharray="8,4"/>
+  <text x="560" y="50" fill="#fbbf24" font-size="12" font-weight="600"
+        font-family="JetBrains Mono" text-anchor="middle">
+    🏛️  AGENT_ARCHITECT — Chief Architect (Technical Gatekeeper)
+  </text>
+  <text x="560" y="68" fill="#78350f" font-size="8.5" font-family="JetBrains Mono" text-anchor="middle">
+    Enforces: max 200 lines/file · CHANGELOG trước code · không over-engineer · small win &lt;30' · không deps mới khi chưa cần
+  </text>
+
+  <!-- ──── LEFT COLUMN: Data Layer ──── -->
+  <text x="150" y="115" fill="#475569" font-size="9" font-family="JetBrains Mono" text-anchor="middle">── DATA LAYER ──</text>
+
+  <!-- SEO Agent -->
+  <rect x="40" y="128" width="220" height="95" rx="6" fill="#0f172a"/>
+  <rect x="40" y="128" width="220" height="95" rx="6"
+        fill="rgba(8,51,68,0.5)" stroke="#22d3ee" stroke-width="1.5"/>
+  <text x="150" y="152" fill="white" font-size="11" font-weight="600"
+        font-family="JetBrains Mono" text-anchor="middle">🔍 SEO Agent</text>
+  <text x="150" y="168" fill="#94a3b8" font-size="8.5" font-family="JetBrains Mono" text-anchor="middle">Keyword research · Meta optimization</text>
+  <line x1="50" y1="176" x2="250" y2="176" stroke="#1e293b" stroke-width="1"/>
+  <text x="150" y="188" fill="#64748b" font-size="8" font-family="JetBrains Mono" text-anchor="middle">Long-tail VN · How-to intent</text>
+  <rect x="55" y="196" width="190" height="16" rx="3" fill="rgba(251,146,60,0.12)" stroke="#fb923c" stroke-width="0.8"/>
+  <text x="150" y="207" fill="#fb923c" font-size="7.5" font-family="JetBrains Mono" text-anchor="middle">📅 Mỗi 2 tuần · Thứ Sáu</text>
+
+  <!-- Backend Agent -->
+  <rect x="40" y="270" width="220" height="112" rx="6" fill="#0f172a"/>
+  <rect x="40" y="270" width="220" height="112" rx="6"
+        fill="rgba(6,78,59,0.4)" stroke="#34d399" stroke-width="1.5"/>
+  <text x="150" y="294" fill="white" font-size="11" font-weight="600"
+        font-family="JetBrains Mono" text-anchor="middle">📊 Backend Agent</text>
+  <text x="150" y="309" fill="#94a3b8" font-size="8.5" font-family="JetBrains Mono" text-anchor="middle">Lead analysis · Content gaps</text>
+  <line x1="50" y1="317" x2="250" y2="317" stroke="#1e293b" stroke-width="1"/>
+  <text x="150" y="329" fill="#64748b" font-size="8" font-family="JetBrains Mono" text-anchor="middle">Phân loại: Recruitment, KPI,</text>
+  <text x="150" y="340" fill="#64748b" font-size="8" font-family="JetBrains Mono" text-anchor="middle">C&amp;B, Training, AI/Prompt</text>
+  <rect x="55" y="348" width="190" height="16" rx="3" fill="rgba(251,146,60,0.12)" stroke="#fb923c" stroke-width="0.8"/>
+  <text x="150" y="359" fill="#fb923c" font-size="7.5" font-family="JetBrains Mono" text-anchor="middle">📅 Mỗi Thứ Sáu + Cuối tháng</text>
+  <text x="150" y="374" fill="#64748b" font-size="7.5" font-family="JetBrains Mono" text-anchor="middle">→ agents/backend-output/latest.md</text>
+
+  <!-- External: Tally + Make + Sheets -->
+  <rect x="40" y="430" width="220" height="85" rx="6" fill="#0f172a"/>
+  <rect x="40" y="430" width="220" height="85" rx="6"
+        fill="rgba(120,53,15,0.22)" stroke="#fbbf24" stroke-width="1.5"/>
+  <text x="150" y="453" fill="#fbbf24" font-size="11" font-weight="600"
+        font-family="JetBrains Mono" text-anchor="middle">☁️ External Data Pipeline</text>
+  <line x1="50" y1="461" x2="250" y2="461" stroke="#78350f" stroke-width="1"/>
+  <text x="150" y="474" fill="#92400e" font-size="8.5" font-family="JetBrains Mono" text-anchor="middle">Tally.so (form leads)</text>
+  <text x="150" y="487" fill="#92400e" font-size="8.5" font-family="JetBrains Mono" text-anchor="middle">→ Make.com (auto-sync)</text>
+  <text x="150" y="500" fill="#92400e" font-size="8.5" font-family="JetBrains Mono" text-anchor="middle">→ Google Sheets (Lười HR Leads)</text>
+
+  <!-- ──── CENTER COLUMN: Core Production ──── -->
+  <text x="510" y="115" fill="#475569" font-size="9" font-family="JetBrains Mono" text-anchor="middle">── PRODUCTION CORE ──</text>
+
+  <!-- Content Agent -->
+  <rect x="388" y="128" width="245" height="135" rx="6" fill="#0f172a"/>
+  <rect x="388" y="128" width="245" height="135" rx="6"
+        fill="rgba(6,78,59,0.4)" stroke="#34d399" stroke-width="1.5"/>
+  <text x="510" y="152" fill="white" font-size="11" font-weight="600"
+        font-family="JetBrains Mono" text-anchor="middle">✍️ Content Agent</text>
+  <text x="510" y="168" fill="#94a3b8" font-size="8.5" font-family="JetBrains Mono" text-anchor="middle">Blog · LinkedIn · Facebook captions</text>
+  <line x1="398" y1="176" x2="623" y2="176" stroke="#1e293b" stroke-width="1"/>
+  <text x="510" y="189" fill="#64748b" font-size="8" font-family="JetBrains Mono" text-anchor="middle">600–1000 từ/bài · 1 PromptBlock tối thiểu</text>
+  <text x="510" y="201" fill="#64748b" font-size="8" font-family="JetBrains Mono" text-anchor="middle">LinkedIn: 150–250 từ → đăng 9am</text>
+  <text x="510" y="213" fill="#64748b" font-size="8" font-family="JetBrains Mono" text-anchor="middle">Facebook: 80–120 từ → đăng 6pm</text>
+  <text x="510" y="225" fill="#64748b" font-size="8" font-family="JetBrains Mono" text-anchor="middle">→ agents/content-drafts/bai-[date]-[slug].md</text>
+  <rect x="403" y="235" width="215" height="16" rx="3" fill="rgba(251,146,60,0.12)" stroke="#fb923c" stroke-width="0.8"/>
+  <text x="510" y="246" fill="#fb923c" font-size="7.5" font-family="JetBrains Mono" text-anchor="middle">📅 Chủ Nhật tối + Thứ Ba tối (2 bài/tuần)</text>
+
+  <!-- Andy Review -->
+  <rect x="418" y="308" width="185" height="70" rx="6" fill="#0f172a"/>
+  <rect x="418" y="308" width="185" height="70" rx="6"
+        fill="rgba(30,41,59,0.65)" stroke="#94a3b8" stroke-width="1.5"/>
+  <text x="510" y="332" fill="white" font-size="11" font-weight="600"
+        font-family="JetBrains Mono" text-anchor="middle">👤 Andy (Review)</text>
+  <text x="510" y="348" fill="#94a3b8" font-size="8.5" font-family="JetBrains Mono" text-anchor="middle">Duyệt nội dung · Approve / Reject</text>
+  <text x="510" y="362" fill="#64748b" font-size="8" font-family="JetBrains Mono" text-anchor="middle">Thứ Hai sáng</text>
+  <text x="510" y="373" fill="#64748b" font-size="8" font-family="JetBrains Mono" text-anchor="middle">HR Director · 11+ năm HRBP</text>
+
+  <!-- Social Media -->
+  <rect x="398" y="415" width="225" height="80" rx="6" fill="#0f172a"/>
+  <rect x="398" y="415" width="225" height="80" rx="6"
+        fill="rgba(30,41,59,0.45)" stroke="#64748b" stroke-width="1.2" stroke-dasharray="4,3"/>
+  <text x="510" y="438" fill="#94a3b8" font-size="11" font-weight="600"
+        font-family="JetBrains Mono" text-anchor="middle">📣 Social Media</text>
+  <line x1="408" y1="446" x2="613" y2="446" stroke="#1e293b" stroke-width="1"/>
+  <text x="510" y="459" fill="#64748b" font-size="8.5" font-family="JetBrains Mono" text-anchor="middle">LinkedIn (9am) · Facebook (6pm)</text>
+  <text x="510" y="472" fill="#64748b" font-size="8" font-family="JetBrains Mono" text-anchor="middle">Andy manual post · Thứ Ba</text>
+  <text x="510" y="485" fill="#64748b" font-size="8" font-family="JetBrains Mono" text-anchor="middle">Target: HR · Recruiter · C&amp;B · HRM</text>
+
+  <!-- ──── RIGHT COLUMN: Publish Pipeline ──── -->
+  <text x="858" y="115" fill="#475569" font-size="9" font-family="JetBrains Mono" text-anchor="middle">── PUBLISH PIPELINE ──</text>
+
+  <!-- QA Agent -->
+  <rect x="758" y="128" width="200" height="120" rx="6" fill="#0f172a"/>
+  <rect x="758" y="128" width="200" height="120" rx="6"
+        fill="rgba(136,19,55,0.4)" stroke="#fb7185" stroke-width="1.5"/>
+  <text x="858" y="152" fill="white" font-size="11" font-weight="600"
+        font-family="JetBrains Mono" text-anchor="middle">🛡️ QA Agent</text>
+  <text x="858" y="167" fill="#94a3b8" font-size="8.5" font-family="JetBrains Mono" text-anchor="middle">Gatekeeper · 3 rounds test</text>
+  <line x1="768" y1="175" x2="948" y2="175" stroke="#1e293b" stroke-width="1"/>
+  <text x="858" y="187" fill="#64748b" font-size="8" font-family="JetBrains Mono" text-anchor="middle">A. Build &amp; Deploy (CRITICAL)</text>
+  <text x="858" y="199" fill="#64748b" font-size="8" font-family="JetBrains Mono" text-anchor="middle">B. Components UI (WARN)</text>
+  <text x="858" y="211" fill="#64748b" font-size="8" font-family="JetBrains Mono" text-anchor="middle">C. Code Quality (WARN)</text>
+  <text x="858" y="223" fill="#64748b" font-size="8" font-family="JetBrains Mono" text-anchor="middle">D. Performance (WARN)</text>
+  <text x="858" y="238" fill="#fb7185" font-size="7.5" font-family="JetBrains Mono" text-anchor="middle">🔴 Build fail = BLOCK · Output: QA_REPORT.md</text>
+
+  <!-- GitHub -->
+  <rect x="758" y="288" width="200" height="78" rx="6" fill="#0f172a"/>
+  <rect x="758" y="288" width="200" height="78" rx="6"
+        fill="rgba(30,41,59,0.65)" stroke="#94a3b8" stroke-width="1.5"/>
+  <text x="858" y="312" fill="white" font-size="11" font-weight="600"
+        font-family="JetBrains Mono" text-anchor="middle">🐙 GitHub</text>
+  <text x="858" y="327" fill="#94a3b8" font-size="8.5" font-family="JetBrains Mono" text-anchor="middle">git add · commit · push</text>
+  <text x="858" y="341" fill="#64748b" font-size="8" font-family="JetBrains Mono" text-anchor="middle">Thứ Ba sáng · Andy thực hiện</text>
+  <text x="858" y="356" fill="#64748b" font-size="8" font-family="JetBrains Mono" text-anchor="middle">github.com/[andy]/luoi-hr</text>
+
+  <!-- Vercel -->
+  <rect x="758" y="408" width="200" height="78" rx="6" fill="#0f172a"/>
+  <rect x="758" y="408" width="200" height="78" rx="6"
+        fill="rgba(120,53,15,0.25)" stroke="#fbbf24" stroke-width="1.5"/>
+  <text x="858" y="432" fill="white" font-size="11" font-weight="600"
+        font-family="JetBrains Mono" text-anchor="middle">▲ Vercel Deploy</text>
+  <text x="858" y="447" fill="#fbbf24" font-size="8.5" font-family="JetBrains Mono" text-anchor="middle">Auto-deploy from GitHub push</text>
+  <text x="858" y="461" fill="#64748b" font-size="8" font-family="JetBrains Mono" text-anchor="middle">Free tier · luoi-hr.vercel.app</text>
+  <text x="858" y="474" fill="#64748b" font-size="8" font-family="JetBrains Mono" text-anchor="middle">Build: Docusaurus · ~2 min</text>
+
+  <!-- Frontend Agent -->
+  <rect x="758" y="528" width="200" height="118" rx="6" fill="#0f172a"/>
+  <rect x="758" y="528" width="200" height="118" rx="6"
+        fill="rgba(8,51,68,0.5)" stroke="#22d3ee" stroke-width="1.5"/>
+  <text x="858" y="552" fill="white" font-size="11" font-weight="600"
+        font-family="JetBrains Mono" text-anchor="middle">🎨 Frontend Agent</text>
+  <text x="858" y="567" fill="#94a3b8" font-size="8.5" font-family="JetBrains Mono" text-anchor="middle">Visual QA · Lighthouse audit</text>
+  <line x1="768" y1="575" x2="948" y2="575" stroke="#1e293b" stroke-width="1"/>
+  <text x="858" y="588" fill="#64748b" font-size="8" font-family="JetBrains Mono" text-anchor="middle">Quick check: sau mỗi deploy (15')</text>
+  <text x="858" y="600" fill="#64748b" font-size="8" font-family="JetBrains Mono" text-anchor="middle">Full audit: 2 tuần/lần · Thứ Sáu</text>
+  <text x="858" y="612" fill="#64748b" font-size="8" font-family="JetBrains Mono" text-anchor="middle">LCP &lt;2.5s · CLS &lt;0.1 · Score &gt;85</text>
+  <rect x="773" y="620" width="170" height="16" rx="3" fill="rgba(251,146,60,0.12)" stroke="#fb923c" stroke-width="0.8"/>
+  <text x="858" y="631" fill="#fb923c" font-size="7.5" font-family="JetBrains Mono" text-anchor="middle">→ agents/frontend-output/check-[date].md</text>
+
+  <!-- ══════════════════════ LEGEND ══════════════════════ -->
+  <rect x="40" y="660" width="1040" height="120" rx="6"
+        fill="rgba(15,23,42,0.6)" stroke="#1e293b" stroke-width="1"/>
+
+  <text x="60" y="680" fill="#475569" font-size="9" font-weight="600" font-family="JetBrains Mono">LEGEND</text>
+
+  <!-- Component type swatches -->
+  <rect x="60" y="690" width="14" height="12" rx="2" fill="rgba(8,51,68,0.5)"  stroke="#22d3ee" stroke-width="1"/>
+  <text x="80" y="700" fill="#94a3b8" font-size="9" font-family="JetBrains Mono">SEO / Frontend Agent</text>
+
+  <rect x="225" y="690" width="14" height="12" rx="2" fill="rgba(6,78,59,0.4)"  stroke="#34d399" stroke-width="1"/>
+  <text x="245" y="700" fill="#94a3b8" font-size="9" font-family="JetBrains Mono">Content / Backend Agent</text>
+
+  <rect x="415" y="690" width="14" height="12" rx="2" fill="rgba(136,19,55,0.4)" stroke="#fb7185" stroke-width="1"/>
+  <text x="435" y="700" fill="#94a3b8" font-size="9" font-family="JetBrains Mono">QA / Security Gate</text>
+
+  <rect x="585" y="690" width="14" height="12" rx="2" fill="rgba(120,53,15,0.25)" stroke="#fbbf24" stroke-width="1"/>
+  <text x="605" y="700" fill="#94a3b8" font-size="9" font-family="JetBrains Mono">External / Cloud</text>
+
+  <rect x="730" y="690" width="14" height="12" rx="2" fill="rgba(30,41,59,0.65)" stroke="#94a3b8" stroke-width="1"/>
+  <text x="750" y="700" fill="#94a3b8" font-size="9" font-family="JetBrains Mono">Human / 3rd Party</text>
+
+  <rect x="880" y="690" width="14" height="12" rx="2" fill="rgba(120,53,15,0.12)" stroke="#fbbf24" stroke-width="1" stroke-dasharray="6,3"/>
+  <text x="900" y="700" fill="#94a3b8" font-size="9" font-family="JetBrains Mono">Oversight Layer</text>
+
+  <!-- Arrow type swatches -->
+  <line x1="60" y1="720" x2="100" y2="720" stroke="#34d399" stroke-width="1.5" marker-end="url(#arr-green)"/>
+  <text x="108" y="724" fill="#94a3b8" font-size="9" font-family="JetBrains Mono">Normal flow</text>
+
+  <line x1="240" y1="720" x2="280" y2="720" stroke="#fb7185" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arr-rose)"/>
+  <text x="288" y="724" fill="#94a3b8" font-size="9" font-family="JetBrains Mono">Rejection / Error</text>
+
+  <line x1="430" y1="720" x2="470" y2="720" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr-slate)"/>
+  <text x="478" y="724" fill="#94a3b8" font-size="9" font-family="JetBrains Mono">Optional / Periodic</text>
+
+  <line x1="640" y1="720" x2="680" y2="720" stroke="#22d3ee" stroke-width="1.1" stroke-dasharray="5,3" marker-end="url(#arr-cyan)"/>
+  <text x="688" y="724" fill="#94a3b8" font-size="9" font-family="JetBrains Mono">Feedback loop (2w)</text>
+
+  <!-- Weekly cycle summary bar -->
+  <rect x="40" y="740" width="1040" height="30" rx="4"
+        fill="rgba(16,185,129,0.07)" stroke="rgba(16,185,129,0.2)" stroke-width="1"/>
+  <text x="560" y="752" fill="#34d399" font-size="8.5" font-family="JetBrains Mono" text-anchor="middle" font-weight="600">
+    WEEKLY CYCLE:
+  </text>
+  <text x="560" y="764" fill="#475569" font-size="8.5" font-family="JetBrains Mono" text-anchor="middle">
+    CN tối → Content draft  ·  T2 sáng → Andy review  ·  T2 tối → QA pass  ·  T3 sáng → Push + Vercel deploy  ·  T3 9am/6pm → Social post  ·  T6 → SEO + Backend + Frontend full audit
+  </text>
+</svg>
+</div>
+
+<!-- ═══════════════════════════════════ SUMMARY CARDS ═══════════════════════════════════ -->
+<div class="cards">
+  <div class="card">
+    <div class="card-header">
+      <div class="dot dot-green"></div>
+      <h3>6 Agents trong hệ thống</h3>
+    </div>
+    <ul>
+      <li>🏛️ Architect — gatekeeper &amp; enforcer rules</li>
+      <li>🔍 SEO — keyword research (2 tuần/lần)</li>
+      <li>📊 Backend — phân tích lead, content gaps</li>
+      <li>✍️ Content — viết bài + captions (2/tuần)</li>
+      <li>🛡️ QA — kiểm tra code trước push</li>
+      <li>🎨 Frontend — visual &amp; Lighthouse audit</li>
+      <li>👤 Andy — review &amp; human-in-the-loop</li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <div class="dot dot-cyan"></div>
+      <h3>Automation Stack</h3>
+    </div>
+    <ul>
+      <li>Tally.so → form capture leads</li>
+      <li>Make.com → auto-sync webhook</li>
+      <li>Google Sheets → data store (free)</li>
+      <li>GitHub → version control</li>
+      <li>Vercel → auto-deploy (free tier)</li>
+      <li>Docusaurus 3.x → framework</li>
+      <li>Zero backend cost · Zero database</li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <div class="dot dot-amber"></div>
+      <h3>Hard Rules (CLAUDE.md)</h3>
+    </div>
+    <ul>
+      <li>Max 200 dòng/component file</li>
+      <li>Ghi CHANGELOG trước khi code</li>
+      <li>Không over-engineer bất cứ gì</li>
+      <li>Small win nhìn thấy trong &lt;30 phút</li>
+      <li>QA pass → mới được git push</li>
+      <li>Không thêm dependency khi chưa cần</li>
+      <li>Comment tiếng Việt cho logic phức tạp</li>
+    </ul>
+  </div>
+</div>
+
+<footer>
+  Lười HR — Agent Architecture v0.8 &nbsp;·&nbsp; 2026-04-20 &nbsp;·&nbsp; Andy (HR Director, 11+ năm HRBP) &nbsp;·&nbsp; Docusaurus + GitHub + Vercel
+</footer>
+
+</body>
+</html>
