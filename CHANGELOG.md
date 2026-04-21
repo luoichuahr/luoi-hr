@@ -8,6 +8,14 @@
 
 ---
 
+## 2026-04-21
+
+- [ARCH] Tạo landing page `/tools/ai-career-wingman` — preview UI trước khi deploy tool thật. Static mockup, không gắn backend.
+- [DESIGN] Demo Job Card tái hiện đúng spec v1.3 (badge, matching %, coaching text, distance toggle, contact). Toggle di chuyển interactive (useState).
+- [BUSINESS] Thêm nav item "✨ Tools" vào navbar — điểm vào cho tính năng tools tương lai.
+- [DESIGN] Phương án A+B: thêm announcement pill (amber, pulsing dot) vào Hero homepage — link đến landing page tool.
+- [DESIGN] Thay floating badge bằng process strip 3 bước (Upload CV → Coaching → Nhận CV) bên dưới ChatMockup, cùng chiều ngang. Cleaner, contextual hơn floating absolute.
+
 ## v1.1 — UI Refresh: Hero animated + FloatingContact (2026-04-21)
 
 ### Quyết định thiết kế

@@ -1,0 +1,495 @@
+/* ── Layout ─────────────────────────────────────────────── */
+.container {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ── Hero ────────────────────────────────────────────────── */
+.hero {
+  position: relative;
+  overflow: hidden;
+  padding: 80px 0 72px;
+  background: #f9fafb;
+}
+
+.blob {
+  position: absolute;
+  top: -120px;
+  right: -180px;
+  width: 560px;
+  height: 560px;
+  background: radial-gradient(circle, rgba(16,185,129,0.12) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.hero .container {
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 48px;
+  align-items: center;
+}
+
+.heroBadge {
+  display: inline-block;
+  background: #E1F5EE;
+  color: #0F6E56;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-bottom: 16px;
+  letter-spacing: 0.02em;
+}
+
+.heroTitle {
+  font-size: 52px;
+  font-weight: 800;
+  color: #0F172A;
+  line-height: 1.1;
+  margin: 0 0 20px;
+}
+
+.heroSub {
+  font-size: 17px;
+  color: #475569;
+  line-height: 1.65;
+  margin-bottom: 32px;
+}
+
+.heroCtas {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+}
+
+.btnDisabled {
+  background: #94a3b8;
+  color: white;
+  border: 2px solid #94a3b8;
+  padding: 13px 26px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: not-allowed;
+  font-family: inherit;
+}
+
+.btnSecondary {
+  background: transparent;
+  color: #10B981;
+  border: 2px solid #10B981;
+  padding: 13px 26px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 15px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+.btnSecondary:hover {
+  background: #10B981;
+  color: white;
+  text-decoration: none;
+}
+
+.proofRow {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.proofItem {
+  font-size: 13px;
+  color: #64748b;
+}
+
+.demoLabel {
+  font-size: 11px;
+  font-weight: 600;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+/* ── Demo Card ───────────────────────────────────────────── */
+.demoCard {
+  background: white;
+  border: 1.5px solid #1D9E75;
+  border-radius: 14px;
+  padding: 18px 20px;
+  font-size: 13px;
+  box-shadow: 0 8px 32px rgba(16,185,129,0.10);
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.badgeDirect {
+  background: #E1F5EE;
+  color: #0F6E56;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+.cardDate {
+  font-size: 11px;
+  color: #94a3b8;
+  margin-left: auto;
+}
+
+.scoreHigh {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1D9E75;
+}
+
+.cardTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: #0F172A;
+  margin-bottom: 3px;
+}
+
+.cardMeta {
+  font-size: 12px;
+  color: #64748b;
+  margin-bottom: 10px;
+}
+
+.cardPills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.pill {
+  background: #f1f5f9;
+  color: #475569;
+  padding: 2px 8px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.pillMatch {
+  background: #E1F5EE;
+  color: #0F6E56;
+  padding: 2px 8px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.pillCall {
+  background: #EAF3DE;
+  color: #3B6D11;
+  padding: 2px 8px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.pillDomain {
+  background: #EFF6FF;
+  color: #2563EB;
+  padding: 2px 8px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid #f1f5f9;
+  margin: 12px 0;
+}
+
+.strength {
+  color: #0F172A;
+  margin-bottom: 4px;
+  font-size: 12px;
+}
+.strength::before { content: ''; }
+
+.tradeoff {
+  color: #BA7517;
+  margin-bottom: 6px;
+  font-size: 12px;
+}
+
+.coaching {
+  font-style: italic;
+  color: #185FA5;
+  font-size: 12px;
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+
+.toggleBtn {
+  background: none;
+  border: none;
+  color: #64748b;
+  font-size: 11px;
+  cursor: pointer;
+  padding: 0;
+  font-family: inherit;
+  margin-bottom: 6px;
+}
+.toggleBtn:hover { color: #10B981; }
+
+.distance {
+  background: #f8fafc;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 12px;
+  color: #475569;
+  line-height: 1.8;
+  margin-bottom: 4px;
+}
+
+.contact {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #DBEAFE;
+  color: #1D4ED8;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.contactInfo { flex: 1; }
+
+.contactName {
+  font-weight: 600;
+  color: #0F172A;
+  font-size: 12px;
+}
+
+.contactRole {
+  font-size: 11px;
+  color: #64748b;
+  margin-bottom: 4px;
+}
+
+.contactRow {
+  display: flex;
+  gap: 8px;
+  font-size: 11px;
+  margin-bottom: 2px;
+}
+
+.contactLabel {
+  color: #94a3b8;
+  width: 52px;
+  flex-shrink: 0;
+}
+
+.contactVal { color: #64748b; }
+
+.linkedinOk { color: #10B981; font-weight: 500; }
+
+.viewJd {
+  display: block;
+  font-size: 12px;
+  color: #185FA5;
+  text-decoration: none;
+  margin-top: 10px;
+}
+.viewJd:hover { text-decoration: underline; }
+
+/* ── Features ────────────────────────────────────────────── */
+.features {
+  padding: 80px 0;
+  background: white;
+}
+
+.eyebrow {
+  font-size: 12px;
+  font-weight: 700;
+  color: #10B981;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 10px;
+}
+
+.sectionTitle {
+  font-size: 32px;
+  font-weight: 800;
+  color: #0F172A;
+  margin: 0 0 12px;
+}
+
+.sectionDesc {
+  font-size: 16px;
+  color: #64748b;
+  margin-bottom: 40px;
+}
+
+.featuresGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.featureCard {
+  background: #f9fafb;
+  border: 1px solid #f1f5f9;
+  border-radius: 14px;
+  padding: 24px 20px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.featureCard:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.07);
+}
+
+.featureIcon {
+  font-size: 28px;
+  margin-bottom: 12px;
+}
+
+.featureTitle {
+  font-size: 15px;
+  font-weight: 700;
+  color: #0F172A;
+  margin: 0 0 8px;
+}
+
+.featureDesc {
+  font-size: 13px;
+  color: #64748b;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ── How It Works ────────────────────────────────────────── */
+.howItWorks {
+  padding: 80px 0;
+  background: #f9fafb;
+}
+
+.stepsRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+  margin-top: 40px;
+}
+
+.step {
+  flex: 1;
+  padding: 28px 24px;
+  background: white;
+  border-radius: 14px;
+  border: 1px solid #f1f5f9;
+}
+
+.stepNum {
+  font-size: 36px;
+  font-weight: 900;
+  color: #10B981;
+  opacity: 0.4;
+  line-height: 1;
+  margin-bottom: 12px;
+}
+
+.stepTitle {
+  font-size: 17px;
+  font-weight: 700;
+  color: #0F172A;
+  margin: 0 0 8px;
+}
+
+.stepDesc {
+  font-size: 14px;
+  color: #64748b;
+  margin: 0;
+  line-height: 1.6;
+}
+
+.stepArrow {
+  font-size: 22px;
+  color: #10B981;
+  padding: 0 12px;
+  margin-top: 36px;
+  flex-shrink: 0;
+}
+
+/* ── CTA ─────────────────────────────────────────────────── */
+.cta {
+  padding: 80px 0;
+  background: #0F172A;
+  text-align: center;
+}
+
+.ctaTitle {
+  font-size: 32px;
+  font-weight: 800;
+  color: white;
+  margin: 0 0 12px;
+}
+
+.ctaSub {
+  font-size: 16px;
+  color: #94a3b8;
+  margin-bottom: 32px;
+}
+
+.btnCta {
+  display: inline-block;
+  background: #10B981;
+  color: white;
+  border: 2px solid #10B981;
+  padding: 14px 32px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 16px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+.btnCta:hover {
+  background: #059669;
+  border-color: #059669;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(16,185,129,0.30);
+  color: white;
+  text-decoration: none;
+}
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 960px) {
+  .hero .container { grid-template-columns: 1fr; }
+  .heroTitle { font-size: 38px; }
+  .heroRight { max-width: 480px; }
+  .featuresGrid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .hero { padding: 56px 0 48px; }
+  .heroTitle { font-size: 32px; }
+  .stepsRow { flex-direction: column; gap: 16px; }
+  .stepArrow { display: none; }
+  .featuresGrid { grid-template-columns: 1fr; }
+  .sectionTitle { font-size: 24px; }
+  .ctaTitle { font-size: 24px; }
+}

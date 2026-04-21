@@ -37,6 +37,11 @@ const config = {
           position: 'left',
           label: 'Bí kíp AI',
         },
+        {
+          to: '/tools/ai-career-wingman',
+          position: 'left',
+          label: '✨ Tool tạo CV',
+        },
       ],
     },
     footer: {
