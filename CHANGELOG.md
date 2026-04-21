@@ -8,6 +8,70 @@
 
 ---
 
+## v1.0 — Analytics Agent + Google Analytics 4 (2026-04-21)
+
+### Quyết định kiến trúc
+- `[ARCH]` **Gắn Google Analytics 4 (GA4) vào Docusaurus** via `@docusaurus/plugin-google-gtag` (built-in classic preset, không cần cài thêm dependency)
+  - Plugin: `gtag` option trong classic preset, `trackingID: G-XXXXXXXXXX` (user thay bằng ID thực)
+  - `anonymizeIP: true` — tuân thủ privacy, ẩn IP người dùng
+  - Lý do: GA4 là tracking chuẩn nhất cho Docusaurus, tích hợp qua config thuần, không code thêm
+  - Bác bỏ: Vercel Analytics (không có free tier đủ dùng), Plausible (thêm dependency mới)
+
+- `[ARCH]` **Tạo Analytics Agent** tại `agents/analytics-agent.md`
+  - Vai trò: đọc GA4 data export (CSV) hàng tuần, phân tích traffic/content/conversion, output report + action items cho Content Agent
+  - Lịch: **Thứ 2 mỗi tuần** (trước SEO Agent thứ 6, trước Content Agent thứ 3 & 5)
+  - Workflow: User export CSV từ GA4 → đặt vào `agents/analytics-data/` → Agent đọc → Output `agents/analytics-output/latest.md`
+  - Lý do tạo riêng, không gộp vào SEO Agent: SEO Agent = acquisition (trước visit), Analytics Agent = behavior (sau visit) — hai mục đích, hai data source, hai tần suất khác nhau
+
+---
+
+## v0.9 — Hero Animated Chat + Layout Fix (2026-04-20)
+
+### Giao diện
+- `[DESIGN]` **Animated chat mockup** — chuyển từ static sang typewriter animation + agent trả lời từng dòng, loop 3 kịch bản (JD → KPI → Onboarding)
+  - Lý do: sinh động hơn, demo được value prop rõ hơn với user lần đầu vào
+  - Dùng React useState/useEffect, không dependency mới
+- `[DESIGN]` **Fix floating cards** — thêm padding vào `.right` để floatA/floatB không bị clip/tràn ra ngoài
+
+
+
+### Nội dung
+- `[CONTENT]` **Sửa headline Hero** — "Tạo cho bản thân 1 Agent làm hết..." → "HR Agent giúp bạn làm mọi thứ trong nhân sự"
+  - Lý do: headline cũ dài dòng, mới ngắn gọn và rõ value prop hơn
+- `[CONTENT]` **Sửa subtitle Hero** — chi tiết hóa các use case: viết JD, xây dựng KPI, hành trình Onboarding, báo cáo phân tích nhân sự; đổi "Agent" → "HR Agent"
+  - Lý do: cụ thể hơn, phù hợp audience HR
+
+---
+
+## v0.8 — Agent System + LeadForm Tư Vấn (2026-04-20)
+
+### Quyết định kiến trúc
+- `[ARCH]` **Tạo hệ thống 4 agents** — Content, Frontend, Backend, SEO chạy trong Cowork
+  - Lý do: tự động hóa quy trình viết bài 2 lần/tuần + SEO + lead analysis
+  - Agents điều phối nhau, QA là chốt chặn cuối
+- `[BUSINESS]` **Cập nhật LeadForm → Tally.so embed**
+  - Lý do: đổi hướng từ "dùng thử" sang "tư vấn 1-1", phù hợp monetization
+  - Dùng Tally embed (WOpZke) thay custom form — Tally quản lý data, không cần env var
+  - CSS dọn sạch các style form cũ không còn dùng
+
+---
+
+## v0.7 — QA Agent Setup + Bug Fixes (2026-04-20)
+
+### Quyết định kiến trúc
+- `[ARCH]` **Tạo skill `luoi-hr-qa`** — QA agent tự động kiểm tra toàn bộ codebase theo rules CLAUDE.md
+  - Lý do: Claude code sai nhiều lần, cần hệ thống kiểm tra tự động mạnh hơn
+  - Trigger: tự động sau mỗi lần Edit/Write, hoặc invoke thủ công bất cứ lúc nào
+- `[ARCH]` **Nâng cấp `scripts/qa-check.js`** — thêm 4 checks mới: REACT_APP_ prefix, dead components, key={idx}, stats inconsistency
+
+### Bug fixes
+- `[ARCH]` **Fix critical: LeadForm env var sai prefix**
+  - Bug: `process.env.REACT_APP_GOOGLE_FORM_URL` — Docusaurus không nhận `REACT_APP_` prefix
+  - Fix: đổi sang `process.env.DOCUSAURUS_GOOGLE_FORM_URL`
+  - Hậu quả trước đây: form không bao giờ submit được Google Forms
+
+---
+
 ## v0.6 — Landing Page Redesign: Dribbble Visual + Agent Positioning (2026-04-20)
 
 ### Quyết định giao diện

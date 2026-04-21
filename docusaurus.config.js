@@ -18,6 +18,9 @@ const config = {
       docs: { sidebarPath: './sidebars.js' },
       blog: false,
       theme: { customCss: './src/css/custom.css' },
+      // GA4: thay G-XXXXXXXXXX bằng Measurement ID thực của bạn
+      // Lấy tại: analytics.google.com → Admin → Data Streams → Web Stream Details
+      gtag: { trackingID: 'G-KELJV9GYP2', anonymizeIP: true },
     })],
   ],
 
@@ -34,11 +37,6 @@ const config = {
           position: 'left',
           label: 'Bí kíp AI',
         },
-        {
-          href: 'https://github.com/luoichuahr/luoi-hr',
-          label: 'GitHub',
-          position: 'right',
-        },
       ],
     },
     footer: {
@@ -51,8 +49,7 @@ const config = {
         {
           title: 'Liên hệ',
           items: [
-            { label: 'Zalo', href: 'https://zalo.me/luoichuahr' },
-            { label: 'GitHub', href: 'https://github.com/luoichuahr/luoi-hr' },
+            { label: 'Zalo', href: 'https://zalo.me/0967696836' },
           ],
         },
       ],
