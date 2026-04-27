@@ -92,6 +92,7 @@ function runCmd(cmd, args = [], opts = {}) {
     cwd: PROJECT_ROOT,
     encoding: "utf8",
     timeout: 120_000, // 2 phút timeout
+    shell: IS_WINDOWS, // Windows cần shell:true để chạy .cmd files
     ...opts,
   });
   return {
@@ -338,8 +339,20 @@ function checkSecurity() {
   const criticals = [];
 
   // E1. Scan secrets trong source code (bỏ qua node_modules, .git, build)
+  // Đọc .gitignore để bỏ qua các file được gitignore
+  const gitignoreEntries = (() => {
+    const gip = path.join(PROJECT_ROOT, ".gitignore");
+    if (!fs.existsSync(gip)) return [];
+    return fs.readFileSync(gip, "utf8").split("\n").map((l) => l.trim()).filter((l) => l && !l.startsWith("#"));
+  })();
+
   const allSrcFiles = getAllFiles(PROJECT_ROOT, [".js", ".jsx", ".ts", ".tsx", ".json", ".md"])
-    .filter((f) => !f.includes("node_modules") && !f.includes(".git") && !f.includes("build"));
+    .filter((f) => {
+      if (f.includes("node_modules") || f.includes(".git") || f.includes("build")) return false;
+      // Bỏ qua các file match gitignore entry
+      const rel = path.relative(PROJECT_ROOT, f).replace(/\\/g, "/");
+      return !gitignoreEntries.some((entry) => rel.endsWith(entry) || rel.includes(entry));
+    });
 
   for (const file of allSrcFiles) {
     const rel = path.relative(PROJECT_ROOT, file);
