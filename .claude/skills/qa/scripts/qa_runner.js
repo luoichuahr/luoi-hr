@@ -754,7 +754,7 @@ async function main() {
   log(`\n  📄 Report đầy đủ: QA_REPORT.md`);
   log("");
 
-  process.exit(buildFailed || securityCritical ? 1 : 0);
+  process.exit(verdict.startsWith("🔴") ? 1 : 0);
 }
 
 main().catch((err) => {
