@@ -10,6 +10,7 @@
 
 ## 2026-04-27
 
+- [CONTENT] Xóa folder `docs/quy-trinh-testing/` và toàn bộ nội dung — danh mục testing không cần thiết sau khi verify luồng
 - [CONTENT] Tạo folder `docs/quy-trinh-testing/` (AgentOS task d54d4a47) — thêm danh mục "Quy trình (testing)" vị trí 3 để test luồng tạo nội dung HR policy
 - [CONTENT] Bài đầu tiên: Quy trình thăng tiến nội bộ BCM Solutions — tiêu chí, các bước, cấp duyệt, timeline
 
