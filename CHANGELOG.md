@@ -10,6 +10,9 @@
 
 ## 2026-05-03
 
+### [DESIGN] Fix Hero CTA button — /docs → /docs/bi-kip/xay-dung-tro-ly-nhan-su-cua-rieng-ban
+- Button "Xây Agent ngay →" trỏ sai về /docs → fix đúng bài launch
+
 ### [ARCH] Fix broken link footer — /docs/intro → /docs/bi-kip/xay-dung-tro-ly-nhan-su-cua-rieng-ban
 - Footer link "Tất cả bài viết" vẫn trỏ về /docs/intro đã bị xóa → build fail
 - Phát hiện bởi QA runner pre-launch, fix trước khi push

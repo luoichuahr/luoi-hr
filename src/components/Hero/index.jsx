@@ -153,7 +153,7 @@ export default function Hero() {
           </p>
 
           <div className={styles.ctas}>
-            <a href="/docs" className={styles.btnPrimary}>Xây Agent ngay →</a>
+            <a href="/docs/bi-kip/xay-dung-tro-ly-nhan-su-cua-rieng-ban" className={styles.btnPrimary}>Xây Agent ngay →</a>
             <a href="#skills" className={styles.btnSecondary}>Xem 30+ Skills</a>
           </div>
 
