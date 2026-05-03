@@ -83,7 +83,7 @@ export default function AgentSkills() {
 
         {/* CTA cuối section */}
         <div className={styles.footer}>
-          <a href="/docs" className={styles.cta}>
+          <a href="/docs/bi-kip/xay-dung-tro-ly-nhan-su-cua-rieng-ban" className={styles.cta}>
             Bắt đầu xây Agent của bạn →
           </a>
           <p className={styles.footerNote}>
