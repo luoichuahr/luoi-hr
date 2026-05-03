@@ -41,7 +41,7 @@ function DemoCard() {
         <span className={styles.scoreHigh}>81%</span>
       </div>
       <div className={styles.cardTitle}>HRBP Manager</div>
-      <div className={styles.cardMeta}>Bosch Global Software Technologies · Q10, HCM</div>
+      <div className={styles.cardMeta}>Công ty A · Q10, HCM</div>
       <div className={styles.cardPills}>
         <span className={styles.pill}>💰 55–70tr</span>
         <span className={styles.pillMatch}>Match 81%</span>
@@ -58,16 +58,16 @@ function DemoCard() {
       </button>
       {expanded && (
         <div className={styles.distance}>
-          <div>📍 Bosch GST — Lotte Center, Q10, HCM</div>
+          <div>📍 Công ty A — Lotte Center, Q10, HCM</div>
           <div>🏍️ Giờ thường: ~22 phút · Cao điểm 7–8h: ~38 phút</div>
         </div>
       )}
       <div className={styles.divider} />
       <div className={styles.contact}>
-        <div className={styles.avatar}>DL</div>
+        <div className={styles.avatar}>LB</div>
         <div className={styles.contactInfo}>
-          <div className={styles.contactName}>Dung Lê Thị Xuân</div>
-          <div className={styles.contactRole}>HR Manager · Bosch Vietnam</div>
+          <div className={styles.contactName}>Lê Thị B</div>
+          <div className={styles.contactRole}>HR Manager · Công ty A</div>
           <div className={styles.contactRow}><span className={styles.contactLabel}>LinkedIn</span><span className={styles.linkedinOk}>✅ Đã xác nhận</span></div>
           <div className={styles.contactRow}><span className={styles.contactLabel}>Email</span><span className={styles.contactVal}>N/A</span></div>
         </div>

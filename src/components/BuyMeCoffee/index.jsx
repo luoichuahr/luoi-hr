@@ -14,19 +14,25 @@ function CoffeeCup() {
   );
 }
 
-const STORAGE_KEY = 'luoi_coffee_clicks';
+const STORAGE_KEY = 'luoi_coffee_clicked';
 
 export default function BuyMeCoffee() {
-  const [count, setCount] = useState(0);
+  const [hasClicked, setHasClicked] = useState(false);
 
   useEffect(() => {
-    setCount(parseInt(localStorage.getItem(STORAGE_KEY) || '0', 10));
+    setHasClicked(localStorage.getItem(STORAGE_KEY) === 'true');
   }, []);
 
   function handleClick() {
-    const next = count + 1;
-    setCount(next);
-    localStorage.setItem(STORAGE_KEY, String(next));
+    if (hasClicked) return;
+    setHasClicked(true);
+    localStorage.setItem(STORAGE_KEY, 'true');
+    if (typeof window.gtag === 'function') {
+      window.gtag('event', 'coffee_button_click', {
+        event_category: 'engagement',
+        event_label: 'buy_me_coffee',
+      });
+    }
   }
 
   return (
@@ -34,7 +40,7 @@ export default function BuyMeCoffee() {
       <CoffeeCup />
       <span className={styles.label}>Buy me a coffee</span>
       <span className={styles.heart}>❤️</span>
-      {count > 0 && <span className={styles.badge}>{count}</span>}
+      {hasClicked && <span className={styles.badge}>✓</span>}
     </Link>
   );
 }

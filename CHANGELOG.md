@@ -10,6 +10,11 @@
 
 ## 2026-05-03
 
+### [ARCH] BuyMeCoffee — localStorage boolean + GA4 event tracking
+- Đổi từ counter → boolean flag: click lần 2+ không tăng số, không fire lại event
+- Thêm `window.gtag('event', 'coffee_button_click')` để đo unique clicks thật
+- Badge đổi từ số sang "✓" — phản ánh đúng trạng thái "đã ủng hộ"
+
 ### [DESIGN] Fix Hero CTA button — /docs → /docs/bi-kip/xay-dung-tro-ly-nhan-su-cua-rieng-ban
 - Button "Xây Agent ngay →" trỏ sai về /docs → fix đúng bài launch
 
