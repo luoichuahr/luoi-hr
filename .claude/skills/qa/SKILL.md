@@ -84,7 +84,42 @@ Dùng template ở cuối file này. Điền kết quả thực tế vào từng
 
 ---
 
-### B. COMPONENTS UI 🎨 (WARN nếu fail)
+### B. LINK COMPLIANCE 🔗 (CRITICAL nếu CTA sai — WARN nếu internal link sai)
+
+> Phân biệt rõ hai loại lỗi link:
+> - **404 broken link**: Docusaurus build tự bắt → hạng mục A đã cover
+> - **Wrong destination**: URL hợp lệ nhưng trỏ sai nghiệp vụ → phải check thủ công ở đây
+
+#### Test Cases — Navigation CTAs (regression, cập nhật khi đổi bài key)
+
+| ID | Component | Selector | Expected URL | Severity |
+|----|-----------|----------|--------------|----------|
+| TC-01 | Hero | CTA primary button | `/docs/bi-kip/xay-dung-tro-ly-nhan-su-cua-rieng-ban` | CRITICAL |
+| TC-02 | Footer | "Tất cả bài viết" | `/docs/bi-kip/xay-dung-tro-ly-nhan-su-cua-rieng-ban` | WARN |
+| TC-03 | Navbar | Link "Bài viết" | path bắt đầu bằng `/docs/bi-kip/` | WARN |
+| TC-04 | Toàn site | Bất kỳ link nào | Không được là `/docs/intro` hoặc `/docs/tutorial-*` | CRITICAL |
+
+**Cách kiểm tra:**
+```bash
+# TC-04: tìm link về path đã xóa
+grep -r "docs/intro\|tutorial-basics\|tutorial-extras" src/ docusaurus.config.js
+
+# TC-01, TC-02, TC-03: grep href trong Hero và config
+grep -n "href\|to:" src/components/Hero/index.jsx docusaurus.config.js
+```
+
+**Pass nếu:** TC-01 và TC-04 không có lỗi.
+**Fail CRITICAL nếu:** Hero CTA trỏ về URL sai hoặc link về path đã xóa còn sót.
+
+#### Backlink safety (khi xóa hoặc rename bài)
+
+Trước khi xóa/đổi tên bất kỳ file `.mdx`:
+- [ ] Grep slug cũ trong toàn project: `grep -r "ten-slug-cu" src/ docs/ docusaurus.config.js`
+- [ ] Cập nhật tất cả backlink trước khi xóa — không xóa trước rồi fix sau
+
+---
+
+### C. COMPONENTS UI 🎨 (WARN nếu fail)
 
 Kiểm tra bằng cách đọc source code — không cần browser.
 

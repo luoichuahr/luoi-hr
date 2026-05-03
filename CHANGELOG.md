@@ -17,6 +17,12 @@
 - Footer link "Tất cả bài viết" vẫn trỏ về /docs/intro đã bị xóa → build fail
 - Phát hiện bởi QA runner pre-launch, fix trước khi push
 
+### [ARCH] Thêm Link Compliance vào QA Skill + Frontend Agent
+- QA SKILL.md: thêm hạng mục B "Link Compliance" — phân biệt 404 (build bắt) vs wrong destination (test case)
+- 4 test cases TC-01 đến TC-04 cho Hero CTA, footer, navbar, banned paths
+- Frontend Agent: thêm "Link Audit" — static grep check + bảng regression Known CTAs
+- Nguồn: bug Hero button /docs → /docs/bi-kip/... bị bỏ sót vì build pass
+
 ### [ARCH] Thêm Workflow mạng xã hội vào Content Agent
 - Cập nhật `agents/content-agent.md`: LinkedIn/Facebook workflow với 3 bước rõ ràng
 - Quy tắc spacing: tối đa 1 dòng trống giữa các đoạn (double blank line = trông như AI)

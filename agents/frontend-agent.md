@@ -23,6 +23,36 @@ Phát hiện lỗi visual, đề xuất cải tiến UX phù hợp với audienc
 
 ---
 
+## 🔗 Link Audit — BẮT BUỘC trước mỗi deploy
+
+> **Tại sao**: Build pass không có nghĩa link đúng. `/docs` là URL hợp lệ nhưng trỏ sai bài.
+> Docusaurus chỉ bắt 404 — không bắt "link hợp lệ nhưng sai nghiệp vụ".
+
+### Static link check (grep source code)
+
+- [ ] `src/components/Hero/index.jsx` — CTA primary button trỏ đúng bài key hiện tại
+- [ ] `src/pages/index.jsx` — không có link hardcode về `/docs`, `/docs/intro`, hay slug cũ
+- [ ] `docusaurus.config.js` navbar — tất cả `to:` và `href:` trỏ về path đang tồn tại
+- [ ] `docusaurus.config.js` footer — tất cả `to:` không còn trỏ về bài đã xóa
+- [ ] Không có link nào dạng `/docs/tutorial-*`, `/docs/intro` còn sót trong source
+
+### Backlink check (khi xóa hoặc đổi tên bài)
+
+Khi xóa hoặc đổi slug một bài docs:
+- [ ] Grep toàn project tìm slug cũ: `grep -r "ten-slug-cu" src/ docs/ docusaurus.config.js`
+- [ ] Cập nhật tất cả chỗ đang link đến slug đó trước khi xóa
+- [ ] Kiểm tra navbar, footer, Hero CTA, các bài docs khác có internal link không
+
+### Regression: Known CTAs (cập nhật khi có bài key mới)
+
+| Component | Link hiện tại | Expected |
+|---|---|---|
+| Hero CTA primary | `src/components/Hero/index.jsx` | `/docs/bi-kip/xay-dung-tro-ly-nhan-su-cua-rieng-ban` |
+| Footer "Tất cả bài viết" | `docusaurus.config.js` | `/docs/bi-kip/xay-dung-tro-ly-nhan-su-cua-rieng-ban` |
+| Navbar "Bài viết" | `docusaurus.config.js` | `/docs/bi-kip/` hoặc bài đầu tiên |
+
+---
+
 ## Checklist Quick Check (sau deploy)
 
 ### Layout
