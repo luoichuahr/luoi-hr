@@ -49,7 +49,7 @@ Script sẽ tự:
 
 ### Bước 2 — Vòng lặp test (3 lần)
 
-Chạy toàn bộ 4 hạng mục **3 lần liên tiếp**. Ghi kết quả từng vòng vào report.
+Chạy toàn bộ 5 hạng mục **3 lần liên tiếp**. Ghi kết quả từng vòng vào report.
 
 ```
 Vòng 1 → Vòng 2 → Vòng 3 → So sánh → Report
@@ -158,6 +158,52 @@ Script tự scan, Claude cũng có thể grep thủ công.
 
 ---
 
+### E. SECURITY 🔒 (WARN nếu fail — CRITICAL nếu secrets bị lộ)
+
+#### E1. Secrets & môi trường
+- [ ] Không có API key / token hardcode trong source code (`grep -r "AIza\|sk-\|ghp_\|Bearer "`)
+- [ ] `.env` và `.env.local` có trong `.gitignore`
+- [ ] `google-credentials.json` và file credentials khác không bị commit vào git
+- [ ] Không có password/secret trong `docusaurus.config.js`
+
+#### E2. Input validation & sanitization
+- [ ] Form inputs (LeadForm) có validate độ dài tối đa (ngăn payload quá lớn)
+- [ ] Email/Zalo field validate format trước khi submit
+- [ ] Không có `dangerouslySetInnerHTML` với dữ liệu user-controlled (XSS risk)
+- [ ] Không dùng `eval()` hay `new Function()` với input từ người dùng
+
+#### E3. Lỗ hổng web phổ biến (XSS, CSRF)
+- [ ] Không render HTML từ URL params hay query string trực tiếp
+- [ ] External links có `rel="noopener noreferrer"` (ngăn tab hijacking)
+- [ ] Không có `iframe` nhúng URL từ user input
+- [ ] Form submit không gửi dữ liệu nhạy cảm qua GET params (chỉ POST)
+
+#### E4. Dependencies CVEs
+- [ ] Chạy `npm audit` — không có lỗ hổng CRITICAL
+- [ ] Lỗ hổng HIGH: ghi vào report, warn nếu > 0
+- [ ] Package versions trong `package.json` không quá cũ (> 1 năm major version)
+
+#### E5. Security headers & CORS
+- [ ] `docusaurus.config.js` hoặc `vercel.json` có cấu hình security headers:
+  - `X-Frame-Options: DENY` hoặc `SAMEORIGIN`
+  - `X-Content-Type-Options: nosniff`
+  - `Referrer-Policy: strict-origin-when-cross-origin`
+- [ ] Nếu có `vercel.json`: kiểm tra `headers` config
+- [ ] Không có CORS wildcard (`Access-Control-Allow-Origin: *`) cho API nhạy cảm
+
+#### E6. Kiểm tra cấu trúc dự án (thu thập thông tin)
+- [ ] Liệt kê tất cả file có thể chứa credentials: `*.json`, `*.env*`, `*.key`, `*.pem`
+- [ ] Kiểm tra git history không có secret bị commit rồi xóa (`git log --all --full-history -- "*.env"`)
+- [ ] Không có file backup (`*.bak`, `*.orig`, `*.old`) chứa dữ liệu nhạy cảm
+
+**Mức độ severity:**
+- Secrets bị lộ trong code → **CRITICAL** (block push ngay)
+- `npm audit` có CRITICAL CVE → **CRITICAL**
+- Missing security headers → **WARN**
+- XSS potential → **WARN** (escalate thành CRITICAL nếu user data được render)
+
+---
+
 ## Xử lý kết quả cross-platform
 
 Một số lỗi CHỈ xảy ra trên Windows, cần flag rõ trong report:
@@ -197,6 +243,7 @@ Dùng template này khi tạo report. Điền thông tin thực tế:
 | B. Components UI | ✅/⚠️ | ✅/⚠️ | ✅/⚠️ | PASS/WARN |
 | C. Code Quality | ✅/⚠️ | ✅/⚠️ | ✅/⚠️ | PASS/WARN |
 | D. Performance | ✅/⚠️ | ✅/⚠️ | ✅/⚠️ | PASS/WARN |
+| E. Security | ✅/⚠️/❌ | ✅/⚠️/❌ | ✅/⚠️/❌ | PASS/WARN/FAIL |
 
 **Verdict:** [🟢 SAFE TO PUSH / 🔴 FIX BUILD FIRST / 🟡 PUSH WITH WARNINGS]
 
@@ -232,6 +279,7 @@ Sau khi chạy xong, tóm tắt ngắn gọn:
 - UI Components: 2 warnings (PromptBlock 82 dòng, vượt limit 80)
 - Code Quality: PASS
 - Performance: 1 warning (hero-banner.png = 1.2MB, nên compress)
+- Security: PASS / 1 warning (missing X-Frame-Options header) / CRITICAL (secret lộ)
 
 🟡 Safe to push — nhưng nên fix 3 warnings trước khi release.
 📄 Chi tiết: QA_REPORT.md

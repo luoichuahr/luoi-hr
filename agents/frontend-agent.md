@@ -8,6 +8,21 @@ Phát hiện lỗi visual, đề xuất cải tiến UX phù hợp với audienc
 - **Sau mỗi deploy lên Vercel** — quick check (15 phút)
 - **2 tuần/lần, thứ 6** — full audit (sau SEO Agent)
 
+## ⛔ Checklist Trước Deploy — BẮT BUỘC
+
+Đọc `CHANGELOG.md` trước khi deploy. Tìm các mục [DESIGN] và [CONTENT] từ lần deploy trước tới nay.
+
+- [ ] Đã đọc CHANGELOG.md — nắm được các thay đổi trong session này
+- [ ] Xác nhận từng mục [DESIGN] đã apply đúng trên localhost (sidebar, layout, heading)
+- [ ] Xác nhận từng mục [CONTENT] — bài mới đã xuất hiện đúng trong sidebar docs
+- [ ] `sidebar_label` hiển thị đúng tên tiêu đề (không phải slug filename)
+- [ ] Heading H1 trên trang khớp với title — không bị lặp hoặc quá to
+- [ ] Không còn mục Tutorial Intro / Tutorial Basics / Tutorial Extras trong sidebar
+
+> **Quy tắc**: Nếu CHANGELOG có thay đổi chưa verify → KHÔNG deploy, báo lại Andy.
+
+---
+
 ## Checklist Quick Check (sau deploy)
 
 ### Layout
@@ -23,9 +38,14 @@ Phát hiện lỗi visual, đề xuất cải tiến UX phù hợp với audienc
 - [ ] Ảnh có alt text
 
 ### Content mới
-- [ ] PromptBlock hiển thị đúng dark background
-- [ ] Nút "Copy Prompt" hoạt động
+- [ ] PromptBlock hiển thị đúng dark background `#0f172a` — **không bị trắng** (Prism CSS hay Infima có thể override `pre` background)
+- [ ] Nút "Copy" nằm trong **title bar** (hàng trên), không đè lên code text bên dưới
+- [ ] Nút "Copy" click được, đổi thành "✓ Đã copy" sau 1.8s
 - [ ] Callout (warn/tip/info) hiển thị đúng màu
+
+### Bugs đã gặp — kiểm tra lại sau mỗi deploy
+- [ ] **[2026-05-03] PromptBlock background trắng**: `pre` bị Docusaurus/Infima inject `--ifm-pre-background` đè. Fix: `background: #0f172a !important` trong `.code`. Kiểm tra: inspect element, background của `pre` phải là `#0f172a`.
+- [ ] **[2026-05-03] Copy button đè text**: Button `position: absolute` trong code area. Fix: chuyển button vào title bar dùng flexbox. Kiểm tra: button phải nằm ngang hàng với title, bên phải.
 
 ## Checklist Full Audit (2 tuần/lần)
 

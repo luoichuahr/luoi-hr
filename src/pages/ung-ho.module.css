@@ -1,0 +1,222 @@
+.page {
+  min-height: 100vh;
+}
+
+/* Hero — compact */
+.hero {
+  background: #FFDD00;
+  padding: 1.5rem 1.5rem 1.25rem;
+  text-align: center;
+}
+
+.emoji {
+  font-size: 2.25rem;
+  display: block;
+  margin-bottom: 0.4rem;
+}
+
+.title {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #1a1a2e;
+  margin: 0 0 0.6rem;
+  line-height: 1.2;
+}
+
+.subtitle {
+  font-size: 0.95rem;
+  color: #333;
+  line-height: 1.7;
+  margin: 0 auto;
+  max-width: 520px;
+  text-align: justify;
+}
+
+/* Content */
+.content {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.section h2 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin: 0 0 0.75rem;
+  border-left: 4px solid #FFDD00;
+  padding-left: 12px;
+}
+
+.section p {
+  font-size: 0.97rem;
+  line-height: 1.85;
+  color: #444;
+  margin: 0 0 0.65rem;
+  text-align: justify;
+}
+
+.section ul {
+  padding-left: 1.4rem;
+  margin: 0.5rem 0 0.65rem;
+}
+
+.section li {
+  font-size: 0.97rem;
+  line-height: 1.8;
+  color: #444;
+  margin-bottom: 0.2rem;
+}
+
+/* Meaning grid */
+.meaningGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 1rem;
+  margin-top: 0.75rem;
+}
+
+.meaningCard {
+  background: #f9fafb;
+  border-radius: 10px;
+  padding: 1rem;
+  border: 1px solid #e5e7eb;
+}
+
+.meaningCard span {
+  font-size: 1.5rem;
+  display: block;
+  margin-bottom: 0.4rem;
+}
+
+.meaningCard h3 {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin: 0 0 0.4rem;
+}
+
+.meaningCard p {
+  font-size: 0.83rem;
+  color: #666;
+  line-height: 1.6;
+  margin: 0;
+  text-align: left;
+}
+
+/* QR — large, no frame */
+.qrBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 0.75rem;
+  gap: 0.75rem;
+}
+
+.qrCaption {
+  font-size: 0.95rem;
+  color: #333;
+  text-align: center;
+  line-height: 1.7;
+  margin: 0;
+}
+
+.qrImage {
+  width: 100%;
+  max-width: 420px;
+  height: auto;
+  border-radius: 8px;
+  display: block;
+}
+
+/* CTA bottom — 2 columns */
+.ctaSection {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 2rem;
+  background: #f9fafb;
+  border-radius: 14px;
+  padding: 1.75rem 1.5rem;
+  border: 1px solid #e5e7eb;
+}
+
+.ctaLeft {
+  flex: 1;
+}
+
+.ctaLeft h2 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin: 0 0 0.75rem;
+  border-left: 4px solid #10B981;
+  padding-left: 12px;
+}
+
+.ctaLeft p {
+  font-size: 0.95rem;
+  line-height: 1.85;
+  color: #444;
+  margin: 0;
+  text-align: justify;
+}
+
+.ctaRight {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.socialBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: #0077b5;
+  color: white;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: opacity 0.15s;
+}
+
+.socialBtn:hover {
+  opacity: 0.85;
+  text-decoration: none;
+  color: white;
+}
+
+.zaloBtn {
+  background: #0068ff;
+}
+
+.tallyWrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 1.5rem 3rem;
+}
+
+.tallyTitle {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin: 0 0 1rem;
+  border-left: 4px solid #FFDD00;
+  padding-left: 12px;
+}
+
+@media (max-width: 600px) {
+  .ctaSection {
+    flex-direction: column;
+  }
+  .ctaRight {
+    flex-direction: row;
+  }
+}

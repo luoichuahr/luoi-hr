@@ -1,10 +1,10 @@
 .formSection {
-  padding: 80px 20px;
+  padding: 48px 20px;
   background: linear-gradient(135deg, #f0fdf4 0%, #f9fafb 100%);
 }
 
 .container {
-  max-width: 380px;
+  max-width: 320px;
   margin: 0 auto;
 }
 
@@ -17,11 +17,11 @@
 }
 
 .title {
-  font-size: 1.75rem;
+  font-size: 1.35rem;
   font-weight: 700;
   color: #0f172a;
   text-align: center;
-  margin: 0 0 12px 0;
+  margin: 0 0 8px 0;
 }
 
 .subtitle {
@@ -95,7 +95,7 @@
 /* Responsive Design */
 @media (max-width: 768px) {
   .formSection {
-    padding: 60px 20px;
+    padding: 36px 20px;
   }
 
   .formWrapper {

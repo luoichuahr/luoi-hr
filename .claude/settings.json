@@ -1,12 +1,52 @@
 {
+  "permissions": {
+    "allow": [
+      "Read(**)",
+      "Write(**.md)",
+      "Write(**.mdx)",
+      "Write(**.json)",
+      "Write(**.py)",
+      "Write(**.css)",
+      "Write(**.jsx)",
+      "Write(**.js)",
+      "Edit(**.md)",
+      "Edit(**.mdx)",
+      "Edit(**.json)",
+      "Edit(**.py)",
+      "Edit(**.css)",
+      "Edit(**.jsx)",
+      "Edit(**.js)"
+    ]
+  },
   "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "agent",
+            "if": "Bash(git push*)",
+            "timeout": 120,
+            "statusMessage": "QA Agent đang kiểm tra trước khi push...",
+            "prompt": "Bạn là QA Agent của dự án Lười HR (Docusaurus). Người dùng sắp chạy git push. Hãy kiểm tra NHANH các mục sau và báo cáo kết quả:\n\n1. SECURITY (ưu tiên cao nhất): Grep tìm secrets bị hardcode trong src/ — API key (AIza, sk-, ghp_), private_key, Bearer token. Nếu tìm thấy → BLOCK ngay lập tức.\n2. BUILD: Chạy `npm run build`. Nếu fail → BLOCK push.\n3. LINE COUNT: Kiểm tra các file vừa thay đổi (git diff --name-only HEAD) có vượt giới hạn không (PromptBlock > 80, Callout > 60, LeadForm > 100, component khác > 200 dòng).\n4. CHANGELOG: Kiểm tra CHANGELOG.md có được cập nhật không.\n\nNếu tất cả OK → trả về JSON: {\"decision\": \"allow\", \"reason\": \"QA passed — build OK, no secrets, no line limit violations\"}\nNếu secrets bị lộ → trả về JSON: {\"decision\": \"block\", \"reason\": \"SECURITY: [tên file] chứa [loại secret]\"}\nNếu build fail → trả về JSON: {\"decision\": \"block\", \"reason\": \"BUILD FAILED: [lỗi cụ thể]\"}\nNếu chỉ có cảnh báo nhỏ → allow nhưng liệt kê warnings rõ ràng."
+          },
+          {
+            "type": "command",
+            "command": "\"C:\\Users\\Work\\AppData\\Local\\Python\\pythoncore-3.14-64\\python.exe\" \"C:/Users/Work/Downloads/AgentOS/agentos/rtk_hook.py\" \"C:/Users/Work/Downloads/luoi-hr\""
+          }
+        ]
+      }
+    ],
     "PostToolUse": [
       {
         "matcher": "Write|Edit",
         "hooks": [
           {
-            "type": "command",
-            "command": "node scripts/qa-check.js"
+            "type": "agent",
+            "if": "Write(*.md)|Edit(*.md)",
+            "timeout": 30,
+            "statusMessage": "SEO checker đang kiểm tra bài viết...",
+            "prompt": "Bạn là SEO Agent của dự án Lười HR. Đọc SKILL.md tại .claude/skills/seo/SKILL.md để biết đầy đủ các tiêu chí.\n\nNgười dùng vừa lưu file .md. Hãy chạy kiểm tra nhanh theo 13 tiêu chí trong SKILL.md và dùng đúng format báo cáo nhanh:\n\nSEO Check: [tên file]\n⚠️ [tiêu chí]: [vấn đề]\nℹ️ [tiêu chí]: [gợi ý]\n→ Ưu tiên fix: [1 action item quan trọng nhất]\n\nNếu tất cả OK → chỉ in: ✅ SEO OK — [tên file]"
           }
         ]
       }

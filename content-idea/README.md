@@ -1,6 +1,6 @@
 # content-idea/
 
-Thư mục chứa **ý tưởng bài viết** Andy đã lên sẵn, chờ Content Agent thực hiện.
+Thư mục chứa **ý tưởng bài viết** Andy đã lên sẵn, chờ A_Content của HR Agent hoặc Content Agent của luoi-hr thực hiện.
 
 ## Cách dùng
 - Mỗi ý tưởng = 1 file `.md`

@@ -77,4 +77,17 @@ Scan toàn bộ `docs/` tìm file thiếu hoặc yếu:
 Khi Google Search Console có >3 tháng data:
 - Track impressions và CTR từng bài
 - Identify "quick wins" — bài đang rank page 2, chỉ cần cải thiện meta để lên page 1
+
+## Sau khi chạy xong
+
+Cập nhật `.session/checkpoint.json`:
+```json
+{
+  "status": "done",
+  "last_agent": "seo-agent",
+  "last_task": "keyword research + meta audit → agents/seo-output/latest.md",
+  "note": "Content Agent đọc file này để viết bài tuần tới",
+  "updated_at": "[ngày hôm nay YYYY-MM-DD]"
+}
+```
 - Report keyword gap so với competitor

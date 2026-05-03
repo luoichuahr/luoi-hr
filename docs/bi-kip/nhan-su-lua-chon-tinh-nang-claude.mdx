@@ -1,0 +1,112 @@
+---
+sidebar_position: 4
+sidebar_label: Claude Chat, Cowork hay Code? Dân HR chọn tính năng nào?
+title: Claude Chat, Cowork hay Code? Dân HR chọn tính năng nào?
+description: "Phân biệt Claude Chat, Project và Code cho nhân sự — chọn đúng tính năng theo công việc để tiết kiệm quota và làm việc hiệu quả hơn."
+tags: [claude, ai-tools, hr-tools, project, thu-thuat, tiet-kiem]
+---
+
+import Callout from '@site/src/components/Callout';
+import PromptBlock from '@site/src/components/PromptBlock';
+
+# Claude Chat, Cowork hay Code? Dân HR chọn tính năng nào?
+
+<div className="badge-row">
+  <span className="doc-badge badge-level">Nhập môn</span>
+  <span className="doc-badge badge-time">⏱ 5 phút đọc</span>
+  <span className="doc-badge badge-tool">Claude.ai</span>
+</div>
+
+Mở Claude.ai lên thấy nhiều nút, nhiều tab — không biết dùng cái gì? Bài này giải thích ngắn gọn 3 tính năng chính để bạn không "chat đại" mà tốn token oan.
+
+---
+
+## Claude Chat — Hỏi nhanh, đáp nhanh
+
+Chat là chế độ cơ bản nhất, có trên **tất cả các gói** kể cả Free.
+
+Dùng Chat khi:
+- Hỏi nhanh một câu: *"Viết email nhắc lịch phỏng vấn cho ứng viên"*
+- Draft nhanh văn bản không cần giữ context dài
+- Dịch, tóm tắt, chỉnh sửa tài liệu đơn lẻ
+
+<Callout type="tip" title="Chat + Haiku = tiết kiệm nhất">
+  Với công việc nhẹ trong Chat, chọn model **Haiku** — nhanh nhất, tốn ít token nhất. Đủ dùng cho 90% câu hỏi HR hàng ngày mà không "đốt" quota.
+</Callout>
+
+---
+
+## Claude Projects (Cowork) — Làm việc có hệ thống
+
+**Projects** là tính năng chỉ có trên **gói Pro trở lên**. Thay vì mỗi cuộc chat độc lập, Projects giúp bạn tạo một "văn phòng riêng" — tài liệu, hướng dẫn, template được giữ lại xuyên suốt, không cần paste lại từ đầu mỗi lần.
+
+### Build từng bước với Project — ví dụ thực tế
+
+**Tình huống:** Xây dựng quy trình phỏng vấn vị trí Marketing Executive
+
+1. Tạo Project mới: *"Tuyển dụng Marketing Executive — Q3/2025"*
+2. Upload vào Project: JD, scorecard, câu hỏi phỏng vấn mẫu, thang điểm đánh giá
+3. Mỗi lần chat trong Project, Claude đã "biết" toàn bộ context — không cần giải thích lại
+4. Kết quả đồng nhất: thư mời PV, email từ chối, offer letter đều nhất quán với JD gốc
+
+<Callout type="info" title="Projects chỉ có từ gói Pro">
+  Free users không có Projects. Nếu cần làm việc nhiều lần trên cùng chủ đề, dùng file .md để load lại context thủ công — xem bài trước để biết cách làm.
+</Callout>
+
+### Live Artifacts là gì?
+
+Live Artifacts là khung hiển thị **ngay bên cạnh chat** — khi Claude tạo HTML, bảng, checklist hay form, bạn thấy kết quả render trực tiếp, chỉnh sửa ngay mà không cần copy ra nơi khác.
+
+Với HR, Live Artifacts hữu ích khi:
+- Tạo **form đánh giá ứng viên** dạng HTML có thể in hoặc chia sẻ
+- Build **bảng KPI template** xem được kết quả ngay
+- Tạo **checklist onboarding** hiển thị đẹp để gửi nhân viên mới
+
+![Live Artifacts trong Claude Projects](/img/live-artifacts-hr.png)
+
+### Gợi ý cấu trúc folder trong Projects
+
+Tổ chức Project theo chủ đề giúp bạn tìm lại context nhanh hơn:
+
+- 📁 **Tuyển dụng** — JD, scorecard, thư mời PV, offer template
+- 📁 **Chính sách** — Nội quy, hướng dẫn, SOP nội bộ
+- 📁 **C&B** — Bảng lương tham khảo, template thư thông báo lương
+- 📁 **L&D** — Tài liệu đào tạo, chương trình onboarding
+
+---
+
+## Claude Code — HR có cần không?
+
+Thẳng thắn: **dân HR không cần Claude Code** trong công việc hàng ngày. Đây là công cụ dành cho lập trình viên, chạy trực tiếp trên máy tính qua terminal.
+
+**Tuy nhiên**, nếu bạn muốn:
+- Viết Google Apps Script tự động gửi email offer/từ chối hàng loạt
+- Build tool đọc CV tự động từ Google Drive vào Sheets
+- Tạo chatbot nhỏ hỗ trợ onboarding nhân viên mới
+
+→ Claude Code sẽ giúp bạn làm nhanh hơn rất nhiều, kể cả khi **bạn không biết code**.
+
+---
+
+## Tổng kết — Dùng cái gì, khi nào?
+
+| Tính năng | Khi nào dùng | Gói cần | Model gợi ý |
+|-----------|-------------|---------|-------------|
+| **Chat** | Hỏi nhanh, draft đơn lẻ | Free+ | Haiku (tiết kiệm) |
+| **Projects** | Dự án dài hạn, quy trình nhiều bước | Pro+ | Sonnet |
+| **Live Artifacts** | Form, checklist, bảng HTML preview | Pro+ | Sonnet |
+| **Claude Code** | Viết tool, automation, app nội bộ | Pro+ | Sonnet / Opus |
+
+<Callout type="tip" title="Công thức vàng cho dân HR">
+  Công việc nhẹ → **Chat + Haiku** · Dự án có hệ thống → **Projects + Sonnet** · Cần build tool → **Claude Code + Opus**
+</Callout>
+
+<PromptBlock
+  title="Prompt khởi tạo Project mới cho HR"
+  lang="text"
+  code={`Tôi đang tạo Project cho quy trình tuyển dụng vị trí [TÊN VỊ TRÍ]. Dưới đây là JD và yêu cầu của tôi. Hãy ghi nhớ context này và hỗ trợ tôi xuyên suốt quá trình: từ viết thư mời PV, đánh giá ứng viên, đến gửi offer.`}
+/>
+
+Hi vọng Bạn chọn đúng tính năng phù hợp cho bản thân.
+
+Lười Chúa

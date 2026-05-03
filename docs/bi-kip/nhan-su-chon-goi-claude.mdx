@@ -1,0 +1,102 @@
+---
+sidebar_position: 3
+sidebar_label: Nhân sự nên dùng gói Claude nào? Free, Pro hay Max?
+title: Nhân sự nên dùng gói Claude nào? Free, Pro hay Max?
+description: "So sánh gói Claude Free, Pro, Max cho dân HR: giới hạn tin nhắn, cửa sổ 5h và gợi ý chọn gói đúng theo công việc — tiết kiệm, hiệu quả."
+tags: [claude, ai-tools, hr-tools, thu-thuat, tiet-kiem]
+---
+
+import Callout from '@site/src/components/Callout';
+import PromptBlock from '@site/src/components/PromptBlock';
+
+<div className="badge-row">
+  <span className="doc-badge badge-level">⚡ Người mới thân thiện</span>
+  <span className="doc-badge badge-time">🕐 Đọc 5 phút</span>
+  <span className="doc-badge badge-tool">Claude AI</span>
+  <span className="doc-badge badge-new">🆕 Cập nhật 05/2026</span>
+</div>
+
+# Nhân sự nên dùng gói Claude nào? Free, Pro hay Max?
+
+<p className="doc-subtitle">Lần đầu dùng Claude, chắc bạn cũng từng tự hỏi: "Free xài được bao lâu? Pro có đáng $20 không? Còn cái Max5, Max20 là cái gì vậy?" Đừng lo — bài này sẽ giải đáp từ A–Z để bạn không phải trả quá nhiều tiền, và quan trọng hơn: không bị "cấm mõm" đúng lúc đang viết JD dở dang 😄</p>
+
+---
+
+## Các gói Claude và model được dùng
+
+| Gói | Giá (USD/tháng) | Model có thể dùng | Mức quota |
+|-----|-----------------|--------------------|-----------|
+| **Free** | $0 | Haiku, Sonnet (hạn chế) | Cơ bản — dễ hết nhanh |
+| **Pro** | $20 | Haiku + Sonnet + Opus (ưu tiên) | 5× so với Free |
+| **Max (5×)** | ~$100 | Tất cả model | 5× so với Pro |
+| **Max (20×)** | ~$200 | Tất cả model | 20× so với Pro |
+
+> **Lưu ý model:** Haiku = nhanh, nhẹ, tiết kiệm. Sonnet = cân bằng, đa năng. Opus = mạnh nhất, dùng nhiều token hơn — dành cho tác vụ phức tạp.
+
+---
+
+## Giới hạn quota và "cửa sổ 5 tiếng" là gì?
+
+Claude tính giới hạn theo **cửa sổ 5 tiếng** — mỗi 5 tiếng, quota của bạn được reset lại. Nếu dùng hết trước đó thì Claude sẽ báo giờ reset và… **cấm mõm bạn tạm thời** 🙃
+
+- **Free**: Hết limit khá nhanh — vài cuộc hội thoại dài là xong.
+- **Pro**: Thoải mái cho 1 ngày làm việc bình thường. Hiếm khi bị cấm nếu dùng hợp lý (đừng nghe Claude nó "bịa", tôi dùng Pro mà cũng bị limit thường xuyên =)) ).
+- **Max**: Gần như không lo hết quota trong giờ làm việc.
+
+<Callout type="info" title="Cửa sổ 5h hoạt động thế nào?">
+  Bắt đầu chat lúc 9:00 → cửa sổ reset lúc 14:00. Lỡ hết quota trước 14:00 thì nghỉ, pha ly café chờ thôi 🙂
+</Callout>
+
+---
+
+## Nhân sự nên chọn gói nào?
+
+<div className="plan-grid">
+  <div className="plan-card">
+    <div className="plan-name">Free</div>
+    <div className="plan-price">$0 / tháng</div>
+    <p className="plan-desc">Viết email đơn giản, tóm tắt văn bản, dịch JD nhanh. Phù hợp nếu bạn chỉ ghé Claude thỉnh thoảng, chưa dùng hàng ngày.</p>
+  </div>
+  <div className="plan-card">
+    <div className="plan-name">Pro — Khuyến nghị</div>
+    <div className="plan-price">$20 / tháng</div>
+    <p className="plan-desc">Soạn JD, thư mời phỏng vấn, draft chính sách, trả lời ứng viên hàng loạt, viết thông báo nội bộ. <strong>90% dân HR chỉ cần Pro là đủ</strong> — cost-effective nhất cho công việc hàng ngày.</p>
+  </div>
+  <div className="plan-card">
+    <div className="plan-name">Max 5×</div>
+    <div className="plan-price">~$100 / tháng</div>
+    <p className="plan-desc">Cuối tháng chạy báo cáo lương, review KPI cả team, build tool bằng Google Apps Script, mùa tuyển dụng nóng chạy liên tục nhiều vị trí. Max 5× giúp bạn không bị ngưng chat trong khi "dầu sôi lửa bỏng".</p>
+  </div>
+  <div className="plan-card">
+    <div className="plan-name">Max 20×</div>
+    <div className="plan-price">~$200 / tháng</div>
+    <p className="plan-desc">Dùng Claude như một HRBP ảo toàn thời gian: tư vấn chiến lược, viết policy phức tạp, phân tích dữ liệu nhân sự, xây hệ thống quy trình. Gói này dành cho người muốn Claude thay thế 1–2 nhân sự thực sự. Thực sự gói này over so với dân HR, nếu bạn có ý định build nguyên phần mềm nhân sự thì mới cần.</p>
+  </div>
+</div>
+
+---
+
+## Tips dùng Claude hiệu quả hơn — áp dụng cho mọi gói
+
+<Callout type="tip" title="Tạo New Chat sau 4–5 lượt hỏi">
+  Mỗi cuộc hội thoại càng dài, Claude càng tốn token để "nhớ lại" toàn bộ context. Sau khoảng 4–5 lượt, tạo **New Chat** để tiết kiệm quota và giữ chất lượng trả lời tốt hơn.
+</Callout>
+
+<Callout type="tip" title="Lưu kết quả ra file .md — chat sau load lại là xong">
+  Thay vì scroll lại hội thoại cũ, hãy yêu cầu Claude tóm tắt kết quả ra file `.md`. Chat mới chỉ cần đính kèm file đó — Claude hiểu ngay context, không tốn thêm quota.
+
+  **Ví dụ thực tế:**
+  - Làm xong mẫu thư mời phỏng vấn → lưu `thu-moi-pv.md`
+  - Làm xong template offer letter → lưu `offer-template.md`
+  - Chat mới: *"Dựa theo file này, chỉnh giúp mình cho vị trí Marketing Manager"* → nhanh hơn nhiều
+</Callout>
+
+<PromptBlock
+  title="Prompt yêu cầu Claude lưu kết quả ra file .md"
+  lang="text"
+  code={`Tóm tắt toàn bộ những gì chúng ta đã làm trong cuộc trò chuyện này thành file .md, bao gồm: mục tiêu ban đầu, kết quả chính, các mẫu template đã tạo. Tôi sẽ dùng lại file này cho lần chat tiếp theo.`}
+/>
+
+**Hi vọng bạn chọn cho mình được gói phù hợp và tiết kiệm trong công việc**
+
+**Lười Chúa**

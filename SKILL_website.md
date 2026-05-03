@@ -278,3 +278,59 @@ npm run build      # Kiểm tra build không lỗi
 - [ ] Đọc lại bài — người không biết code có làm được không?
 - [ ] Commit message rõ ràng: `content: thêm bài [tên]`
 - [ ] Ghi CHANGELOG nếu có thay đổi cấu trúc/component
+
+---
+
+## WORKFLOW E — Pre-push review (chạy trước mọi git push)
+
+> Hook QA Agent trong `.claude/settings.json` tự động chặn nếu phát hiện vấn đề nghiêm trọng.
+> Workflow này là bước review thủ công bổ sung — đọc nhanh trước khi bấm push.
+
+### Bước 1 — Xem những gì sắp push
+
+```bash
+git diff --name-only HEAD       # danh sách file đã thay đổi
+git diff --stat HEAD            # tóm tắt số dòng thêm/bớt
+git log --oneline origin/main..HEAD   # các commit chưa push
+```
+
+### Bước 2 — Checklist review (Claude đọc và confirm từng mục)
+
+**Nội dung:**
+- [ ] CHANGELOG.md đã được cập nhật cho mọi thay đổi trong lần push này
+- [ ] Không có file `.env`, secret key, token nào bị include
+
+**Code:**
+- [ ] Mọi component chỉnh sửa vẫn trong giới hạn dòng (PromptBlock ≤80, Callout ≤60, LeadForm ≤100, khác ≤200)
+- [ ] Không import dependency mới chưa được Andy approve
+
+**Build:**
+```bash
+npm run build    # phải pass trước khi push
+```
+
+**Nếu có bài viết mới:**
+- [ ] Frontmatter đầy đủ: `title`, `description`, `sidebar_position`, `tags`
+- [ ] `description` có từ khóa chính, dài 120–155 ký tự
+- [ ] Có ít nhất 1 `PromptBlock` với prompt thực tế
+- [ ] Đọc lại — người HR không biết code có tự làm được không?
+
+### Bước 3 — Cập nhật checkpoint rồi mới push
+
+Sau khi mọi mục xanh hết, ghi vào `.session/checkpoint.json`:
+```json
+{
+  "status": "done",
+  "last_agent": "manual-review",
+  "last_task": "[mô tả ngắn việc vừa làm]",
+  "note": "đã push lên main",
+  "updated_at": "[ngày hôm nay]"
+}
+```
+
+Rồi mới chạy:
+```bash
+git push
+```
+
+> Hook QA Agent sẽ tự động chạy lần cuối khi bạn gõ `git push` — nếu có gì bất thường nó sẽ chặn lại.

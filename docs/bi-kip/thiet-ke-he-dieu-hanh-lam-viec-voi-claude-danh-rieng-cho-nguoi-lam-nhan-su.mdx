@@ -1,0 +1,272 @@
+---
+sidebar_position: 5
+sidebar_label: Hệ điều hành Claude cho nhân sự
+title: Thiết kế Claude dành riêng cho người làm nhân sự
+description: 8 component thiết lập một lần, dùng mãi — giúp HRBP, Recruiter, C&B làm việc với Claude bài bản hơn từ hôm nay.
+tags: [claude, hr, hrbp, tuyen-dung, nhan-su, project-instructions]
+---
+
+import Callout from '@site/src/components/Callout';
+import PromptBlock from '@site/src/components/PromptBlock';
+
+<div className="badge-row">
+  <span className="doc-badge badge-guide">📐 Hướng dẫn thiết lập</span>
+  <span className="doc-badge badge-time">🕐 Đọc 12 phút</span>
+  <span className="doc-badge badge-new">🆕 Cập nhật 05/2026</span>
+</div>
+
+# Thiết kế Claude dành riêng cho người làm nhân sự
+
+Bạn đang dùng Claude như thế nào? Hỏi một câu, nhận một câu trả lời, rồi đóng tab. Phiên sau lại bắt đầu từ đầu — giới thiệu lại bản thân, giải thích lại ngữ cảnh, chỉnh lại giọng văn.
+
+Đó không phải cách dùng Claude hiệu quả. Đó là cách mất thời gian.
+
+Bài này hướng dẫn bạn xây một **hệ điều hành làm việc với Claude** — thiết lập một lần, Claude hiểu bạn làm gì, viết như thế nào, và cần tránh điều gì. Ngay từ phiên đầu tiên của mỗi ngày.
+
+
+---
+
+## 1. about-me.md — Hồ sơ vận hành HR của bạn
+
+File này không phải tiểu sử. Nó là **"bản briefing"** để Claude hiểu bạn đang ở đâu trong công việc — ngay lúc này.
+
+Nội dung một about-me.md tốt trả lời được 5 câu: *Tôi đang làm gì? Tôi phục vụ ai? Tôi ưu tiên điều gì lúc này? Tôi ghét kiểu đầu ra nào? Claude cần tối ưu cho điều gì?*
+
+**Cấu trúc gợi ý:**
+- Vai trò hiện tại (HRBP, C&B, Recruiter, HR Manager...)
+- Quy mô công ty và ngành
+- Đang focus vào đâu trong 1–3 tháng tới
+- Những quyết định đã chốt (không muốn Claude đề xuất lại từ đầu)
+- Ưu tiên output: tốc độ, chiều sâu hay thực thi?
+
+**Ví dụ thực tế:**
+
+<PromptBlock
+  title="about-me.md mẫu cho HRBP"
+  lang="text"
+  code={`Tôi là HRBP tại công ty A ~200 người, ngành FMCG.
+Đang focus Q2: giảm time-to-hire từ 30 ngày xuống 20 ngày cho khối Sales.
+Đã chốt: dùng sourcing facebook + TopCV, không dùng headhunter giai đoạn này.
+Ưu tiên output: thực tế, có thể dùng ngay — không cần lý thuyết dài.`}
+/>
+
+Nạp file này vào **Project Knowledge** trong Claude.ai — Claude sẽ tham chiếu xuyên suốt mọi cuộc trò chuyện trong project đó mà không cần nhắc lại.
+
+---
+
+## 2. voice-profile.md — ADN giọng viết của bạn
+
+Claude không dở vì thiếu từ vựng. Claude dở vì không bắt được **nhịp** của bạn: câu ngắn hay dài, thẳng thắn hay lòng vòng, trang trọng hay gần gũi với từng đối tượng.
+
+**Viết gì trong voice-profile.md:**
+- Thích câu ngắn hay câu dài?
+- Giọng: trực tiếp, sắc bén / hay mềm mại, thấu cảm?
+- Mức độ trang trọng theo từng đối tượng (CEO / nhân viên / ứng viên)
+- "Hard yes": kiểu viết bạn muốn Claude lặp lại
+- "Hard no": kiểu viết khiến bạn xóa ngay
+
+**Ví dụ cho HR:**
+
+<PromptBlock
+  title="voice-profile.md mẫu"
+  lang="text"
+  code={`Viết tiếng Việt. Tông gần gũi nhưng chuyên nghiệp.
+Câu ngắn, đi thẳng vấn đề — không dẫn dắt dài.
+Email với ứng viên: ấm, không robot. Email với quản lý: súc tích, có số liệu.
+Mở bài bằng vấn đề, không bằng câu chào hỏi.
+Hard no: "Chúng tôi trân trọng sự quan tâm của bạn", "Đội ngũ năng động sáng tạo".`}
+/>
+
+---
+
+## 3. anti-ai-writing-style.md — Hàng rào chống sáo ngữ HR
+
+Ngành HR có tập hợp sáo ngữ riêng mà Claude rất hay tự động sinh ra. Viết hẳn một file cấm — hiệu quả hơn nhiều so với mỗi lần nhắc *"hãy viết tự nhiên hơn."*
+
+Về mặt bản chất, đây là lớp **negative constraints**: nói rõ Claude không được viết như thế nào thường giúp tránh văn phong AI hơn cả mô tả điều bạn muốn.
+
+<Callout type="warning" title="Những câu cấm điển hình trong HR">
+  **Cấm dùng:**
+  - "Nhân tài là tài sản quý giá nhất của doanh nghiệp"
+  - "Môi trường làm việc năng động, sáng tạo, chuyên nghiệp"
+  - "Chúng tôi cam kết mang lại trải nghiệm tốt nhất cho nhân viên"
+  - Bullet list 5 điểm đều nhau, không phân cấp, không ví dụ
+  - Mở đầu bằng "Trong bối cảnh..." hoặc "Hiện nay..."
+</Callout>
+
+**Ví dụ anti-ai-writing-style.md:**
+
+<PromptBlock
+  title="anti-ai-writing-style.md mẫu cho HR"
+  lang="text"
+  code={`KHÔNG viết:
+- Sáo ngữ HR: "môi trường năng động", "cơ hội phát triển không giới hạn"
+- Câu mở dài hơn 1.5 dòng trước khi vào vấn đề
+- Bullet 5 điểm đều nhau, không phân cấp
+- Lạm dụng: "tận dụng", "khai thác tiềm năng"
+- Kết bài kiểu "Chúng tôi rất mong chờ ..."
+
+LUÔN:
+- Có ít nhất 1 con số hoặc ví dụ cụ thể
+- Câu đầu tiên đặt vấn đề, không chào hỏi`}
+/>
+
+Ba file đầu — about-me, voice-profile, anti-ai — ghép lại thành bộ ba **"tôi là ai / tôi viết thế nào / tôi tuyệt đối không viết ra sao."** Đây là nền tảng của cả hệ thống.
+
+---
+
+## 4. Cowork Folder — Hệ thư mục làm việc cho HR
+
+Cấu trúc 4 thư mục này giúp Claude biết chính xác cần đọc gì và xuất kết quả ở đâu — không còn file rải rác lung tung.
+
+```
+ABOUT ME/
+  ├── about-me.md
+  ├── voice-profile.md
+  └── anti-ai-writing-style.md
+
+PROJECTS/
+  ├── tuyendung-Q2/
+  │     ├── brief.md          (mục tiêu, timeline, headcount)
+  │     ├── JD_sales_v1.docx
+  │     └── pipeline_notes.md
+  └── policy-update-2026/
+        └── chinh-sach-nghi-phep-draft.docx
+
+TEMPLATES/
+  ├── JD_template.md
+  ├── email-rejection.md
+  ├── email-offer.md
+  └── policy_template.docx
+
+OUTPUTS/
+  (Claude chỉ được phép lưu kết quả ở đây)
+```
+
+Nguyên tắc: Claude xuất kết quả vào `OUTPUTS/`, bạn review rồi mới move sang nơi lưu chính thức. Tách dữ liệu nền — dữ liệu dự án — mẫu chuẩn — kết quả đầu ra.
+
+---
+
+## 5. Global Instructions — Luật cơ bản chạy ở mọi phiên
+
+Đây là các chỉ dẫn áp dụng cho **mọi cuộc trò chuyện**, không cần nhắc lại. Đặt trong **Settings → Cowork → Global instructions**.
+
+**Nên có:**
+
+<PromptBlock
+  title="Global Instructions mẫu cho HR"
+  lang="text"
+  code={`Tôi là HRBP. Luôn viết tiếng Việt.
+Ưu tiên thực tế hơn lý thuyết — ví dụ cụ thể hơn khái niệm.
+Nếu thiếu thông tin quan trọng → hỏi trước, không đoán.
+Output mặc định: ngắn gọn, có thể dùng ngay.
+Khi viết email/JD: tự kiểm tra sáo ngữ HR và xóa trước khi xuất.`}
+/>
+
+**Không nên nhét vào đây:**
+- Brief từng dự án cụ thể
+- Thông tin chỉ đúng trong 1–2 tuần
+- Quy trình chi tiết cho từng task
+
+Những thứ đó để trong Project Knowledge hoặc từng chat riêng.
+
+---
+
+## 6. The One Prompt — Prompt chuẩn hóa cho task HR
+
+Điểm hay nhất của "The One Prompt" không phải câu chữ — mà là cơ chế **ép Claude không đoán bừa**. Một prompt mở đầu tốt buộc Claude làm 4 việc: đọc đúng ngữ cảnh → xác định thiếu gì → hỏi lại đúng chỗ → chốt cách làm rồi mới thực thi.
+
+<PromptBlock
+  title="Template prompt mở đầu cho mọi task HR"
+  lang="text"
+  code={`Tôi muốn [nhiệm vụ cụ thể] để đạt [kết quả mong muốn].
+Trước hết, đọc [tên file/folder liên quan].
+Sau đó hỏi tôi những thông tin còn thiếu.
+Đề xuất cách tiếp cận ngắn gọn. Chỉ bắt đầu viết khi tôi xác nhận.`}
+/>
+
+**Áp dụng cho 3 task HR thường gặp:**
+
+<PromptBlock
+  title="Prompt phân tích CV shortlist"
+  lang="text"
+  code={`Tôi muốn phân tích 3 CV này để shortlist cho vị trí Sales Manager.
+Tiêu chí: >5 năm B2B, từng quản lý team ≥5 người, ưu tiên ngành FMCG.
+Đọc 3 file CV trong folder. Tạo bảng so sánh: Điểm mạnh / Điểm cần xem xét / Kết luận (Pass / Hold / Reject).`}
+/>
+
+<PromptBlock
+  title="Prompt viết JD"
+  lang="text"
+  code={`Viết JD cho vị trí C&B Specialist, công ty sản xuất 300 người, lương gross 15–18 triệu.
+Đọc template JD trong TEMPLATES/ và about-me.md.
+Không dùng sáo ngữ. Phần "Môi trường làm việc" thay bằng 2–3 điều thật sự cụ thể.`}
+/>
+
+<PromptBlock
+  title="Prompt soạn policy"
+  lang="text"
+  code={`Soạn policy nghỉ phép bổ sung cho nhân viên thâm niên >3 năm.
+Trước khi viết, hỏi tôi: mức nghỉ phép hiện tại, chế độ bổ sung khác, loại hợp đồng áp dụng, tài liệu tham khảo 
+Output: bản nháp 1 trang, tiếng Việt, tone chính thức nhưng không cứng.`}
+/>
+
+---
+
+## 7. Connectors — Kéo Claude vào đúng dữ liệu HR
+
+Connectors biến Claude từ *"người viết giỏi"* thành *"đồng đội làm việc thật"* — khi Claude có thể đọc email ứng viên thật, lịch thật, file CV thật của bạn.
+
+| Connector | Dùng để làm gì trong HR |
+|-----------|------------------------|
+| **Gmail** | Tóm tắt loạt email ứng viên, soạn reply hàng loạt rejection / invitation |
+| **Google Drive** | Đọc CV, tham chiếu policy hiện tại, so sánh với template |
+| **Google Calendar** | Lên lịch phỏng vấn, kiểm tra xung đột lịch interviewer |
+| **Slack** | Thông báo pipeline cho hiring manager, update team HR |
+
+<Callout type="tip" title="Cài connector Google Workspace">
+  Claude.ai → Settings → Connectors → Google Workspace. Bật Gmail + Drive + Calendar là đủ cho workflow tuyển dụng thông thường. Slack connector có từ gói Pro trở lên.
+</Callout>
+
+---
+
+## 8. Plugins / Skills — Gói chuyên môn hóa sẵn cho HR
+
+Plugins trong Claude Cowork kết hợp skills + connectors thành một **"đồng đội thực thụ"** hoàn chỉnh — thay vì tự viết prompt, tự nối tool, tự quản ngữ cảnh từng phiên.
+
+Với HR, các plugin/skill phù hợp:
+
+- **CV Analyzer**: Claude đọc CV, tóm tắt và score theo tiêu chí bạn đặt trước
+- **JD Generator**: Viết JD từ brief ngắn, tự kiểm tra sáo ngữ
+- **Policy Drafter**: Soạn policy từ khung có sẵn, tự check xung đột quy định nội bộ
+
+<Callout type="info" title="Tự tạo skill nếu chưa có plugin sẵn">
+  Lưu một prompt chuẩn vào Project Knowledge, đặt tên rõ ràng (ví dụ: "SKILL: Phân tích CV"). Claude sẽ gọi đúng khi bạn nhắc tên. Không cần chờ Anthropic ra plugin chính thức.
+</Callout>
+
+Plugins có sẵn cho gói **Pro, Max, Team, Enterprise** và hơn thế nữa, bạn cũng có thể nhờ Claude đóng gói skill thành plugin cho bạn bè xài cùng được luôn.
+
+---
+
+## Tổng kết — 8 component, dùng khi nào
+
+| Component | Thiết lập ở đâu | Dùng khi nào |
+|-----------|----------------|--------------|
+| **about-me.md** | Project Knowledge | Mọi task cần Claude hiểu vai trò và ngữ cảnh |
+| **voice-profile.md** | Project Knowledge | Viết email, JD, policy, nội dung đăng |
+| **anti-ai-writing-style.md** | Project Knowledge | Mọi task viết lách — ngăn sáo ngữ tự động |
+| **Cowork Folder** | Local folder | Khi làm dự án dài, nhiều file liên quan |
+| **Global Instructions** | Claude Settings | Luật nền — thiết lập một lần, áp dụng mãi |
+| **The One Prompt** | Dùng lại mỗi task | Khi bắt đầu task mới, tránh Claude đoán sai |
+| **Connectors** | Claude Settings | Khi cần Claude đọc email / file / lịch thật |
+| **Plugins / Skills** | Claude Settings | Khi muốn Claude đóng vai chuyên môn cụ thể |
+
+<Callout type="tip" title="Bắt đầu từ đâu nếu bạn mới?">
+  Làm theo thứ tự **1 → 5 → 6**: about-me.md + Global Instructions + một prompt chuẩn. Ba thứ đó đã đủ để thay đổi rõ rệt chất lượng output ngay hôm nay — không cần thiết lập toàn bộ 8 component cùng lúc.
+</Callout>
+
+Claude mạnh hơn rất nhiều khi bạn thiết lập các quy tắc cho nó. Ban đầu bạn coi nó là một sinh viên thực tập, hãy dạy nó và từ từ coi nó như một người cộng sự. Hãy cung cấp đúng dữ liệu, quy tắc, bối cảnh, và công cụ làm việc cho nó để nó sẵn sàng trở thành "trợ lý nhân sự của riêng bạn" sau này.
+
+**Chúc bạn làm việc thật hiệu quả với Claude.**
+
+**Lười Chúa**

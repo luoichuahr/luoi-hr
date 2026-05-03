@@ -106,6 +106,14 @@ BƯỚC 5 — Verify
 - Sau submit: hiển thị "✓ Đã gửi! Lười Chúa sẽ liên hệ sớm."
 - MAX 100 dòng
 
+## Quy tắc SEO
+
+Mọi kiểm tra SEO do **SEO Agent** đảm nhiệm — xem `.claude/skills/seo/SKILL.md`.
+
+- Khi tạo/sửa file `.md` → SEO Agent tự động chạy qua PostToolUse hook
+- Khi chạy QA → SEO Agent được gọi trong mục F của qa_runner.js
+- Claude KHÔNG tự kiểm tra SEO — chỉ gọi SEO Agent và trình bày kết quả
+
 ## Khi được hỏi về quyết định thiết kế
 
 Luôn trả lời theo format:
@@ -127,17 +135,104 @@ Không đưa ra 1 phương án duy nhất trừ khi được hỏi "làm luôn �
 
 ---
 
+## Session context tự động
+
+Hook `session-start` inject trạng thái project khi Claude mở:
+- Branch, commit cuối, số file chưa push
+- Nội dung `.session/checkpoint.json` — agent nào chạy cuối, task gì đang dở
+
+File trạng thái: `.session/checkpoint.json` — cập nhật sau mỗi task xong.
+
 ## Cách dùng từ Cowork
 
-Không cần làm gì thêm. Cowork tự đọc file này khi bạn mở thư mục project.
+**Cách nhanh nhất — dùng router:**
+```
+Mở SKILL_luoi.md và: [mô tả việc cần làm]
+```
 
-Chỉ cần nói thẳng yêu cầu, ví dụ:
+Ví dụ:
 ```
-Thêm tính năng search bài viết vào sidebar.
+Mở SKILL_luoi.md và: viết bài về kỹ năng đánh giá KPI cho HR
+Mở SKILL_luoi.md và: website bị lỗi, fix giùm
+Mở SKILL_luoi.md và: check SEO bài mới đăng hôm qua
 ```
+
+Hoặc gọi thẳng agent/skill nếu đã biết:
 ```
 Tạo bài mới theo Workflow B trong SKILL_website.md với nội dung sau: [...]
-```
-```
 Debug lỗi build trên Vercel.
 ```
+
+---
+
+## Quy trình Preview localhost (bắt buộc khi deploy MDX)
+
+Khi cần chạy preview sau khi copy file vào docs/:
+
+**BƯỚC 1 — Kill port cũ trước khi start:**
+```powershell
+# Tìm PID đang giữ port 3000
+Get-NetTCPConnection -LocalPort 3000 -State Listen | Select-Object OwningProcess
+# Kill nó
+Stop-Process -Id <PID> -Force
+```
+
+**BƯỚC 2 — Start server:**
+```bash
+cd "C:/Users/Work/Downloads/luoi-hr" && npm start > /tmp/luoi-hr-npm.log 2>&1 &
+```
+
+**BƯỚC 3 — Đợi và verify (30 giây):**
+```bash
+sleep 25 && cat /tmp/luoi-hr-npm.log | tail -5
+# Phải thấy: [SUCCESS] Docusaurus website is running at: http://localhost:3000/
+# Nếu thấy [ERROR] → đọc log, sửa lỗi, restart
+```
+
+**BƯỚC 4 — Mở browser tự động:**
+```bash
+start "" "http://localhost:3000/<slug-bài>"
+```
+
+**Lỗi thường gặp:**
+- `[ERROR] Something is already running on port 3000` → Kill port cũ trước (Bước 1)
+- `[ERROR] Error while parsing Markdown front matter` → `description` hoặc `title` có dấu `:` chưa được wrap trong double quotes
+
+**YAML frontmatter rules:**
+- Bất kỳ trường nào có dấu `:` trong giá trị → **bắt buộc wrap trong `"double quotes"`**
+- Ví dụ SAI: `description: Hướng dẫn: tạo agent`
+- Ví dụ ĐÚNG: `description: "Hướng dẫn: tạo agent"`
+
+---
+
+## AgentOS Task Execution Protocol
+
+Khi thấy block `[AGENTOS TASK]` xuất hiện trong terminal (do AgentOS tự inject):
+
+**BƯỚC 1 — Đọc**
+- Ghi nhớ `Queue ID`, `From`, `Priority` từ header block
+- Đọc subject + body — đây là yêu cầu cần thực thi
+
+**BƯỚC 2 — Thực thi**
+- Áp dụng đúng workflow của luoi-hr (CHANGELOG trước khi code, verify, commit)
+- Không hỏi lại, tự quyết định trong phạm vi task
+
+**BƯỚC 3 — Lưu kết quả**
+- Lưu artifact (file kết quả) vào thư mục phù hợp
+- Ghi vào `CHANGELOG.md` (bắt buộc, kể cả task nhỏ)
+
+**BƯỚC 4 — Báo cáo** (copy lệnh từ cuối task block, điền thông tin thực tế):
+```bash
+python "$AGENTOS_TOOLS_DIR/msg_send.py" \
+  --to <from_agent> \
+  --task-id <queue_id> \
+  --status done \
+  --summary "Mô tả ngắn việc đã làm (< 100 ký tự)" \
+  --artifact "đường/dẫn/file/kết/quả.md"
+```
+
+**Quy tắc:**
+- `--summary` rõ ràng: ví dụ "Sửa 3 lỗi hiển thị, xem CHANGELOG.md"
+- `--artifact` phải là file thực sự đã tồn tại
+- Nếu lỗi không sửa được: `--status error --summary "Mô tả lỗi"`
+- Luôn ghi CHANGELOG **trước** khi gọi msg_send.py

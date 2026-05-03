@@ -18,9 +18,9 @@ const config = {
       docs: { sidebarPath: './sidebars.js' },
       blog: false,
       theme: { customCss: './src/css/custom.css' },
-      // GA4: thay G-XXXXXXXXXX bằng Measurement ID thực của bạn
-      // Lấy tại: analytics.google.com → Admin → Data Streams → Web Stream Details
-      gtag: { trackingID: 'G-KELJV9GYP2', anonymizeIP: true },
+      gtag: process.env.NODE_ENV === 'production'
+        ? { trackingID: 'G-KELJV9GYP2', anonymizeIP: true }
+        : undefined,
     })],
   ],
 
@@ -35,7 +35,7 @@ const config = {
           type: 'docSidebar',
           sidebarId: 'tutorialSidebar',
           position: 'left',
-          label: 'Bí kíp AI',
+          label: 'Bí Kíp Nhân sự',
         },
         {
           to: '/tools/ai-career-wingman',
@@ -49,7 +49,7 @@ const config = {
       links: [
         {
           title: 'Bí kíp',
-          items: [{ label: 'Tất cả bài viết', to: '/docs/intro' }],
+          items: [{ label: 'Tất cả bài viết', to: '/docs/bi-kip/xay-dung-tro-ly-nhan-su-cua-rieng-ban' }],
         },
         {
           title: 'Liên hệ',

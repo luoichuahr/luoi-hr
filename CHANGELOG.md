@@ -8,6 +8,88 @@
 
 ---
 
+## 2026-05-03
+
+### [ARCH] Fix broken link footer — /docs/intro → /docs/bi-kip/xay-dung-tro-ly-nhan-su-cua-rieng-ban
+- Footer link "Tất cả bài viết" vẫn trỏ về /docs/intro đã bị xóa → build fail
+- Phát hiện bởi QA runner pre-launch, fix trước khi push
+
+### [ARCH] Thêm Workflow mạng xã hội vào Content Agent
+- Cập nhật `agents/content-agent.md`: LinkedIn/Facebook workflow với 3 bước rõ ràng
+- Quy tắc spacing: tối đa 1 dòng trống giữa các đoạn (double blank line = trông như AI)
+- Hashtag 3 lớp: Brand + Topic + Reach, SEO-aligned với luoi-hr.vercel.app
+- Output: HTML preview có contenteditable + nút Copy + nút "Tải ảnh về máy" (html2canvas)
+- Trigger: khi Andy nói "viết bài LinkedIn/Facebook" → LCA viết → LHRA tạo HTML preview
+
+### [CONTENT] Deploy bài "Xây dựng trợ lý nhân sự của riêng bạn" vào docs/bi-kip
+- Copy từ tempo/ → docs/bi-kip/xay-dung-tro-ly-nhan-su-cua-rieng-ban.mdx
+- Verdict: PASS WITH NOTES (H1 duplicate line 18, 4 placeholder lạ, bold formatting line 250)
+- Andy xem xét khi preview để quyết định sửa hay giữ nguyên
+
+
+
+### [ARCH] Mount FloatingContact + BuyMeCoffee global trên mọi trang
+- Tạo `src/theme/Root.js` — Docusaurus swizzle, render 2 component cố định toàn site
+- Trước đây chỉ có ở homepage; giờ hiện trên tất cả docs, tools, landing page
+
+### [ARCH] Fix lỗi window.gtag is not a function
+- Chỉ enable Google Tag plugin trong production (`NODE_ENV === 'production'`)
+- Lý do: gtag script bị block/chưa load xong trong dev → uncaught runtime error
+
+
+
+### [CONTENT] Deploy bài mới: thiet-ke-he-dieu-hanh-lam-viec-voi-claude-danh-rieng-cho-nguoi-lam-nhan-su
+- Copy `tempo/thiet-ke-he-dieu-hanh-lam-viec-voi-claude-danh-rieng-cho-nguoi-lam-nhan-su.mdx` → `docs/bi-kip/` (PASS WITH NOTES)
+- Review notes: H1 trùng frontmatter (line 18), Callout type="warning" nên là "warn" (line 89) — không block build
+
+### [CONTENT] Deploy bài mới: nhan-su-lua-chon-tinh-nang-claude
+- Tạo `docs/bi-kip/nhan-su-lua-chon-tinh-nang-claude.mdx` từ `tempo/` (Andy's source)
+- sidebar_position: 4 (tránh conflict với bài position 3)
+- Thêm badge row (Nhập môn / 5 phút / Claude.ai)
+- `[insert:claude-projects-hr.jpg]` bỏ qua — không có file trong tempo/
+- `[insert:live-artifacts-hr.jpg]` → copy `tempo/live-artifacts-hr.png` vào `static/img/` + đổi sang MDX img syntax
+
+
+
+### [DESIGN] Áp dụng template HTML vào 3 trang docs/bi-kip
+- **CSS** `custom.css`: thêm typography docs (h1=28px, h2=20px+border-top, h3=16px), badge-row, stat-row, usecase-grid, plan-grid, flow diagram, dark mode overrides, mobile responsive
+- **claude-ai-la-gi**: rewrite theo HTML template — badge row + stat-row (70%/3-5×/Miễn phí) + usecase-grid thay H3+list + flow diagram JSX
+- **nhan-su-chon-goi-claude**: rewrite — badge row + plan-grid (4 cards) thay H3+text; sidebar_label đổi về đúng tiêu đề đầy đủ
+- **cv_extract_tool**: thêm badge row; heading size tự apply qua CSS
+
+### [CONTENT] Fix sidebar label + heading cho 2 bài mới trong bi-kip
+- Thêm `sidebar_label` explicit vào cả 2 file — Docusaurus fallback về filename slug khi thiếu trường này
+- `claude-ai-la-gi`: align H1 body với frontmatter title (2 text khác nhau → heading to bất thường trên trang)
+- `nhan-su-chon-goi-claude`: đổi `sidebar_position` 2 → 3 để tránh trùng với bài trên
+- Sidebar labels ngắn gọn theo format cv_extract_tool: "Claude AI là gì?" / "Nên dùng gói Claude nào?"
+
+### [CONTENT] Deploy 2 bài mới vào docs/bi-kip + dọn tutorial mặc định
+- Copy `tempo/nhan-su-chon-goi-claude.mdx` → `docs/bi-kip/`
+- Copy `tempo/claude-ai-la-gi-cho-nhan-su.mdx` đã có từ task trước
+- Xóa `docs/intro.mdx`, `docs/tutorial-basics/`, `docs/tutorial-extras/` — nội dung mẫu Docusaurus, không dùng
+
+### [CONTENT] Đổi label sidebar "Bí Kíp" → "Bí Kíp Nhân sự"
+- **File**: `docs/bi-kip/_category_.json`
+- **Lý do**: Tên rõ hơn, đúng audience
+
+---
+
+### [DESIGN] Xóa Table of Contents sidebar bên phải toàn trang
+- **File**: `src/css/custom.css`
+- **Lý do**: Không có trong thiết kế — Docusaurus tự thêm mặc định, gây layout thừa cột
+- **Cách làm**: Ẩn `.theme-doc-toc-desktop` + expand `[class*='docItemCol']` lên 100%
+
+---
+
+## 2026-04-30
+
+- [DESIGN] **LeadForm — thu nhỏ và sửa flow** — đổi title từ "Bạn có nhu cầu gì..." → "Không muốn tự build?" + subtitle rõ mục đích; giảm max-width 380→320px; giảm padding 80→48px; tạo lối thoát thứ 2 rõ ràng (tự làm /docs vs thuê làm A-Z)
+- [DESIGN] **Ẩn Testimonials + TrustIndicators** — 2 section trùng lặp thông điệp trust, số liệu chưa thực, comment out để tái sử dụng sau khi có nội dung thật
+- [DESIGN] **Giảm padding các section** — Hero 80/100px → 64/80px; AgentSkills 80/90px → 60/72px; Testimonials 80px → 56px; TrustIndicators 60px → 40px (áp dụng cho tương lai); giảm scroll không cần thiết
+- [DESIGN] **Fix white-space mobile trong WingmanFlashcard** — bỏ `white-space: nowrap` khỏi `.flashcardText` và `.flashcardSub` tại breakpoint ≤480px; text không còn bị cắt trên màn hình nhỏ
+
+---
+
 ## 2026-04-27
 
 - [CONTENT] Xóa folder `docs/quy-trinh-testing/` và toàn bộ nội dung — danh mục testing không cần thiết sau khi verify luồng

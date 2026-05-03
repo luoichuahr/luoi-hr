@@ -1,0 +1,244 @@
+---
+sidebar_position: 6
+title: Xây dựng trợ lý nhân sự của riêng bạn — HR Agent cá nhân hóa
+description: "Hướng dẫn từng bước tạo đội HR agent cá nhân: viết CLAUDE.md, tạo agent tuyển dụng, đào tạo, tính lương và tránh 5 sai lầm phổ biến."
+tags: [hr-agent, automation, tuyen-dung, luong, sub-agent, claude]
+---
+
+import Callout from '@site/src/components/Callout';
+import PromptBlock from '@site/src/components/PromptBlock';
+
+<div className="badge-row">
+  <span className="doc-badge badge-tool">🤖 HR Agent</span>
+  <span className="doc-badge badge-tool">Claude AI</span>
+  <span className="doc-badge badge-time">🕐 Đọc 15 phút</span>
+  <span className="doc-badge badge-new">🆕 Cập nhật 05/2026</span>
+</div>
+
+# Xây dựng trợ lý nhân sự của riêng bạn — HR Agent cá nhân hóa
+
+Bạn từng mơ có một đội nhân viên làm việc 24/7, không bao giờ quên checklist, không bao giờ copy-paste nhầm tên ứng viên? và không đòi nghỉ việc :D 
+
+**HR Agent** chính là điều đó — nhưng mỗi agent cần được "tuyển dụng" và "đào tạo" đúng cách. Bài này hướng dẫn bạn xây một đội HR agent cá nhân hóa: theo phong cách của bạn, quy trình của công ty bạn, giọng văn của chính bạn.
+
+---
+
+## Tư duy nền: Agent = nhân viên, Skill = kỹ năng
+
+Khi bạn chat với Claude thông thường, bạn đang nói chuyện với một AI "đa năng" — biết mọi thứ nhưng không chuyên sâu gì. Một agent là khi bạn nói: *"Từ giờ, bạn là Chuyên viên Tuyển dụng của tôi. Bạn chỉ làm tuyển dụng. Bạn tuân theo checklist này."*
+
+Hãy hình dung đơn giản:
+
+- **HR Agent** = nhân viên AI làm việc dưới quyền bạn
+- **Skill** = bộ kỹ năng cụ thể của từng nhân viên đó
+
+Một Chuyên viên Tuyển dụng biết viết offer letter, nhưng không biết tính gross-to-net. Một nhân viên C&B biết tính lương, nhưng không làm đào tạo. **Tách biệt vai trò** là chìa khóa để hệ thống chạy nhất quán — và khi có lỗi, bạn biết ngay phải sửa ở đâu.
+
+<Callout type="tip" title="Nguyên tắc 1 agent – 1 vai trò">
+  Đừng để agent tuyển dụng kiêm luôn tính lương kiêm luôn viết policy. Cùng lý do bạn không để một người vừa viết JD vừa tự review JD đó — thiên kiến xác nhận sẽ bỏ qua lỗi (và AI mắc lỗi này thường xuyên nếu bạn không có quy tắc cho nó)
+</Callout>
+
+---
+
+## Trước khi bắt đầu — Viết CLAUDE.md: "Bản mô tả công việc" cho đội AI
+
+Trước khi tạo bất kỳ agent nào, bạn cần một file `CLAUDE.md` — đây là **"hiến pháp"** của toàn bộ hệ thống. Hãy hình dung nó như bản Nội quy lao động + Nội quy công ty dành riêng cho đội nhân viên AI của bạn.
+
+File này cần định nghĩa rõ 3 thứ:
+- **Hệ thống là gì** — bạn là ai, đội AI phục vụ mục đích gì
+- **Từng agent làm gì** — ranh giới nhiệm vụ rõ ràng
+- **Quy tắc bất biến** — những điều agent không bao giờ được tự ý làm
+
+Viết `CLAUDE.md` giống như viết SOP cho nhân viên mới: rõ ràng, cụ thể, không mơ hồ. Nếu bạn viết *"làm tốt"* thay vì *"email 3 đoạn, tone thân thiện nhưng chuyên nghiệp, có deadline phản hồi"* — agent sẽ tự sáng tạo theo cách của nó, không phải cách của bạn.
+
+<PromptBlock
+  title="CLAUDE.md mẫu cho HR Agent cá nhân"
+  lang="text"
+  code={`# HR Agent System — [Tên bạn]
+Owner: [Tên bạn] — [Chức danh], [Tên công ty]
+
+## Mục đích
+Hỗ trợ công việc HR hàng ngày: tuyển dụng, đào tạo nhân viên mới, tính lương.
+Nguyên tắc: đề xuất trước, tôi approve sau. Không action không thể đảo ngược.
+
+## Agents và nhiệm vụ
+- A-Recruiter : offer letter, email ứng viên, xác nhận lịch phỏng vấn
+- A-Training  : onboarding kit, chương trình đào tạo theo phòng ban
+- A-Payroll   : tính lương, lập phiếu lương, viết chính sách C&B
+
+## Quy tắc bất biến
+- KHÔNG tự gửi email khi chưa có lệnh "Gửi" từ tôi
+- KHÔNG bịa số liệu — thiếu data → hỏi lại, không tự điền, ghi [DATA_MISSING]
+- Lưu bản draft vào tempo/ trước khi tôi xác nhận
+- Lỗi lặp lại 2 lần → báo tôi sửa instructions, không tự xử lý
+
+## Cấu trúc thư mục
+hr-agent/
+├── agents/    → file instructions từng agent
+├── skills/    → bộ kỹ năng (template, checklist, chính sách)
+└── tempo/     → nơi agent lưu bản draft`}
+/>
+
+<Callout type="info" title="CLAUDE.md càng cụ thể, agent càng đúng ý bạn">
+  Thêm vào CLAUDE.md những gì đặc thù của công ty bạn: cách xưng hô trong email, format phiếu lương, danh sách chức danh nội bộ. Agent sẽ dùng đúng những thứ đó thay vì tự nghĩ ra.
+Tips: hãy giữ cho file claude.md dưới 200 line để tiết kiệm token.
+</Callout>
+
+---
+## Cách tạo các Agents 
+
+## Bước 1 — Tạo nhân viên tuyển dụng (A-Recruiter)
+
+**A-Recruiter** xử lý toàn bộ phần giao tiếp với ứng viên — đúng format, đúng tone, không bao giờ quên thông tin địa điểm phỏng vấn hay deadline nhận offer.
+
+**Skill cần trang bị:**
+
+| Skill | Nhiệm vụ |
+|-------|----------|
+| `Offer_Skill` | Soạn offer letter từ template, tự điền tên/vị trí/mức lương/ngày bắt đầu |
+| `Interview_Confirm_Skill` | Gửi xác nhận lịch phỏng vấn với địa điểm, người tiếp, link meeting |
+| `Rejection_Skill` | Viết email từ chối chuyên nghiệp, giữ thương hiệu nhà tuyển dụng |
+
+**Cách "onboard" A-Recruiter:** Tải lên 2–3 email offer/từ chối bạn thấy ổn nhất từ trước đến nay. Agent sẽ học giọng văn của bạn thay vì viết theo kiểu AI chung chung.
+
+<PromptBlock
+  title="Prompt khởi tạo A-Recruiter"
+  lang="text"
+  code={`Bạn là A-Recruiter — Chuyên viên Tuyển dụng AI của tôi.
+Nhiệm vụ DUY NHẤT: soạn offer letter, email xác nhận/từ chối ứng viên.
+Bạn KHÔNG làm: tính lương, viết policy, onboarding.
+
+Quy tắc:
+- Không tự gửi email — luôn xuất draft để tôi review trước
+- Thiếu thông tin (tên, mức lương, ngày bắt đầu) → hỏi lại, không tự điền
+- Dùng đúng template offer trong file Offer_Template.docx tôi đã cung cấp`}
+/>
+
+---
+
+## Bước 2 — Tạo nhân viên đào tạo (A-Training)
+
+**A-Training** giúp bạn chuẩn hóa trải nghiệm nhân viên mới mà không phải viết đi viết lại từ đầu mỗi lần có người mới hay có chương trình đào tạo mới.
+
+**Skill cần trang bị:**
+
+| Skill | Nhiệm vụ |
+|-------|----------|
+| `Onboarding_Skill` | Tạo lịch onboarding 30-60-90 ngày theo phòng ban và cấp bậc |
+| `Training_Design_Skill` | Xây khung chương trình L&D, đề xuất learning path |
+| `Assessment_Skill` | Soạn bộ câu hỏi đánh giá sau đào tạo, tổng hợp kết quả |
+
+**Cách "onboard" A-Training:** Cung cấp checklist onboarding hiện tại (dù đang là file Word lộn xộn), cơ cấu tổ chức, và danh sách hệ thống nội bộ nhân viên cần học. Agent sẽ chuẩn hóa lại theo đúng format bạn muốn.
+
+<Callout type="info" title="Cá nhân hóa theo từng phòng ban">
+  Nhân viên Sales ngày đầu gia nhập sẽ khác nhân viên Kế toán. Thêm vào Onboarding_Skill danh sách người cần gặp, hệ thống cần học, và KPI tháng đầu theo từng phòng — agent sẽ tạo kit đúng người, đúng việc.
+</Callout>
+
+---
+
+## Bước 3 — Tạo nhân viên tính lương (A-Payroll)
+
+**A-Payroll** xử lý phần tính toán nhạy cảm nhất trong HR — đảm bảo con số chính xác và có giải trình rõ ràng trước khi đến tay kế toán hay nhân viên.
+
+**Skill cần trang bị:**
+
+| Skill | Nhiệm vụ |
+|-------|----------|
+| `Salary_Calc_Skill` | Tính lương net từ gross theo BHXH/thuế TNCN hiện hành |
+| `Payslip_Skill` | Tạo phiếu lương đúng format công ty, có giải trình từng khoản khấu trừ |
+| `CB_Policy_Skill` | Tra cứu và giải thích chính sách C&B nội bộ khi nhân viên thắc mắc |
+
+<Callout type="warning" title="Dữ liệu đầu vào là trách nhiệm của bạn">
+  Agent tính dựa trên dữ liệu bạn cung cấp. Bảng thuế TNCN, mức đóng BHXH, phụ cấp nội bộ — cập nhật mỗi năm và mỗi lần công ty thay đổi chính sách. Feed đúng data vào, agent ra đúng số.
+  Lưu ý: **cân nhắc khi đưa dữ liệu nhạy cảm**
+
+</Callout>
+
+---
+
+## Kết nối 3 agent thành pipeline tuyển dụng – onboarding – lương
+
+Ba nhân viên làm việc **độc lập** hoặc **phối hợp** tùy workflow:
+
+```
+Ứng viên accept offer
+        ↓
+A-Recruiter → soạn offer, lưu thông tin vào pipeline
+        ↓ (nhân viên join)
+A-Training  → tạo onboarding kit 30-60-90 ngày cá nhân hóa
+        ↓ (hết tháng thử việc)
+A-Payroll   → tính lương chính thức tháng đầu tiên
+```
+
+<Callout type="tip" title="Bắt đầu từ 1 agent, không cần cả 3">
+  Chọn quy trình dễ nhất mà bạn thành thạo nhất để build. Chạy ổn rồi mới mở rộng.
+</Callout>
+
+---
+
+## Bước 4 — Test thật: Không có nhân viên nào ngon ngay từ đầu
+
+Nhân viên mới cần thời gian thử việc để hiểu cách làm việc của bạn — agent AI cũng vậy. **Test với case thật, không test bằng ví dụ tưởng tượng.**
+
+**Quy trình test chuẩn:**
+
+1. **Lấy case thật từ tuần trước** — một offer thật, một email từ chối thật, một bảng lương thật
+2. **Chạy agent với case đó** — xem output ra thế nào
+3. **Đánh giá theo tiêu chí cụ thể**: đúng format chưa? đúng tone chưa? có thiếu thông tin gì không?
+4. **Nếu sai → sửa instructions, không sửa output** — đây là nguyên tắc quan trọng nhất
+5. **Chạy lại với case thứ 2, thứ 3** — đến khi output nhất quán
+
+<Callout type="warning" title="Sửa output thay vì sửa instructions = lỗi sẽ lặp lại">
+  Hôm nay bạn sửa tay email từ chối vì agent viết thiếu câu "Chúng tôi sẽ lưu hồ sơ của bạn cho các vị trí phù hợp trong tương lai." Tuần sau agent vẫn sẽ thiếu câu đó. Mỗi lần sửa output, bạn đang vá víu — không phải dạy. Hãy vào file instructions và bổ sung dòng đó vào template một lần duy nhất.
+</Callout>
+
+**Dấu hiệu agent đã "pass thử việc":**
+- Output nhất quán qua 3–5 case khác nhau
+- Biết hỏi lại khi thiếu thông tin thay vì tự điền
+- Không "sáng tạo" ra ngoài phạm vi nhiệm vụ
+
+---
+
+## 5 sai lầm HR hay mắc khi xây agent
+
+Sau đây là một số lỗi chúng ta thường hay mắc phải trong quá trình thử nghiệm tạo agent:
+
+**1. Viết instructions quá mơ hồ**
+
+*"Viết email chuyên nghiệp"* không có nghĩa gì với AI. Phải cụ thể: *"Email 3 đoạn — đoạn 1 cảm ơn ứng viên đã tham gia phỏng vấn, đoạn 2 thông báo kết quả, đoạn 3 hướng dẫn bước tiếp theo hoặc lời chúc. Tone: thân thiện nhưng chuyên nghiệp, không dùng emoji."*
+
+**2. Để một agent làm tất cả**
+
+Một agent vừa viết JD, vừa làm offer, vừa tính lương, vừa viết policy — kết quả không nhất quán và khi lỗi xảy ra bạn không biết sửa ở đâu. Đừng khiến agent làm tất: mỗi người một việc.
+
+**3. Không cung cấp template và ví dụ thật**
+
+Agent được yêu cầu viết offer letter nhưng không có mẫu offer của công ty — nó sẽ viết theo kiểu "generic HR" mà bạn sẽ phải sửa lại toàn bộ. Cung cấp 1–2 file mẫu thật là tiết kiệm 80% thời gian chỉnh sửa.
+
+**4. Test bằng ví dụ giả, không dùng case thật**
+
+*"Output trông có vẻ ổn"* khi test với ứng viên tưởng tượng "Nguyễn Văn A" — nhưng khi chạy với data thật, agent bỏ sót trường phụ cấp, viết sai chức danh, hoặc nhầm ngày bắt đầu. Luôn test với dữ liệu thật từ pipeline hiện tại của bạn.
+
+**5. Over-engineering ngay từ đầu**
+
+Xây 5 agent cùng lúc với 20 skill mỗi agent trước khi biết mình thực sự cần gì. Bắt đầu với 1 agent, 2–3 skill, chạy thật trong 2 tuần — rồi mới mở rộng dựa trên những gì thực sự thiếu.
+
+<Callout type="tip" title="Quy tắc 2 tuần">
+  Dùng thật trong 2 tuần trước khi quyết định thêm hay thay đổi. Phần lớn vấn đề bạn sẽ cần sửa ngay trong tuần đầu tiên, và nó không quá nghiêm trọng như bạn tưởng tượng.
+</Callout>
+
+---
+
+## Lời kết
+
+Xây trợ lý HR agent không yêu cầu bạn biết lập trình. Nó yêu cầu bạn biết một thứ mà người làm nhân sự đã làm suốt nhiều năm: **phân tách công việc rõ ràng, định nghĩa tiêu chuẩn cụ thể, và đánh giá theo kết quả thực tế.**
+
+Nếu bạn từng viết JD, thiết kế quy trình phỏng vấn, hay xây KPI cho nhân viên — bạn đã có đủ tư duy để xây agent. Phần còn lại chỉ là dạy lại cho agent, hãy coi nó như thực tập sinh ban đầu và chúng lớn nhanh mỗi ngày.
+
+Đội HR agent bạn xây hôm nay sẽ ngày càng hiểu cách bạn làm việc — giọng email, format ưa thích, tiêu chuẩn riêng của công ty. Đó là sự khác biệt giữa một AI "đa năng" và **trợ lý nhân sự thực sự của riêng bạn**.
+
+> Bắt đầu từ hôm nay. Xây 1 agent. Dùng thật 2 tuần. Rồi bạn sẽ có cả một phòng nhân sự dành riêng cho bạn.
+
+**Chúc bạn có được đội ngũ nhân sự tin cậy và hiệu quả**
+
+**Lười Chúa**

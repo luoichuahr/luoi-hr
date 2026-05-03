@@ -2,7 +2,7 @@
 
 .section {
   background: white;
-  padding: 80px 20px 90px;
+  padding: 60px 20px 72px;
 }
 
 .container {
@@ -187,5 +187,5 @@
   .grid { grid-template-columns: 1fr; }
   .statsRow { grid-template-columns: repeat(2, 1fr); }
   .title { font-size: 1.9rem; }
-  .section { padding: 56px 20px 64px; }
+  .section { padding: 40px 20px 48px; }
 }

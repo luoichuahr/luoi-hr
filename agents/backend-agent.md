@@ -18,7 +18,7 @@ Cột: Timestamp | Ho ten | Email | So dien thoai | Noi dung tu van
 ## Quy trình
 
 ### BƯỚC 1 — Đọc config
-Đọc `C:\Users\LAP062\Downloads\luoi-hr\agents\backend-data\config.txt` để lấy:
+Đọc `C:\Users\Work\Downloads\luoi-hr\agents\backend-data\config.txt` để lấy:
 - `SPREADSHEET_ID`
 - `SHEET_NAME`
 - `CREDENTIALS_PATH`
@@ -60,7 +60,7 @@ Xác định leads chưa được follow up: submit > 3 ngày trước.
 
 ### BƯỚC 4 — Viết Weekly Report
 
-Lưu tại `C:\Users\LAP062\Downloads\luoi-hr\agents\backend-output\weekly-[YYYY-MM-DD].md`
+Lưu tại `C:\Users\Work\Downloads\luoi-hr\agents\backend-output\weekly-[YYYY-MM-DD].md`
 
 ```markdown
 # Backend Report — Thứ 6, [ngày]

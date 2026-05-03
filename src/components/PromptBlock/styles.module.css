@@ -13,6 +13,10 @@
   font-size: 0.85rem;
   font-weight: 600;
   border-bottom: 1px solid #334155;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
 }
 
 .codeWrapper {
@@ -23,6 +27,7 @@
 .code {
   padding: 20px 16px;
   margin: 0;
+  background: #0f172a !important;
   overflow-x: auto;
   font-size: 0.9rem;
   line-height: 1.5;
@@ -31,17 +36,15 @@
 }
 
 .code code {
-  background: none;
+  background: transparent !important;
   padding: 0;
-  color: inherit;
+  color: #e2e8f0 !important;
   font-family: inherit;
 }
 
 .copyBtn {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  padding: 8px 12px;
+  padding: 5px 12px;
+  flex-shrink: 0;
   background: rgba(16, 185, 129, 0.8);
   color: white;
   border: none;

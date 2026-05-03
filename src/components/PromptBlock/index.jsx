@@ -16,13 +16,8 @@ export default function PromptBlock({
 
   return (
     <div className={styles.promptBlock}>
-      {title && <div className={styles.title}>{title}</div>}
-
-      <div className={styles.codeWrapper}>
-        <pre className={styles.code}>
-          <code className={`language-${lang}`}>{code}</code>
-        </pre>
-
+      <div className={styles.title}>
+        <span>{title}</span>
         <button
           className={styles.copyBtn}
           onClick={handleCopy}
@@ -30,6 +25,12 @@ export default function PromptBlock({
         >
           {copied ? '✓ Đã copy' : '📋 Copy'}
         </button>
+      </div>
+
+      <div className={styles.codeWrapper}>
+        <pre className={styles.code}>
+          <code>{code}</code>
+        </pre>
       </div>
     </div>
   );
