@@ -13,6 +13,32 @@ const config = {
   onBrokenLinks: 'throw',
   i18n: { defaultLocale: 'vi', locales: ['vi'] },
 
+  plugins: [
+    function chunkSplitter() {
+      return {
+        name: 'chunk-splitter',
+        configureWebpack(config, isServer) {
+          if (isServer) return {};
+          return {
+            optimization: {
+              splitChunks: {
+                chunks: 'all',
+                cacheGroups: {
+                  vendor: {
+                    test: /[\\/]node_modules[\\/]/,
+                    name: 'vendors',
+                    priority: 10,
+                    chunks: 'all',
+                  },
+                },
+              },
+            },
+          };
+        },
+      };
+    },
+  ],
+
   presets: [
     ['classic', ({
       docs: { sidebarPath: './sidebars.js' },
@@ -26,7 +52,7 @@ const config = {
 
   themeConfig: ({
     image: 'img/docusaurus-social-card.jpg',
-    colorMode: { respectPrefersColorScheme: true },
+    colorMode: { disableSwitch: true, respectPrefersColorScheme: true },
     navbar: {
       title: '🦥 Lười HR',
       logo: { alt: 'Lười HR Logo', src: 'img/logo.svg' },

@@ -149,7 +149,7 @@ export default function AICareerWingman() {
         <div className={styles.container}>
           <h2 className={styles.ctaTitle}>Muốn thử khi tool ra mắt?</h2>
           <p className={styles.ctaSub}>Để lại Zalo — Lười Chúa báo ngay khi Tool tạo CV phù hợp JD deploy.</p>
-          <a href="https://zalo.me/0967696836" target="_blank" rel="noreferrer" className={styles.btnCta}>
+          <a href="https://zalo.me/0967696836" target="_blank" rel="noopener noreferrer" className={styles.btnCta}>
             Nhắn Zalo ngay
           </a>
         </div>

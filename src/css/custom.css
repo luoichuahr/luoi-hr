@@ -102,6 +102,11 @@
   .usecase-grid, .plan-grid, .stat-row { grid-template-columns: 1fr; }
 }
 
+/* ── Google Translate — ẩn widget gốc + banner ──────────────────────────── */
+.goog-te-banner-frame { display: none !important; }
+body { top: 0 !important; }
+#gt-hidden { display: none; }
+
 /* For readability concerns, you should choose a lighter palette in dark mode. */
 [data-theme='dark'] {
   --ifm-color-primary: #10B981;

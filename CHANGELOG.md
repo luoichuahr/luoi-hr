@@ -8,6 +8,34 @@
 
 ---
 
+## 2026-05-04
+
+### [ARCH] Security fix — rel="noopener noreferrer" + vercel.json security headers
+- Fix `target="_blank"` thiếu rel trên ai-career-wingman.jsx (line 152) — tab hijacking risk
+- Tạo vercel.json: X-Content-Type-Options, X-Frame-Options (SAMEORIGIN), X-XSS-Protection, Referrer-Policy, Permissions-Policy
+- Lưu ý npm audit: 21 lỗ hổng đều ở dev deps (webpack-dev-server chain) — KHÔNG fix, fix yêu cầu downgrade Docusaurus
+
+### [CONTENT] SEO — Thêm internal links cho 6 bài bi-kip
+- Mỗi bài thêm section "Đọc thêm" với 2 link liên quan: claude-ai-la-gi, cv_extract_tool, nhan-su-chon-goi-claude, nhan-su-lua-chon-tinh-nang-claude, thiet-ke-he-dieu-hanh, xay-dung-tro-ly-nhan-su
+
+### [ARCH] SEO — Convert ảnh PNG → WebP (63% nhỏ hơn)
+- live-artifacts-hr.png (382KB) → live-artifacts-hr.webp (142KB) dùng sharp
+- Cập nhật reference trong nhan-su-lua-chon-tinh-nang-claude.mdx
+
+### [ARCH] Performance — Webpack chunk splitting
+- Thêm plugin chunkSplitter vào docusaurus.config.js: splitChunks all + vendor cache group
+- Mục tiêu: split vendor bundle khỏi main chunk
+
+### [DESIGN] Google Translate widget — flag selector navbar
+- Tạo GoogleTranslate component: flag button + dropdown card 12 ngôn ngữ
+- Dùng flag-icons (SVG sprites) — hiển thị đúng trên Windows, không dùng emoji cờ
+- Vị trí: fixed top-right, cùng hàng navbar, viền xanh #10B981, transparent background
+- Bỏ dark mode toggle (disableSwitch: true), trang vẫn tự theo OS preference
+- Ẩn Google Translate banner mặc định (goog-te-banner-frame)
+- Trigger dịch qua .goog-te-combo hidden element — không reload trang
+
+---
+
 ## 2026-05-03
 
 ### [ARCH] BuyMeCoffee — localStorage boolean + GA4 event tracking

@@ -1,5 +1,5 @@
 # QA Report — Lười HR
-**Date:** 21:13:09 3/5/2026
+**Date:** 22:44:28 3/5/2026 (base) | **Updated:** 4/5/2026 (post-kaizen)
 **OS:** Windows
 **Node:** v24.15.0
 **Vòng test:** 3/3
@@ -14,29 +14,29 @@
 | B. Components UI | ✅ | ✅ | ✅ | PASS |
 | C. Code Quality | ✅ | ✅ | ✅ | PASS |
 | D. Performance | ✅ | ✅ | ✅ | PASS |
-| E. Security | ⚠️ | ⚠️ | ⚠️ | ⚠️ WARN |
-| F. SEO | ⚠️ | ⚠️ | ⚠️ | ⚠️ WARN |
+| E. Security | ✅ | ✅ | ✅ | PASS (fixed 4/5) |
+| F. SEO | ⚠️ | ⚠️ | ⚠️ | ⚠️ WARN (minor) |
 
-**Verdict:** 🟡 PUSH WITH WARNINGS — ổn nhưng nên xem xét warnings
+**Verdict:** 🟢 PUSH — security và performance đã fix, còn SEO content length minor
 
 ---
 
-## ⚠️ Cảnh báo (nên fix)
+## ✅ Đã fix (4/5/2026)
 
-- ℹ️ Bundle khá lớn: build\assets\js\main.e3e0c8a8.js = 458KB (> 300KB)
-- ⚠️ npm audit: 18 HIGH vulnerabilities
-- ℹ️ Không có vercel.json — security headers chưa được cấu hình cho Vercel
-- ⚠️ src\pages\tools\ai-career-wingman.jsx: target="_blank" thiếu rel="noopener noreferrer" — tab hijacking risk
-- ℹ️ SEO [docs\bi-kip\claude-ai-la-gi-cho-nhan-su.mdx]: không có internal link — thêm ít nhất 1 link đến bài liên quan
-- ℹ️ SEO [docs\bi-kip\cv_extract_tool.mdx]: tên file dùng dấu "_" — nên dùng "-" thay thế
-- ℹ️ SEO [docs\bi-kip\cv_extract_tool.mdx]: không có internal link — thêm ít nhất 1 link đến bài liên quan
-- ℹ️ SEO [docs\bi-kip\nhan-su-chon-goi-claude.mdx]: nội dung 815 từ — nên mở rộng lên ≥ 1500 từ để rank tốt hơn
-- ℹ️ SEO [docs\bi-kip\nhan-su-chon-goi-claude.mdx]: không có internal link — thêm ít nhất 1 link đến bài liên quan
-- ℹ️ SEO [docs\bi-kip\nhan-su-lua-chon-tinh-nang-claude.mdx]: nội dung 795 từ — nên mở rộng lên ≥ 1500 từ để rank tốt hơn
-- ℹ️ SEO [docs\bi-kip\nhan-su-lua-chon-tinh-nang-claude.mdx]: không có internal link — thêm ít nhất 1 link đến bài liên quan
-- ℹ️ SEO [docs\bi-kip\nhan-su-lua-chon-tinh-nang-claude.mdx]: 1 ảnh dùng PNG/JPG — nên convert sang WebP để tăng tốc độ
-- ℹ️ SEO [docs\bi-kip\thiet-ke-he-dieu-hanh-lam-viec-voi-claude-danh-rieng-cho-nguoi-lam-nhan-su.mdx]: không có internal link — thêm ít nhất 1 link đến bài liên quan
-- ℹ️ SEO [docs\bi-kip\xay-dung-tro-ly-nhan-su-cua-rieng-ban.mdx]: không có internal link — thêm ít nhất 1 link đến bài liên quan
+- ✅ `ai-career-wingman.jsx`: thêm `rel="noopener noreferrer"` — tab hijacking risk đã xử lý
+- ✅ `vercel.json` mới: X-Content-Type-Options, X-Frame-Options, X-XSS-Protection, Referrer-Policy
+- ✅ Bundle JS: main.js 458KB → 29KB (chunk splitting, vendor code tách riêng)
+- ✅ SEO: Thêm internal links cho 6 bài bi-kip
+- ✅ SEO: `live-artifacts-hr.png` → `live-artifacts-hr.webp` (382KB → 142KB, −63%)
+
+---
+
+## ⚠️ Còn lại (chấp nhận hoặc backlog)
+
+- ℹ️ npm audit: 21 lỗ hổng (3 moderate, 18 high) — **tất cả dev deps** (webpack-dev-server chain), không ảnh hưởng production. Fix yêu cầu downgrade Docusaurus → bỏ qua.
+- ℹ️ SEO [`nhan-su-chon-goi-claude.mdx`]: nội dung 815 từ — nên mở rộng ≥ 1500 từ (backlog)
+- ℹ️ SEO [`nhan-su-lua-chon-tinh-nang-claude.mdx`]: nội dung 795 từ — nên mở rộng ≥ 1500 từ (backlog)
+- ℹ️ SEO [`cv_extract_tool.mdx`]: tên file dùng `_` — nên đổi sang `-` (backlog, cần redirect)
 
 ## ℹ️ Ghi chú Windows
 

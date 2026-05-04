@@ -1,5 +1,5 @@
 # PROJECT PLAN — Lười HR
-> Cập nhật: 30/4/2026 | Launch: 4/5/2026 (T2)
+> Cập nhật: 4/5/2026 | Launch đã xong ✅ — Đang chạy tuần 1
 
 ---
 
@@ -12,43 +12,13 @@
 | GA4, QA Agent, SEO Skill | ✅ Done |
 | Wingman Tool landing page | ✅ Done |
 | Trang ủng hộ (`/ung-ho`) | ✅ Done |
-| QR ngân hàng | ✅ Done — nằm trong trang /ung-ho |
-| Bài viết docs | ✅ Done — `docs/bi-kip/xay-dung-tro-ly-nhan-su-cua-rieng-ban.mdx` |
-| Bài key launch 4/5 | ✅ Done — LinkedIn post + bài bi-kip là bài launch |
-| Git dirty files | ❌ Chưa commit + push → Vercel |
-
----
-
-## Critical path — 4 ngày còn lại
-
-### 30/4 (T4 — Hôm nay)
-- [ ] Andy: Chụp QR ngân hàng → `static/img/qr-ung-ho.png`
-- [ ] Tạo `src/pages/ung-ho.jsx` (cần số TK + tên ngân hàng từ Andy)
-- [ ] Soạn caption LinkedIn teaser #2 (đăng ngày 1/5)
-
-### 1/5 (T5)
-- [ ] Đăng teaser #2 LinkedIn lúc 7:30 — "4/5 tới mình ra mắt thứ gì đó cho dân HR…"
-
-### 2–3/5 (T7–CN)
-- [ ] Viết bài key: "HR Agent là gì? 5 Agents người làm nhân sự nên tạo ngay" → `docs/hr-agents/hr-agent-la-gi.md`
-- [ ] SEO Agent audit bài key
-- [ ] QA Agent gate (3 vòng)
-- [ ] Commit 9 dirty files theo nhóm + push staging Vercel
-- [ ] Soạn LinkedIn + Facebook caption cho ngày launch
-
-### 4/5 (T2 — LAUNCH DAY)
-- [ ] **Git commit + push → Vercel** — chạy trước 7:00 (việc cuối còn lại)
-- [ ] Đăng LinkedIn lúc 7:30–8:00 — post đã sẵn tại `tempo/xay-dung-tro-ly-nhan-su-linkedin.html`
-- [ ] Đăng Facebook lúc 18:00
-
----
-
-## Việc của Andy (không thể delegate)
-
-1. Chụp QR ngân hàng → lưu file `static/img/qr-ung-ho.png`
-2. Cung cấp: tên ngân hàng + số tài khoản (để điền vào trang `/ung-ho`)
-3. Viết nội dung bài HR Agent (hoặc cung cấp outline để agent draft)
-4. Đăng LinkedIn thủ công ngày 1/5 và 4/5
+| Bài viết docs (6 bài bi-kip) | ✅ Done |
+| Bài key launch 4/5 | ✅ Done — deployed + LinkedIn post |
+| Security (rel, vercel.json headers) | ✅ Done — 4/5 |
+| SEO internal links (6 bài) | ✅ Done — 4/5 |
+| Ảnh WebP (−63% size) | ✅ Done — 4/5 |
+| Bundle JS (458KB → 29KB main) | ✅ Done — 4/5 |
+| Google Translate flag selector | ✅ Done — 4/5 |
 
 ---
 
@@ -63,16 +33,16 @@
 ### Tuần 1 — LAUNCH WEEK (4/5–8/5)
 | Ngày | Bài | Folder |
 |---|---|---|
-| T2 4/5 | **KEY LAUNCH:** "HR Agent là gì? 5 Agents người làm nhân sự nên tạo ngay" | `docs/hr-agents/` |
-| T3 6/5 | "Claude AI là gì? So sánh ChatGPT và Gemini" | `docs/nhap-mon/` |
-| T5 8/5 | LinkedIn short: "3 lý do HR nên thử Claude" | LinkedIn only |
+| T2 4/5 | **KEY LAUNCH:** "Xây dựng trợ lý nhân sự của riêng bạn" | `docs/bi-kip/` ✅ Done |
+| T3 6/5 | "Claude AI là gì? So sánh ChatGPT và Gemini" | `docs/nhap-mon/` ✅ Done |
+| T5 8/5 | LinkedIn short: "3 lý do HR nên thử Claude" | LinkedIn only ✅ Done |
 
 ### Tuần 2 (11/5–15/5)
 | Ngày | Bài | Folder |
 |---|---|---|
 | T2 11/5 | LinkedIn short hook | LinkedIn only |
-| T3 13/5 | "Claude AI giúp gì cho HR? + preview 30+ Skills" | `docs/nhap-mon/` |
-| T5 15/5 | "So sánh gói Free/Pro/Max — dùng thế nào tiết kiệm?" | `docs/nhap-mon/` |
+| T3 13/5 | "Claude AI giúp gì cho HR? + preview 30+ Skills" | `docs/nhap-mon/` ✅ Done |
+| T5 15/5 | "So sánh gói Free/Pro/Max — dùng thế nào tiết kiệm?" | `docs/nhap-mon/` ✅ Done |
 
 ### Tuần 3 (18/5–22/5)
 | Ngày | Bài | Folder |
@@ -103,11 +73,28 @@ docs/
 
 ---
 
+## Social Media Automation — Quyết định pending
+
+**Hiện tại:** Claude for Chrome (browser automation)
+**Vấn đề:** Phải click quá nhiều, UX kém
+
+**Kế hoạch:**
+- Thử thêm 1–2 case với Claude for Chrome
+- Nếu vẫn không ổn → **chuyển sang Make.com** (free tier, 1,000 ops/tháng)
+- Make.com có Facebook + LinkedIn native connector, không cần Blotato hay n8n
+
+**Không dùng:** Blotato (startup nhỏ, likely sponsored content), Apify (không phù hợp), n8n (cần self-host)
+
+---
+
 ## Backlog — Ưu tiên thấp
 
 | Tính năng | Mô tả | Effort |
 |---|---|---|
-| Google Translate widget | Thêm nút dịch tự động cho người đọc nước ngoài (HR quốc tế). Dịch toàn bộ kể cả prompt. Không cần i18n thủ công. | ~30 phút |
+| SEO content length | `nhan-su-chon-goi-claude` (815 từ) và `nhan-su-lua-chon-tinh-nang-claude` (795 từ) — nên mở rộng lên ≥ 1500 từ | Medium |
+| SEO filename | `cv_extract_tool.mdx` dùng `_` — nên đổi sang `-` | Low |
+| Social proof | Thêm số liệu thật (người dùng, testimonial) sau khi có data | Low |
+| Ảnh header bài | Thêm ảnh đại diện cho từng bài khi có đủ nội dung | Low |
 
 ---
 
