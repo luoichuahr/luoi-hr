@@ -1,0 +1,185 @@
+---
+sidebar_position: 10
+sidebar_label: Xây dựng Dashboard bằng skill
+title: Xây dựng HR Dashboard bằng skill
+description: Hướng dẫn thực hành tạo HR Dashboard bằng skill để biến các dòng dữ liệu thô sơ thành dashboard hữu ích với các insights đi kèm.
+tags: [hr-dashboard, claude, analytics, s29, data-storytelling]
+---
+
+import Callout from '@site/src/components/Callout';
+import PromptBlock from '@site/src/components/PromptBlock';
+
+<div className="badge-row">
+  <span className="doc-badge badge-level">Trung cấp</span>
+  <span className="doc-badge badge-time">🕐 Đọc 12 phút</span>
+  <span className="doc-badge badge-tool">Claude AI · S29</span>
+  <span className="doc-badge badge-new">🆕 Cập nhật 05/2026</span>
+</div>
+
+# Xây dựng HR Dashboard bằng skill
+
+<p className="doc-subtitle">Hướng dẫn thực hành tạo HR Dashboard bằng skill để biến các dòng dữ liệu thô sơ thành dashboard hữu ích với các insights đi kèm</p>
+
+<div className="stat-row">
+  <div className="stat-card">
+    <div className="stat-num">30 phút</div>
+    <div className="stat-label">từ file Excel đến dashboard hoàn chỉnh</div>
+  </div>
+  <div className="stat-card">
+    <div className="stat-num">1,470</div>
+    <div className="stat-label">nhân viên trong IBM HR Analytics dataset</div>
+  </div>
+  <div className="stat-card">
+    <div className="stat-num">4 tab</div>
+    <div className="stat-label">business-first: Attrition · Risk · Pay · Dept</div>
+  </div>
+</div>
+
+---
+
+## Xây dựng HR Dashboard nhanh hơn
+
+Trước đây chúng ta mất nhiều thời gian để làm báo cáo nhân sự cuối tháng, cuối năm, mất từ 1 tiếng đến 2 tiếng hoặc nếu đã biết dùng Power Bi thì lại đau đầu khi phải nhớ DAX. Nhưng giờ đây bạn chỉ cần ra lệnh cho AI làm hết, bạn chỉ nói báo cáo đó cần có chart gì, phân tích gì là "a-lê-hấp" 5 phút có ngay.
+
+Bạn sẽ không cần phải nhớ luôn các hàm của excel là gì nữa, quá đã :D
+
+<Callout type="tip" title="Mẹo">
+  Bạn setup rule lần đầu mất 15-20 phút và sau đó dùng skill này cực kỳ nhanh
+</Callout>
+
+HR Dashboard trong bài này được làm từ kỹ năng tạo báo cáo từ bộ skills của HR Agent. Sau bài này, bạn có thể down về tự chế biến cho riêng mình.
+
+---
+
+## Dataset IBM HR Analytics — tại sao nên dùng để thực hành
+
+Kaggle có hàng nghìn dataset HR. Nhưng IBM HR Analytics là lựa chọn tốt nhất để bắt đầu vì 3 lý do:
+
+- **Đủ lớn để có ý nghĩa thống kê:** 1,470 nhân viên, 39 cột — đủ để ra insight thực sự, không phải pattern ngẫu nhiên
+- **Đủ sạch để không mất thời gian cleaning:** IBM đã xử lý giúp bạn — không null, không lỗi encoding, không cột rác
+- **Bao gồm đủ chiều dữ liệu HR quan trọng:** attrition, performance, salary, tenure, department, age, education — tất cả trong một file
+
+<Callout type="info" title="Thông tin">
+  [Link download](https://drive.google.com/drive/folders/1pxBM18JktlL8B7ndHRW2AY5xXICmfSov?usp=drive_link)
+</Callout>
+
+---
+
+## Universal skill làm gì cho bạn?
+
+HR Dashboard Universal là một kỹ năng chung (general skill) đã được tùy chỉnh cho người dùng cơ bản. Nó nằm trong hệ thống HR Agent — một bộ hướng dẫn có cấu trúc để Claude biết chính xác cần làm gì khi bạn yêu cầu tạo HR Dashboard.
+
+Thay vì phải prompt dài dòng mỗi lần, skill này đã encode sẵn 4 thứ:
+
+- **Framework 4 tab business-first:** Attrition Overview → Talent Risk → Pay Equity → Department Deep Dive — đúng thứ tự ưu tiên C-suite cần
+- **Python extraction script:** đọc Excel/CSV, tính KPI, output JSON nhúng thẳng vào HTML — chạy hoàn toàn offline
+- **Quy tắc Data Storytelling:** chart title = insight, sea-of-grey với 1 highlight đỏ, data labels trên chart quan trọng
+- **SHRM benchmark reference:** so sánh attrition với benchmark ngành ngay trong dashboard — không cần tra thêm
+
+<Callout type="tip" title="Mẹo">
+  Universal skill dùng được với **bất kỳ dataset HR nào**. Cột tối thiểu: `Attrition` (Yes/No), `Department`, `JobRole`, `MonthlyIncome`. Các cột khác là bonus — Claude tự điều chỉnh chart list. Hoặc bạn tự bảo điều chỉnh skill này theo ý muốn.
+</Callout>
+
+---
+
+## Hướng dẫn 4 bước thực hành
+
+<div className="doc-flow">
+  <div className="flow-box">1. Tải dataset từ Kaggle</div>
+  <div className="flow-arrow">→</div>
+  <div className="flow-box">2. Gọi S29 trong Claude Code</div>
+  <div className="flow-arrow">→</div>
+  <div className="flow-box">3. Chọn chart &amp; extract</div>
+  <div className="flow-arrow">→</div>
+  <div className="flow-box flow-box-green">4. Mở dashboard ✓</div>
+</div>
+
+### Bước 1 — Tạo Project trong Cowork
+
+Bạn nên tạo một Project trong Cowork để xài cho các lần sau. Claude sẽ hỏi folder nào để dùng, hãy trỏ đến folder chứa dashboard skill + hr data.xlsx. Trong mục instruction thì ghi như bên dưới
+
+![Tạo Project trong Claude Cowork](/img/bi-kip/lam-hr-dashboard-voi-claude-s29/cowork-setup.png)
+
+### Bước 2 — Gọi skill dashboard
+
+Paste đúng câu này vào Claude Cowork
+
+<PromptBlock
+  title="Prompt — Gọi Dashboard skill"
+  lang="text"
+  code={`gọi dashboard skill sau đó đọc file excel [đường dẫn HR Data.xlsx]
+để làm hr dashboard, gợi ý trước các chart sẽ thể hiện,
+xuất ra html trong cùng folder và tự động mở khi xong`}
+/>
+
+Claude sẽ load skill này, đọc file Excel, phân tích cột có sẵn, rồi đề xuất danh sách chart phù hợp với data của bạn. Bước này mất khoảng 30–60 giây.
+
+### Bước 3 — Chọn chart và chạy extraction
+
+Claude đề xuất chart list — bạn có thể bỏ chart không cần, hoặc thêm chart tùy theo ý định của bạn
+
+<Callout type="warn" title="Lưu ý">
+  Script cần `pandas` và `openpyxl`. Nếu chưa cài, Claude tự chạy `pip install pandas openpyxl` trước. Lần đầu mất thêm ~30 giây, các lần sau chạy ngay.
+</Callout>
+
+### Bước 4 — Mở dashboard trong browser
+
+File tự động mở lên browser mặc định của máy bạn.
+
+---
+
+## Mapping: cột dữ liệu → KPI dashboard
+
+| Tab | Cột IBM dataset | KPI trong dashboard |
+|-----|----------------|---------------------|
+| Tab 1 — Attrition Overview | Attrition, MonthlyIncome, Department, YearsAtCompany | Tỷ lệ nghỉ việc vs SHRM benchmark · Chi phí turnover · Peak tenure |
+| Tab 2 — Talent Risk | JobRole, OverTime, JobSatisfaction, Attrition | Risk theo role · Overtime correlation · Satisfaction gap |
+| Tab 3 — Pay Equity | MonthlyIncome, Gender, JobLevel, PerformanceRating | Gender pay gap · Pay compression ratio · Pay-for-performance |
+| Tab 4 — Dept Deep Dive | Department, EducationField | Drill-down attrition · Overtime · Education mismatch |
+
+---
+
+## Kết quả từ 1,470 nhân viên IBM
+
+IBM dataset cho ra những insight đáng chú ý:
+
+- **Attrition 16.1%** — cao hơn SHRM benchmark (15%), tương đương chi phí ước tính $18.5–27.7M/năm
+- **Sales Rep: 39.8%** — outlier nghiêm trọng, gần gấp đôi average. Dashboard highlight đỏ duy nhất cột này — người xem nhìn vào biết ngay cần action ở đâu
+- **Peak attrition ở tenure 1–2 năm** — bài toán là onboarding và 6-month check-in, không phải retention bonus
+- **Gender pay gap tối đa 2.1%** — thấp hơn nhiều so với thị trường VN (~8–12%)
+- **Pay compression 1.78x** (Director/Entry) — nếu career path không rõ ràng, nhân viên mid-level có thể cảm thấy "lên Director cũng không đáng"
+
+<Callout type="info" title="Thông tin">
+  Mỗi tab có **CEO Decision Panel** ở cuối — tóm tắt 2–3 dòng action gợi ý dựa trên data. Đây là phần board đọc đầu tiên, không phải chart.
+</Callout>
+
+---
+
+## Thành quả — Dashboard thực tế từ IBM dataset
+
+Đây là kết quả sau khi chạy dashboard skill trên 1,470 nhân viên IBM — dashboard 4 tab hoàn chỉnh, đầy đủ chart và CEO Decision Panel và có 3 màu sắc cho bạn lựa chọn nữa nhé.
+
+![insert:hr-dashboard-preview.jpg]
+
+<Callout type="tip" title="Mẹo">
+  Click vào các tab trong dashboard để xem Attrition Overview, Talent Risk, Pay Equity và Department Deep Dive. Mỗi tab có CEO Decision Panel ở cuối — đây là phần quan trọng nhất khi thuyết trình với lãnh đạo.
+</Callout>
+
+---
+
+## Bài tiếp theo: Data Storytelling cho HR Reports
+
+Dashboard đã xong trong 30 phút. Nhưng làm sao để **report của bạn thực sự thuyết phục được CEO hành động ngay**, không chỉ "à vâng để xem xét"?
+
+Bài tiếp theo sẽ đi sâu vào 5 quy tắc Data Storytelling áp dụng trực tiếp trong HR reports:
+
+- **R-DS09:** Chart title phải là insight — "Sales Rep nghỉ gấp đôi average" thay vì "Attrition by Job Role"
+- **R-DS15:** Sea-of-grey technique — chỉ 1 màu highlight duy nhất cho điểm CEO cần chú ý, tất cả còn lại màu xám
+- Khi nào dùng bar, khi nào dùng line — và khi nào không cần chart nào cả
+- **CEO-first narrative:** kết luận trước, bằng chứng sau — ngược với báo cáo học thuật truyền thống
+
+Nếu bạn đã thực hành xong bài này với IBM dataset, bài tiếp theo sẽ nâng cấp dashboard đó lên chuẩn consultant-grade.
+
+---
+
+Thân, **Lười Chúa**

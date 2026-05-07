@@ -8,6 +8,14 @@
 
 ---
 
+## 2026-05-07
+
+### [CONTENT] Deploy bài "Xây dựng HR Dashboard bằng skill" (S29)
+- Publish `docs/bi-kip/lam-hr-dashboard-voi-claude-s29.mdx` — 185 dòng, trung cấp
+- Đã QA + SEO check, nội dung khớp với bản Andy review trong tempo/
+
+---
+
 ## 2026-05-04
 
 ### [ARCH] Security fix — rel="noopener noreferrer" + vercel.json security headers
