@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Dashboard Nhân Sự — Chẩn Đoán Chi Phí Nhân Lực</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0f1117; --surface:#1a1d27; --border:#2a2d3e;
+  --text:#e2e8f0; --muted:#94a3b8;
+  --accent:#6366f1; --red:#ef4444; --yellow:#f59e0b; --green:#10b981;
+}
+[data-theme="light"] {
+  --bg:#f8fafc; --surface:#ffffff; --border:#e2e8f0;
+  --text:#1e293b; --muted:#64748b; --accent:#4f46e5;
+}
+[data-theme="warm"] {
+  --bg:#fdf6ec; --surface:#fff9f0; --border:#e8d5b0;
+  --text:#3d2b1f; --muted:#92765a; --accent:#d97706;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);}
+
+.header{padding:20px 32px;background:var(--surface);border-bottom:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center;}
+.header-title{font-size:18px;font-weight:700;}
+.header-sub{font-size:12px;color:var(--muted);margin-top:3px;}
+.theme-btn{padding:5px 12px;border:1px solid var(--border);border-radius:6px;
+  background:var(--surface);color:var(--text);cursor:pointer;font-size:12px;margin-left:6px;}
+.theme-btn:hover{border-color:var(--accent);}
+
+.tab-bar{display:flex;border-bottom:1px solid var(--border);background:var(--surface);
+  padding:0 32px;overflow-x:auto;}
+.tab-btn{padding:13px 18px;font-size:13px;font-weight:600;color:var(--muted);
+  border:none;background:none;cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;}
+.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent);}
+
+.tab-content{display:none;padding:28px 32px;}
+.tab-content.active{display:block;}
+
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:14px;margin-bottom:28px;}
+.kpi-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:18px;}
+.kpi-card .lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;}
+.kpi-card .val{font-size:26px;font-weight:700;}
+.kpi-card .sub{font-size:11px;color:var(--muted);margin-top:3px;}
+.kpi-card.red{border-left:4px solid var(--red);}
+.kpi-card.yellow{border-left:4px solid var(--yellow);}
+.kpi-card.green{border-left:4px solid var(--green);}
+
+.insight{margin-top:12px;padding:10px 12px;background:rgba(99,102,241,0.07);
+  border-left:3px solid var(--accent);border-radius:0 6px 6px 0;
+  font-size:12px;line-height:1.6;color:var(--text);}
+.insight strong{color:var(--accent);}
+.insight .flag-red{color:var(--red);font-weight:600;}
+.insight .flag-green{color:var(--green);font-weight:600;}
+.insight .flag-yellow{color:var(--yellow);font-weight:600;}
+
+.chart-grid{display:grid;gap:20px;margin-bottom:24px;}
+.g2{grid-template-columns:1fr 1fr;}
+.g3{grid-template-columns:1fr 1fr 1fr;}
+.g1{grid-template-columns:1fr;}
+.chart-box{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px;}
+.chart-box h3{font-size:13px;font-weight:600;margin-bottom:14px;}
+.chart-box canvas{max-height:240px;}
+
+.ceo-panel{background:var(--surface);border:2px solid var(--accent);border-radius:10px;padding:20px;margin-top:4px;}
+.ceo-panel h3{font-size:12px;font-weight:700;color:var(--accent);text-transform:uppercase;
+  letter-spacing:.06em;margin-bottom:14px;}
+.ceo-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;}
+.ceo-item .cl{font-size:11px;color:var(--muted);text-transform:uppercase;margin-bottom:3px;}
+.ceo-item .cv{font-size:15px;font-weight:700;}
+.cv.danger{color:var(--red);} .cv.warning{color:var(--yellow);} .cv.safe{color:var(--green);}
+
+@media(max-width:768px){
+  .g2,.g3{grid-template-columns:1fr;}
+  .tab-content{padding:16px;}
+  .kpi-grid{grid-template-columns:repeat(2,1fr);}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div class="header-title">Dashboard Nhân Sự — Chẩn Đoán Chi Phí Nhân Lực</div>
+    <div class="header-sub">TechForward Inc. · IBM HR Analytics · 1,470 nhân viên · Chuẩn so sánh: SHRM 2024 · BLS 2024 · SaaStr</div>
+  </div>
+  <div>
+    <button class="theme-btn" onclick="setTheme('dark')">Tối</button>
+    <button class="theme-btn" onclick="setTheme('light')">Sáng</button>
+    <button class="theme-btn" onclick="setTheme('warm')">Ấm</button>
+  </div>
+</div>
+
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="showTab('t1',this)">Tổng Quan P&amp;L</button>
+  <button class="tab-btn" onclick="showTab('t2',this)">Q1 · Chi Phí Nghỉ Việc</button>
+  <button class="tab-btn" onclick="showTab('t3',this)">Q2 · Ổn Định Sales</button>
+  <button class="tab-btn" onclick="showTab('t4',this)">Q3 · Hiệu Quả Lương</button>
+</div>
+
+<!-- TAB 1 -->
+<div id="t1" class="tab-content active">
+  <div class="kpi-grid" id="kpi1"></div>
+  <div class="chart-grid g2">
+    <div class="chart-box">
+      <h3>Sales &amp; HR đang vượt ngưỡng nguy hiểm 15%</h3>
+      <canvas id="c1a"></canvas>
+      <div class="insight"><span class="flag-red">Sales 20.6% · HR 19.0%</span> — cả hai vượt benchmark nguy hiểm. R&D tương đối ổn ở 13.8% nhưng R&amp;D chiếm 65% headcount nên volume nghỉ việc vẫn cao nhất công ty.</div>
+    </div>
+    <div class="chart-box">
+      <h3>Nam chiếm 60% — cần kiểm tra attrition theo giới</h3>
+      <canvas id="c1b"></canvas>
+      <div class="insight">Tỷ lệ 60/40 (Nam/Nữ) không đáng lo nếu tỷ lệ nghỉ và lương đồng đều. Tab Q3 xác nhận: <span class="flag-green">chênh lệch lương giới tính tối đa 2.1% — an toàn.</span></div>
+    </div>
+    <div class="chart-box">
+      <h3>R&amp;D chiếm 65% headcount — chi phí mất người cao nhất</h3>
+      <canvas id="c1c"></canvas>
+      <div class="insight">Với 961/1,470 người, <strong>mỗi 1% tỷ lệ nghỉ ở R&amp;D = ~10 người nghỉ</strong>. Dù tỷ lệ thấp nhất (13.8%), số lượng người nghỉ ở R&amp;D vẫn là gánh nặng thay thế lớn nhất công ty.</div>
+    </div>
+    <div class="chart-box">
+      <h3>38% nhân viên ở độ tuổi 25–34 — nhóm rủi ro cao nhất</h3>
+      <canvas id="c1d"></canvas>
+      <div class="insight">Nhóm 25-34 (554 người) có tính cơ động nghề nghiệp cao nhất — dễ bị thị trường săn đón. Kết hợp với đỉnh nghỉ việc ở năm 1-2 tại Tab Q1: <span class="flag-yellow">chất lượng hội nhập nhân viên mới quyết định có giữ được nhóm này không.</span></div>
+    </div>
+  </div>
+  <div class="ceo-panel"><h3>CEO · Tổng Hợp Chi Phí Nhân Lực</h3><div class="ceo-grid" id="ceo1"></div></div>
+</div>
+
+<!-- TAB 2 -->
+<div id="t2" class="tab-content">
+  <div class="kpi-grid" id="kpi2"></div>
+  <div class="chart-grid g2">
+    <div class="chart-box">
+      <h3>Sales mất 1 trong 5 người mỗi năm</h3>
+      <canvas id="c2a"></canvas>
+      <div class="insight"><span class="flag-red">Sales 20.6% = ~92 người nghỉ/năm.</span> Với chi phí thay thế SHRM 100%, riêng Sales đã ngốn <strong>~$5.9M/năm</strong>. HR nhỏ (63 người) nhưng rate 19% = 12 người/năm, mỗi người HR mất đi kéo theo disruption vận hành.</div>
+    </div>
+    <div class="chart-box">
+      <h3>Sales Rep: gần 2 trong 5 người nghỉ mỗi năm — khẩn cấp</h3>
+      <canvas id="c2b"></canvas>
+      <div class="insight"><span class="flag-red">Nhân viên kinh doanh 39.8%</span> — cao gấp 2.5 lần chuẩn 15%. Kỹ thuật viên phòng thí nghiệm (23.9%) và Nhân sự (23.1%) cũng vượt ngưỡng. Giám đốc nghiên cứu (2.5%) và Quản lý (4.9%) ổn định — lãnh đạo cấp cao không phải vấn đề.</div>
+    </div>
+  </div>
+  <div class="chart-grid g1">
+    <div class="chart-box">
+      <h3>Người nghỉ nhiều nhất ở năm 1–2: vấn đề hội nhập, không phải lương</h3>
+      <canvas id="c2c"></canvas>
+      <div class="insight"><strong>Đỉnh rõ ràng tại năm 1-2 (59 người)</strong> — chiếm 25% tổng số người nghỉ. Khi đỉnh xảy ra ở năm 1-2 (không phải năm 3-5 hoặc 5+), <span class="flag-yellow">nguyên nhân gốc thường là: kỳ vọng công việc không khớp thực tế, hội nhập kém, hoặc chất lượng quản lý thấp</span> — không phải vấn đề lương. Khuyến nghị: cải thiện chương trình hội nhập 90 ngày + đào tạo quản lý, không cần tăng lương đại trà.</div>
+    </div>
+  </div>
+  <div class="ceo-panel"><h3>Q1 · Hành Động CEO</h3><div class="ceo-grid" id="ceo2"></div></div>
+</div>
+
+<!-- TAB 3 -->
+<div id="t3" class="tab-content">
+  <div class="kpi-grid" id="kpi3"></div>
+  <div class="chart-grid g3">
+    <div class="chart-box">
+      <h3>Sales cao hơn R&amp;D 6.8 điểm % — khoảng cách đáng lo</h3>
+      <canvas id="c3a"></canvas>
+      <div class="insight">Khoảng cách Sales vs R&amp;D là <span class="flag-red">+6.8 điểm %</span>. Nếu Sales giảm về bằng R&amp;D (13.8%), công ty tiết kiệm được ~$2.1M/năm chỉ từ riêng Sales attrition.</div>
+    </div>
+    <div class="chart-box">
+      <h3>28.7% Sales đang OT — tín hiệu hỗn hợp</h3>
+      <canvas id="c3b"></canvas>
+      <div class="insight">Làm thêm giờ 28.7% là mức trung bình — <span class="flag-yellow">không đủ để kết luận là khủng hoảng tải công việc.</span> Cần kết hợp phỏng vấn thôi việc: nếu người nghỉ nói "quá tải" → điều chỉnh chỉ tiêu; nếu nói "lương thị trường cao hơn" → điều chỉnh lương.</div>
+    </div>
+    <div class="chart-box">
+      <h3>Đội Sales nhiều kinh nghiệm — mất họ là mất quan hệ khách hàng</h3>
+      <canvas id="c3c"></canvas>
+      <div class="insight"><strong>160 người (36%) có thâm niên 5-10 năm</strong>, 121 người (27%) có trên 10 năm. Đội Sales đang dày dặn kinh nghiệm — không phải nhân viên mới. Mất nhóm 5-10 năm = mất quan hệ khách hàng, không thể thay thế nhanh bằng tuyển dụng mới.</div>
+    </div>
+  </div>
+  <div class="ceo-panel"><h3>Q2 · Hành Động CEO</h3><div class="ceo-grid" id="ceo3"></div></div>
+</div>
+
+<!-- TAB 4 -->
+<div id="t4" class="tab-content">
+  <div class="kpi-grid" id="kpi4"></div>
+  <div class="chart-grid g2">
+    <div class="chart-box">
+      <h3>Thang lương tuyến tính và lành mạnh — không có hiện tượng nén lương</h3>
+      <canvas id="c4a"></canvas>
+      <div class="insight">Cấp 1→5 tăng <strong>6.9 lần</strong> ($2,787 → $19,192). Tỷ lệ nén lương L3/L2 = <span class="flag-green">1.78x — vượt ngưỡng an toàn 1.25x.</span> Không có dấu hiệu nén lương — nhân viên cấp trung có đủ lý do tài chính để ở lại và thăng tiến.</div>
+    </div>
+    <div class="chart-box">
+      <h3>Chênh lệch lương giới tính không đáng kể — Cấp 3 Nữ còn cao hơn Nam</h3>
+      <canvas id="c4b"></canvas>
+      <div class="insight">Chênh lệch tối đa chỉ 2.1% (Cấp 2, nghiêng về Nam). <span class="flag-green">Cấp 3: Nữ cao hơn Nam $256/tháng</span> — không có bằng chứng về phân biệt đối xử có hệ thống. Rủi ro pháp lý (EPA/Title VII): không tồn tại với dữ liệu này.</div>
+    </div>
+    <div class="chart-box">
+      <h3>56% nhân viên bị gom ở mức tăng lương thấp 11–14% — thiếu phân hóa</h3>
+      <canvas id="c4c"></canvas>
+      <div class="insight"><span class="flag-yellow">818/1,470 người (56%) nhận tăng lương 11-14%</span> — tập trung ở dải thấp nhất. Chỉ 8.4% nhận 22-25%. Phân phối này cho thấy tăng lương đang áp dụng kiểu "đồng loạt" thay vì khen thưởng hiệu suất. Không khuyến khích người làm tốt ở lại.</div>
+    </div>
+    <div class="chart-box">
+      <h3>Cổ phần thưởng không phân hóa — chưa được dùng để giữ chân cấp cao</h3>
+      <canvas id="c4d"></canvas>
+      <div class="insight">Cổ phần thưởng dao động rất nhỏ từ <strong>0.74 (Cấp 1) đến 0.84 (Cấp 2)</strong> — gần như không phân biệt theo cấp bậc. <span class="flag-yellow">Cấp 5 (Giám đốc) nhận cổ phần tương đương Cấp 1</span> — cổ phần đang không đóng vai trò công cụ giữ chân cho lãnh đạo cấp cao.</div>
+    </div>
+  </div>
+  <div class="ceo-panel"><h3>Q3 · Hành Động CEO</h3><div class="ceo-grid" id="ceo4"></div></div>
+</div>
+
+<script>
+// ── DATA ─────────────────────────────────────────────────────────────
+const D = {
+  "summary": {
+    "total": 1470, "active": 1233, "attrited": 237,
+    "attrition_rate": 16.1,
+    "avg_income_monthly": 6503, "avg_income_annual": 78036,
+    "ot_rate": 28.3, "avg_tenure": 7.0,
+    "turnover_cost_100m": 18.5, "turnover_cost_150m": 27.7,
+    "compression_ratio": 1.78, "gap_max": 2.1,
+    "gender_split": {"Male": 882, "Female": 588},
+    "age_band": {"25 - 34": 554, "35 - 44": 505, "45 - 54": 245, "Under 25": 97, "Over 55": 69},
+    "dept_hc": {"R&D": 961, "Sales": 446, "HR": 63}
+  },
+  "tab2": {
+    "dept_attr": {"HR": 19.0, "R&D": 13.8, "Sales": 20.6},
+    "role_attr": {
+      "Sales Representative": 39.8, "Laboratory Technician": 23.9,
+      "Human Resources": 23.1, "Sales Executive": 17.5,
+      "Research Scientist": 16.1, "Healthcare Representative": 6.9,
+      "Manufacturing Director": 6.9, "Manager": 4.9, "Research Director": 2.5
+    },
+    "tenure_hist": {"<1yr": 16, "1-2yr": 59, "2-3yr": 27, "3-5yr": 39, "5-10yr": 58, "10+yr": 38}
+  },
+  "tab3": {
+    "sales_total": 446, "sales_attr_rate": 20.6,
+    "sales_ot_rate": 28.7, "sales_avg_tenure": 7.3,
+    "sales_tenure_hist": {"<1yr": 17, "1-2yr": 44, "2-3yr": 42, "3-5yr": 62, "5-10yr": 160, "10+yr": 121},
+    "dept_attr": {"HR": 19.0, "R&D": 13.8, "Sales": 20.6}
+  },
+  "tab4": {
+    "income_by_level": {"1": 2787, "2": 5502, "3": 9817, "4": 15504, "5": 19192},
+    "gender_gap": {
+      "1": {"Male": 2791, "Female": 2780, "gap_pct": 0.4},
+      "2": {"Male": 5549, "Female": 5435, "gap_pct": 2.1},
+      "3": {"Male": 9707, "Female": 9963, "gap_pct": -2.6},
+      "4": {"Male": 15571, "Female": 15431, "gap_pct": 0.9},
+      "5": {"Male": 19225, "Female": 19130, "gap_pct": 0.5}
+    },
+    "hike_hist": {"11-12%": 408, "13-14%": 410, "15-17%": 261, "18-21%": 268, "22-25%": 123},
+    "stock_by_level": {"1": 0.75, "2": 0.84, "3": 0.83, "4": 0.78, "5": 0.74}
+  }
+};
+
+// Register datalabels plugin only for charts that opt in
+Chart.register(ChartDataLabels);
+
+// ── HELPERS ──────────────────────────────────────────────────────────
+const $ = id => document.getElementById(id);
+const RED='#ef4444', YELLOW='#f59e0b', GREEN='#10b981', ACCENT='#6366f1', BLUE='#06b6d4';
+const PALETTE = [ACCENT,'#10b981','#f59e0b','#ef4444','#8b5cf6','#06b6d4','#f97316','#84cc16','#ec4899'];
+
+const gridColor = () => getComputedStyle(document.body).getPropertyValue('--border').trim() || '#2a2d3e';
+const textColor = () => getComputedStyle(document.body).getPropertyValue('--muted').trim() || '#94a3b8';
+
+function scaleOpts() {
+  return {
+    x: { grid:{color:'rgba(255,255,255,0.05)'}, ticks:{color:textColor(),font:{size:11}} },
+    y: { grid:{color:'rgba(255,255,255,0.05)'}, ticks:{color:textColor(),font:{size:11}} }
+  };
+}
+
+function kpiCard(lbl,val,sub='',cls=''){
+  return `<div class="kpi-card ${cls}"><div class="lbl">${lbl}</div><div class="val">${val}</div>${sub?`<div class="sub">${sub}</div>`:''}</div>`;
+}
+function ceoItem(lbl,val,cls=''){
+  return `<div class="ceo-item"><div class="cl">${lbl}</div><div class="cv ${cls}">${val}</div></div>`;
+}
+
+function bar(id, labels, data, colors, horizontal=false, showLabels=false){
+  const dlOpts = showLabels ? {
+    anchor: 'end', align: horizontal ? 'right' : 'top',
+    color: textColor(), font:{size:10, weight:'600'},
+    formatter: v => v + '%'
+  } : {display: false};
+  new Chart($(id),{type:'bar',
+    data:{labels, datasets:[{data, backgroundColor:colors, borderRadius:5}]},
+    options:{indexAxis:horizontal?'y':'x', responsive:true,
+      plugins:{legend:{display:false}, datalabels: dlOpts},
+      scales: scaleOpts()}
+  });
+}
+
+function groupedBar(id, labels, datasets){
+  new Chart($(id),{type:'bar',
+    data:{labels, datasets},
+    options:{responsive:true, barPercentage:0.7,
+      plugins:{legend:{position:'top',labels:{color:textColor(),font:{size:11}}}},
+      scales: scaleOpts()}
+  });
+}
+
+function donut(id, labels, data, colors){
+  new Chart($(id),{type:'doughnut',
+    data:{labels, datasets:[{data, backgroundColor:colors}]},
+    options:{responsive:true,
+      plugins:{legend:{position:'right',labels:{color:textColor(),font:{size:11}}}}}
+  });
+}
+
+// ── TAB 1 ────────────────────────────────────────────────────────────
+function renderT1(){
+  const s = D.summary;
+  const aStatus = s.attrition_rate>15?'red':s.attrition_rate>10?'yellow':'green';
+  const oStatus = s.ot_rate>30?'red':s.ot_rate>20?'yellow':'green';
+
+  $('kpi1').innerHTML = [
+    kpiCard('Tổng Nhân Lực', s.total.toLocaleString()),
+    kpiCard('Đang Làm Việc', s.active.toLocaleString()),
+    kpiCard('Tỷ Lệ Nghỉ Việc', s.attrition_rate+'%', s.attrited+' người/năm · chuẩn <15%', aStatus),
+    kpiCard('Chi Phí Thay Thế', `$${s.turnover_cost_100m}–${s.turnover_cost_150m}M`, 'SHRM 100–150% lương năm', 'red'),
+    kpiCard('Thu Nhập TB/Tháng', `$${s.avg_income_monthly.toLocaleString()}`),
+    kpiCard('Tỷ Lệ Làm Thêm', s.ot_rate+'%', 'làm thêm giờ · chuẩn <20%', oStatus),
+  ].join('');
+
+  const da = D.tab2.dept_attr;
+  bar('c1a', Object.keys(da), Object.values(da),
+    Object.values(da).map(v=>v>20?RED:v>15?YELLOW:GREEN), false, true);
+
+  const gs = s.gender_split, gt = gs.Male+gs.Female;
+  donut('c1b', ['Nam','Nữ'],
+    [Math.round(gs.Male/gt*100), Math.round(gs.Female/gt*100)], [ACCENT, GREEN]);
+
+  const hc = s.dept_hc;
+  bar('c1c', Object.keys(hc), Object.values(hc), PALETTE);
+
+  const ab = s.age_band;
+  const ageVI = {'Under 25':'Dưới 25','25 - 34':'25 - 34','35 - 44':'35 - 44','45 - 54':'45 - 54','Over 55':'Trên 55'};
+  donut('c1d', Object.keys(ab).map(k=>ageVI[k]||k), Object.values(ab), PALETTE);
+
+  $('ceo1').innerHTML = [
+    ceoItem('Rủi Ro Nghỉ Việc/Năm', `$${s.turnover_cost_100m}–${s.turnover_cost_150m}M`, 'danger'),
+    ceoItem('Nguyên Nhân Gốc', '→ Tab Q1 (Thâm niên khi nghỉ)'),
+    ceoItem('Nghỉ Việc Sales', D.tab3.sales_attr_rate+'% so với trung bình 16.1%', 'warning'),
+    ceoItem('Doanh Thu Bị Khóa', '~$9.6M/năm (SaaStr)', 'danger'),
+    ceoItem('Chênh Lệch Lương GT', `Tối đa ${s.gap_max}% — không có rủi ro pháp lý`, 'safe'),
+    ceoItem('Mốc Báo Cáo Board', 'D+30 · D+60 · D+90'),
+  ].join('');
+}
+
+// ── TAB 2 ────────────────────────────────────────────────────────────
+function renderT2(){
+  const s = D.summary; const q = D.tab2;
+  const aStatus = s.attrition_rate>15?'red':s.attrition_rate>10?'yellow':'green';
+
+  $('kpi2').innerHTML = [
+    kpiCard('Tỷ Lệ Nghỉ Việc', s.attrition_rate+'%', 'chuẩn <15%', aStatus),
+    kpiCard('Người Nghỉ/Năm', s.attrited),
+    kpiCard('Chi Phí (SHRM 100%)', `$${s.turnover_cost_100m}M/năm`, 'ước tính thấp', 'red'),
+    kpiCard('Chi Phí (SHRM 150%)', `$${s.turnover_cost_150m}M/năm`, 'ước tính cao', 'red'),
+    kpiCard('Thu Nhập TB: Đang Làm', `$${(q.income_by_attr&&q.income_by_attr['No']||6503).toLocaleString()}`),
+    kpiCard('Thâm Niên TB Khi Nghỉ', s.avg_tenure+' năm', 'trung bình toàn công ty'),
+  ].join('');
+
+  bar('c2a', Object.keys(q.dept_attr), Object.values(q.dept_attr),
+    Object.values(q.dept_attr).map(v=>v>20?RED:v>15?YELLOW:GREEN), false, true);
+
+  const roles = Object.entries(q.role_attr).sort((a,b)=>b[1]-a[1]);
+  const GREY = 'rgba(148,163,184,0.35)';
+  // R-DS15: 1 highlight color in sea of grey — Sales Rep is clear outlier at 39.8%
+  bar('c2b', roles.map(r=>r[0]), roles.map(r=>r[1]),
+    roles.map(r=>r[1]>30?RED:GREY), true, true);
+
+  const th = q.tenure_hist;
+  const peak = Object.entries(th).sort((a,b)=>b[1]-a[1])[0]?.[0]||'';
+  const peakColors = Object.entries(th).map(([k,v])=> k===peak?RED:ACCENT);
+  bar('c2c', Object.keys(th), Object.values(th), peakColors);
+
+  const rootCause = (peak==='<1yr'||peak==='1-2yr') ? 'Vấn đề hội nhập (đỉnh: '+peak+')'
+    : (peak==='2-3yr'||peak==='3-5yr') ? 'Vấn đề phát triển nghề (đỉnh: '+peak+')'
+    : 'Vấn đề lương thưởng (đỉnh: '+peak+')';
+
+  $('ceo2').innerHTML = [
+    ceoItem('Rủi Ro (Ước Tính Thấp)', `$${s.turnover_cost_100m}M/năm`, 'danger'),
+    ceoItem('Rủi Ro (Ước Tính Cao)', `$${s.turnover_cost_150m}M/năm`, 'danger'),
+    ceoItem('Tín Hiệu Nguyên Nhân', rootCause, 'warning'),
+    ceoItem('Vị Trí Rủi Ro Cao Nhất', 'Nhân viên kinh doanh 39.8% nghỉ', 'danger'),
+    ceoItem('Quyết Định CEO', 'Phê duyệt $2.5M chương trình giữ chân'),
+    ceoItem('Mục Tiêu Board D+90', 'Tỷ lệ nghỉ → 12%'),
+  ].join('');
+}
+
+// ── TAB 3 ────────────────────────────────────────────────────────────
+function renderT3(){
+  const q = D.tab3;
+  const sStatus = q.sales_attr_rate>20?'red':q.sales_attr_rate>15?'yellow':'green';
+  const oStatus = q.sales_ot_rate>40?'red':q.sales_ot_rate>25?'yellow':'green';
+
+  $('kpi3').innerHTML = [
+    kpiCard('Nhân Lực Sales', q.sales_total),
+    kpiCard('Nghỉ Việc Sales', q.sales_attr_rate+'%', 'so với trung bình 16.1%', sStatus),
+    kpiCard('Làm Thêm Sales', q.sales_ot_rate+'%', 'làm thêm giờ', oStatus),
+    kpiCard('Thâm Niên TB Sales', q.sales_avg_tenure+' năm'),
+    kpiCard('Doanh Thu Bị Khóa', '~$9.6M/năm', 'chuẩn SaaStr ramp-up', 'red'),
+  ].join('');
+
+  const da = q.dept_attr;
+  bar('c3a', Object.keys(da), Object.values(da),
+    Object.values(da).map(v=>v>20?RED:v>15?YELLOW:GREEN), false, true);
+
+  const ot = q.sales_ot_rate;
+  donut('c3b', ['Làm Thêm Giờ','Không OT'], [ot, Math.round(100-ot)], [YELLOW, GREEN]);
+
+  const sth = q.sales_tenure_hist;
+  bar('c3c', Object.keys(sth), Object.values(sth), ACCENT);
+
+  const signal = q.sales_ot_rate>40
+    ? 'OT >40% → Quá tải công việc → Điều chỉnh chỉ tiêu trước'
+    : q.sales_ot_rate>25
+    ? 'OT 25-40% → Hỗn hợp: kiểm tra tải + lương vs thị trường'
+    : 'OT <25% → Chênh lệch lương là gốc → Điều chỉnh lương';
+
+  $('ceo3').innerHTML = [
+    ceoItem('Doanh Thu Bị Khóa/Năm', '~$9.6M', 'danger'),
+    ceoItem('Sales vs Toàn Công Ty', `${q.sales_attr_rate}% vs 16.1%`, 'warning'),
+    ceoItem('Tín Hiệu', signal, 'warning'),
+    ceoItem('Phương Án A (OT cao)', 'Điều chỉnh chỉ tiêu + $1.5M thưởng giữ chân'),
+    ceoItem('Phương Án B (lệch lương)', 'Điều chỉnh lương thị trường + tuyển chọn'),
+    ceoItem('Mục Tiêu D+90', 'Tỷ lệ nghỉ Sales ↓ · Doanh thu/người ↑'),
+  ].join('');
+}
+
+// ── TAB 4 ────────────────────────────────────────────────────────────
+function renderT4(){
+  const q = D.tab4; const s = D.summary;
+  const gapStatus = s.gap_max>5?'red':s.gap_max>2?'yellow':'green';
+  const compStatus = s.compression_ratio<1.15?'red':s.compression_ratio<1.25?'yellow':'green';
+
+  $('kpi4').innerHTML = [
+    kpiCard('Thu Nhập TB/Tháng', `$${s.avg_income_monthly.toLocaleString()}`),
+    kpiCard('Tỷ Lệ Nén Lương', s.compression_ratio+'x', 'tỷ lệ L3/L2 · lành mạnh >1.25', 'green'),
+    kpiCard('Chênh Lệch Lương GT', s.gap_max+'%', 'theo cấp bậc · <3% = an toàn', gapStatus),
+    kpiCard('Tỷ Lệ Làm Thêm', s.ot_rate+'%', 'rủi ro chi phí làm thêm giờ'),
+  ].join('');
+
+  const il = q.income_by_level;
+  bar('c4a', Object.keys(il).map(k=>'Cấp '+k), Object.values(il), ACCENT);
+
+  const gg = q.gender_gap;
+  if(gg && Object.keys(gg).length){
+    groupedBar('c4b',
+      Object.keys(gg).map(k=>'Cấp '+k),
+      [
+        {label:'Nam', backgroundColor:ACCENT, data:Object.values(gg).map(g=>g.Male)},
+        {label:'Nữ', backgroundColor:GREEN, data:Object.values(gg).map(g=>g.Female)},
+      ]
+    );
+  }
+
+  const hh = q.hike_hist;
+  bar('c4c', Object.keys(hh), Object.values(hh), ACCENT);
+
+  const sl = q.stock_by_level;
+  bar('c4d', Object.keys(sl).map(k=>'Cấp '+k), Object.values(sl), ACCENT);
+
+  const gapAction = s.gap_max>5?'⚠ Sửa ngay — rủi ro pháp lý EPA/Title VII'
+    :s.gap_max>2?'⚡ Theo dõi — phát hiện chênh lệch nhỏ'
+    :'✓ Không có chênh lệch đáng kể (tối đa '+s.gap_max+'%)';
+
+  $('ceo4').innerHTML = [
+    ceoItem('Chênh Lệch Lương Giới Tính', gapAction, gapStatus==='red'?'danger':gapStatus==='yellow'?'warning':'safe'),
+    ceoItem('Tỷ Lệ Nén Lương', s.compression_ratio+'x L3/L2 — lành mạnh', 'safe'),
+    ceoItem('Phân Phối Tăng Lương', 'Dải 11-14% = 56% nhân viên — cần xem lại'),
+    ceoItem('Cổ Phần Thưởng', 'Phẳng theo cấp (0.74–0.84) — chưa phân hóa'),
+    ceoItem('Hành Động Ngay', 'Không cần — cấu trúc lương ổn định'),
+    ceoItem('Mục Tiêu Board', 'Chi phí nhân sự % doanh thu: xu hướng giảm'),
+  ].join('');
+}
+
+// ── NAV ──────────────────────────────────────────────────────────────
+function showTab(id, btn){
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  $(id).classList.add('active');
+  btn.classList.add('active');
+}
+function setTheme(t){ document.body.setAttribute('data-theme',t); }
+
+// ── INIT ─────────────────────────────────────────────────────────────
+renderT1(); renderT2(); renderT3(); renderT4();
+</script>
+</body>
+</html>

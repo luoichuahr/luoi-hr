@@ -10,6 +10,11 @@
 
 ## 2026-05-07
 
+### [CONTENT] Embed IBM HR Dashboard vào bài S29 — replace placeholder
+- Copy `1778071649_HR_Dashboard_2026-05-06.html` → `static/demos/hr-ibm-dashboard.html`
+- Replace `![insert:hr-dashboard-preview.jpg]` bằng iframe thumbnail + link fullscreen
+- Update cả docs/bi-kip/ và tempo/
+
 ### [CONTENT] Deploy bài "Xây dựng HR Dashboard bằng skill" (S29)
 - Publish `docs/bi-kip/lam-hr-dashboard-voi-claude-s29.mdx` — 185 dòng, trung cấp
 - Đã QA + SEO check, nội dung khớp với bản Andy review trong tempo/
