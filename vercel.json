@@ -1,4 +1,11 @@
 {
+  "redirects": [
+    {
+      "source": "/docs/bi-kip/cv_extract_tool",
+      "destination": "/docs/bi-kip/cv-extract-tool",
+      "permanent": true
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",

@@ -1,7 +1,8 @@
 ---
 sidebar_position: 1
+slug: cv-extract-tool
 title: CV Extract Tool — Tự động đọc CV bằng AI
-description: Hướng dẫn xây dựng tool tự động trích xuất thông tin ứng viên từ CV PDF/Word thành Google Sheets dùng Google Apps Script + Gemini AI.
+description: "Tự động trích xuất CV PDF/Word vào Google Sheets bằng Google Apps Script + Gemini AI. Miễn phí, không cần code, giảm 80% thời gian xử lý hồ sơ. Làm theo hướng dẫn này là chạy được ngay."
 tags: [google-apps-script, gemini, google-drive, automation, tuyển-dụng]
 ---
 
@@ -21,7 +22,7 @@ import Callout from '@site/src/components/Callout';
 
 **Kết quả:** Giảm tới **80% thời gian xử lý hành chính**, giúp HR tập trung vào đánh giá chuyên môn và phỏng vấn.
 
-### Những hỗ trợ đột phá cho quy trình tuyển dụng
+## Những hỗ trợ đột phá cho quy trình tuyển dụng
 
 - **Tự động trích xuất thông tin:** AI tự "đọc" và bóc tách Họ tên, SĐT, Email, Vị trí ứng tuyển — không cần copy-paste thủ công.
 - **Xử lý CV định dạng phức tạp:** Hỗ trợ OCR để đọc được CV dạng ảnh quét hoặc layout nhiều cột (Marketing, Kỹ thuật...).
@@ -220,6 +221,25 @@ function callGeminiFinal(cvText) {
 <Callout type="info" title="Hệ thống chỉ quét file mới">
   Mỗi lần chạy, tool so sánh URL file với cột E trong Sheets. File nào đã có link → bỏ qua. Bạn có thể nhấn nút bao nhiêu lần cũng được mà không lo trùng dữ liệu.
 </Callout>
+
+---
+
+## Câu hỏi thường gặp
+
+**Tool này có miễn phí không?**
+Có. Toàn bộ tool dùng Google Apps Script (miễn phí), Google Drive (miễn phí), và Gemini API (miễn phí cho mức sử dụng cơ bản dưới 1.500 request/ngày). Bạn chỉ cần tài khoản Google.
+
+**Cần kỹ năng lập trình để dùng không?**
+Không. Bạn chỉ cần copy-paste đoạn code có sẵn và thay 2 dòng cấu hình: Folder ID và API Key. Không cần hiểu code, không cần biết JavaScript.
+
+**Tool hỗ trợ định dạng CV nào?**
+Hỗ trợ PDF (kể cả CV dạng ảnh scan nhờ tính năng OCR), Google Docs, và Word (.docx). Không hỗ trợ file `.doc` cũ (định dạng Office 97-2003).
+
+**Mỗi lần chạy có quét lại CV cũ không?**
+Không. Hệ thống lưu link CV vào cột E sau mỗi lần quét. Lần sau chạy, tool tự so sánh và bỏ qua file đã xử lý — bạn có thể nhấn nút bao nhiêu lần cũng được mà không lo trùng dữ liệu.
+
+**Dữ liệu CV có bị chia sẻ ra ngoài không?**
+Toàn bộ xử lý diễn ra trong tài khoản Google của bạn. Nội dung CV được gửi đến Gemini API để trích xuất thông tin, nhưng Google không lưu lại dữ liệu này cho các tài khoản Gemini Free tier theo chính sách của Google.
 
 ---
 

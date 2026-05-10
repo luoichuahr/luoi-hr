@@ -8,6 +8,16 @@
 
 ---
 
+## 2026-05-10 — SEO Fix (từ Analytics Agent + SEO Agent audit)
+
+- `[CONTENT]` **cv_extract_tool: Fix slug `_` → `-`** — thêm `slug: cv-extract-tool` vào frontmatter; Google xử lý underscore như 1 từ liền, không tách keyword
+- `[ARCH]` **vercel.json: Thêm redirect 301** từ `/docs/bi-kip/cv_extract_tool` → `/docs/bi-kip/cv-extract-tool` — giữ SEO juice cho URL cũ
+- `[CONTENT]` **cv_extract_tool: Fix heading H1→H3** — đổi `###` thành `##` cho "Những hỗ trợ đột phá", tránh nhảy cấp heading
+- `[CONTENT]` **cv_extract_tool: Thêm FAQ section** — 5 câu hỏi long-tail target keyword: "miễn phí", "không cần code", "hỗ trợ định dạng", "không quét lại", "bảo mật"
+- `[CONTENT]` **thiet-ke-he-dieu-hanh: Mở rộng description** từ 97 → 192 ký tự — thêm CTA và liệt kê component cụ thể để tăng CTR trên SERP
+
+---
+
 ## 2026-05-07
 
 ### [CONTENT] Embed IBM HR Dashboard vào bài S29 — replace placeholder
