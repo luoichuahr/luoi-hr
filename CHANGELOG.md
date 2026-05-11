@@ -8,6 +8,12 @@
 
 ---
 
+## 2026-05-11
+
+- [DESIGN] Fix ảnh QR Zalo bị broken trên Vercel — đổi tên `zalo-qr.JPG` → `zalo-qr.jpg` (Linux case-sensitive, code gọi lowercase)
+
+---
+
 ## 2026-05-10 — SEO Fix (từ Analytics Agent + SEO Agent audit)
 
 - `[CONTENT]` **cv_extract_tool: Fix slug `_` → `-`** — thêm `slug: cv-extract-tool` vào frontmatter; Google xử lý underscore như 1 từ liền, không tách keyword
