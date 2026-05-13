@@ -55,7 +55,7 @@ const config = {
     colorMode: { disableSwitch: true, respectPrefersColorScheme: true },
     navbar: {
       title: '🦥 Lười HR',
-      logo: { alt: 'Lười HR Logo', src: 'img/logo.svg' },
+      logo: { alt: 'Lười HR Logo', src: 'img/logo.png', width: 32, height: 32 },
       items: [
         {
           type: 'docSidebar',
