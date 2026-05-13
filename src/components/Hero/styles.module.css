@@ -22,7 +22,7 @@
 /* Sparkle decorations */
 .spark1, .spark2, .spark3 {
   position: absolute;
-  color: #10B981;
+  color: #0D9488;
   pointer-events: none;
   font-style: normal;
   line-height: 1;
@@ -92,7 +92,7 @@
   align-items: center;
   gap: 6px;
   background: #ecfdf5;
-  color: #059669;
+  color: #0F766E;
   border: 1px solid #a7f3d0;
   padding: 6px 14px;
   border-radius: 100px;
@@ -112,7 +112,7 @@
 
 .highlight {
   font-style: normal;
-  color: #10B981;
+  color: #0D9488;
 }
 
 .sub {
@@ -142,13 +142,13 @@
 }
 
 .btnPrimary {
-  background: #10B981;
+  background: #0D9488;
   color: white;
-  border: 2px solid #10B981;
+  border: 2px solid #0D9488;
 }
 .btnPrimary:hover {
-  background: #059669;
-  border-color: #059669;
+  background: #0F766E;
+  border-color: #0F766E;
   transform: translateY(-2px);
   box-shadow: 0 8px 24px rgba(16, 185, 129, 0.28);
   color: white;
@@ -161,8 +161,8 @@
   border: 2px solid #e2e8f0;
 }
 .btnSecondary:hover {
-  border-color: #10B981;
-  color: #10B981;
+  border-color: #0D9488;
+  color: #0D9488;
   transform: translateY(-2px);
   text-decoration: none;
 }
@@ -240,7 +240,7 @@
 }
 .chatDots span:first-child  { background: #ef4444; }
 .chatDots span:nth-child(2) { background: #f59e0b; }
-.chatDots span:last-child   { background: #10B981; }
+.chatDots span:last-child   { background: #0D9488; }
 
 .chatTitle {
   color: #94a3b8;
@@ -266,7 +266,7 @@
 }
 
 .msgUser {
-  background: #10B981;
+  background: #0D9488;
   color: white;
   align-self: flex-end;
   border-bottom-right-radius: 4px;
@@ -331,7 +331,7 @@
 .floatA {
   top: -18px;
   right: -10px;
-  color: #059669;
+  color: #0F766E;
 }
 .floatA small {
   color: #94a3b8;
@@ -359,7 +359,7 @@
   overflow: hidden;
 }
 .flashcard:hover {
-  border-color: #10B981;
+  border-color: #0D9488;
   box-shadow: 0 6px 20px rgba(16,185,129,0.12);
   text-decoration: none;
 }
@@ -373,13 +373,13 @@
 .flashcardLabel {
   font-size: 0.7rem;
   font-weight: 700;
-  color: #10B981;
+  color: #0D9488;
   letter-spacing: 0.02em;
 }
 .flashcardCta {
   font-size: 0.75rem;
   font-weight: 700;
-  color: #059669;
+  color: #0F766E;
   background: #ecfdf5;
   padding: 4px 10px;
   border-radius: 6px;

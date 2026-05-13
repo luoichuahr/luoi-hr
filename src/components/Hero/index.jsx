@@ -21,7 +21,7 @@ const WINGMAN_STEPS = [
   { icon: '📄', tag: 'Bước 1', text: 'Tải lên CV của bạn...', sub: 'AI đang đọc 11 năm kinh nghiệm', color: '#3B82F6' },
   { icon: '🔍', tag: 'Bước 2', text: 'Phân tích hồ sơ', sub: 'Tìm thấy 6 thành tích chưa có số', color: '#8B5CF6' },
   { icon: '📋', tag: 'Bước 3', text: 'Đọc JD: HRBP Manager · Bosch', sub: 'Đối chiếu 14 tiêu chí tuyển dụng', color: '#F59E0B' },
-  { icon: '✨', tag: 'Bước 4', text: 'CV mới khớp 81% với JD này', sub: 'Gap report + STAR stories sẵn sàng', color: '#10B981' },
+  { icon: '✨', tag: 'Bước 4', text: 'CV mới khớp 81% với JD này', sub: 'Gap report + STAR stories sẵn sàng', color: '#0D9488' },
   { icon: '📍', tag: 'Bước 5', text: 'Bosch cách nhà bạn ~22 phút 🛵', sub: 'Giờ cao điểm 7–8h: khoảng 38 phút', color: '#EF4444' },
 ];
 

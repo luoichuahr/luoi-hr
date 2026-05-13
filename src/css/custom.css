@@ -10,13 +10,13 @@
 /* You can override the default Infima variables here. */
 :root {
   /* Brand colors */
-  --ifm-color-primary: #10B981;
-  --ifm-color-primary-dark: #059669;
-  --ifm-color-primary-darker: #047857;
-  --ifm-color-primary-darkest: #065f46;
-  --ifm-color-primary-light: #34d399;
-  --ifm-color-primary-lighter: #6ee7b7;
-  --ifm-color-primary-lightest: #a7f3d0;
+  --ifm-color-primary: #0D9488;
+  --ifm-color-primary-dark: #0F766E;
+  --ifm-color-primary-darker: #115E59;
+  --ifm-color-primary-darkest: #134E4A;
+  --ifm-color-primary-light: #14B8A6;
+  --ifm-color-primary-lighter: #2DD4BF;
+  --ifm-color-primary-lightest: #99F6E4;
 
   /* Custom colors for components */
   --color-dark-blue: #0F172A;
@@ -49,38 +49,38 @@
 .badge-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
 .doc-badge { font-size: 11px; padding: 3px 10px; border-radius: 20px; font-weight: 500; line-height: 1.6; }
 .badge-level { background: #FEFCE8; color: #713F12; border: 1px solid #FDE047; }
-.badge-time  { background: #D1FAE5; color: #065F46; }
+.badge-time  { background: #CCFBF1; color: #0F766E; }
 .badge-tool  { background: #EFF6FF; color: #1D4ED8; }
 .badge-new   { background: #FEF3C7; color: #92400E; border: 1px solid #FCD34D; }
 
 /* ── Stat row ────────────────────────────────────────────────────────────── */
 .stat-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 24px 0; }
 .stat-card { background: #fff; border: 1px solid #E2E8F0; border-radius: 10px; padding: 16px 18px; text-align: center; }
-.stat-num { font-size: 1.75rem; font-weight: 600; color: #10B981; line-height: 1.2; }
+.stat-num { font-size: 1.75rem; font-weight: 600; color: #0D9488; line-height: 1.2; }
 .stat-label { font-size: 12px; color: #475569; margin-top: 4px; line-height: 1.4; }
 
 /* ── Use-case grid ───────────────────────────────────────────────────────── */
 .usecase-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 20px 0; }
 .usecase-card { background: #fff; border: 1px solid #E2E8F0; border-radius: 10px; padding: 18px; transition: border-color .15s; }
-.usecase-card:hover { border-color: #10B981; }
+.usecase-card:hover { border-color: #0D9488; }
 .usecase-icon  { font-size: 22px; margin-bottom: 8px; }
-.usecase-role  { font-size: 11px; font-weight: 600; color: #10B981; text-transform: uppercase; letter-spacing: .6px; margin-bottom: 4px; }
+.usecase-role  { font-size: 11px; font-weight: 600; color: #0D9488; text-transform: uppercase; letter-spacing: .6px; margin-bottom: 4px; }
 .usecase-title { font-size: 14px; font-weight: 600; color: #1E293B; margin-bottom: 8px; }
 .usecase-list  { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 5px; }
 .usecase-list li { font-size: 12px; color: #475569; display: flex; align-items: flex-start; gap: 6px; line-height: 1.5; margin: 0; }
-.usecase-list li::before { content: "→"; color: #10B981; font-weight: 600; flex-shrink: 0; margin-top: 1px; }
+.usecase-list li::before { content: "→"; color: #0D9488; font-weight: 600; flex-shrink: 0; margin-top: 1px; }
 
 /* ── Plan cards ──────────────────────────────────────────────────────────── */
 .plan-grid  { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 20px 0; }
 .plan-card  { background: #fff; border: 1px solid #E2E8F0; border-radius: 10px; padding: 18px; }
 .plan-name  { font-size: 15px; font-weight: 600; color: #1E293B; margin-bottom: 2px; }
-.plan-price { font-size: 13px; color: #10B981; font-weight: 600; margin-bottom: 8px; }
+.plan-price { font-size: 13px; color: #0D9488; font-weight: 600; margin-bottom: 8px; }
 .plan-desc  { font-size: 13px; color: #475569; line-height: 1.6; margin: 0; }
 
 /* ── Flow diagram ────────────────────────────────────────────────────────── */
 .doc-flow { display: flex; align-items: center; gap: 4px; margin: 20px 0; flex-wrap: wrap; }
 .flow-box { background: #fff; border: 1px solid #E2E8F0; border-radius: 8px; padding: 10px 14px; font-size: 12px; font-weight: 500; color: #1E293B; text-align: center; min-width: 90px; }
-.flow-box-green { background: #D1FAE5; border-color: #6EE7B7; color: #065F46; }
+.flow-box-green { background: #CCFBF1; border-color: #2DD4BF; color: #0F766E; }
 .flow-arrow { color: #94A3B8; font-size: 18px; padding: 0 4px; }
 
 /* ── Dark mode overrides ─────────────────────────────────────────────────── */
@@ -109,13 +109,13 @@ body { top: 0 !important; }
 
 /* For readability concerns, you should choose a lighter palette in dark mode. */
 [data-theme='dark'] {
-  --ifm-color-primary: #10B981;
-  --ifm-color-primary-dark: #34d399;
-  --ifm-color-primary-darker: #6ee7b7;
-  --ifm-color-primary-darkest: #a7f3d0;
-  --ifm-color-primary-light: #34d399;
-  --ifm-color-primary-lighter: #6ee7b7;
-  --ifm-color-primary-lightest: #a7f3d0;
+  --ifm-color-primary: #14B8A6;
+  --ifm-color-primary-dark: #0D9488;
+  --ifm-color-primary-darker: #0F766E;
+  --ifm-color-primary-darkest: #115E59;
+  --ifm-color-primary-light: #2DD4BF;
+  --ifm-color-primary-lighter: #5EEAD4;
+  --ifm-color-primary-lightest: #99F6E4;
   --color-dark-blue: #1e293b;
   --color-off-white: #1f2937;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);

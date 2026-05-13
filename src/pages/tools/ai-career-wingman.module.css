@@ -79,8 +79,8 @@
 
 .btnSecondary {
   background: transparent;
-  color: #10B981;
-  border: 2px solid #10B981;
+  color: #0D9488;
+  border: 2px solid #0D9488;
   padding: 13px 26px;
   border-radius: 10px;
   font-weight: 600;
@@ -89,7 +89,7 @@
   transition: all 0.2s ease;
 }
 .btnSecondary:hover {
-  background: #10B981;
+  background: #0D9488;
   color: white;
   text-decoration: none;
 }
@@ -246,7 +246,7 @@
   font-family: inherit;
   margin-bottom: 6px;
 }
-.toggleBtn:hover { color: #10B981; }
+.toggleBtn:hover { color: #0D9488; }
 
 .distance {
   background: #f8fafc;
@@ -307,7 +307,7 @@
 
 .contactVal { color: #64748b; }
 
-.linkedinOk { color: #10B981; font-weight: 500; }
+.linkedinOk { color: #0D9488; font-weight: 500; }
 
 .viewJd {
   display: block;
@@ -327,7 +327,7 @@
 .eyebrow {
   font-size: 12px;
   font-weight: 700;
-  color: #10B981;
+  color: #0D9488;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   margin-bottom: 10px;
@@ -407,7 +407,7 @@
 .stepNum {
   font-size: 36px;
   font-weight: 900;
-  color: #10B981;
+  color: #0D9488;
   opacity: 0.4;
   line-height: 1;
   margin-bottom: 12px;
@@ -429,7 +429,7 @@
 
 .stepArrow {
   font-size: 22px;
-  color: #10B981;
+  color: #0D9488;
   padding: 0 12px;
   margin-top: 36px;
   flex-shrink: 0;
@@ -457,9 +457,9 @@
 
 .btnCta {
   display: inline-block;
-  background: #10B981;
+  background: #0D9488;
   color: white;
-  border: 2px solid #10B981;
+  border: 2px solid #0D9488;
   padding: 14px 32px;
   border-radius: 10px;
   font-weight: 700;
@@ -468,8 +468,8 @@
   transition: all 0.2s ease;
 }
 .btnCta:hover {
-  background: #059669;
-  border-color: #059669;
+  background: #0F766E;
+  border-color: #0F766E;
   transform: translateY(-2px);
   box-shadow: 0 8px 24px rgba(16,185,129,0.30);
   color: white;

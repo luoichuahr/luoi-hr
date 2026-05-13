@@ -51,7 +51,7 @@ const config = {
   ],
 
   themeConfig: ({
-    image: 'img/docusaurus-social-card.jpg',
+    image: 'img/social-card.png',
     colorMode: { disableSwitch: true, respectPrefersColorScheme: true },
     navbar: {
       title: '🦥 Lười HR',

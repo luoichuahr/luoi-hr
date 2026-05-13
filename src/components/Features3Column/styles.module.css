@@ -35,7 +35,7 @@
 .statNum {
   font-size: 2.4rem;
   font-weight: 800;
-  color: #10B981;
+  color: #0D9488;
   line-height: 1;
   letter-spacing: -1px;
 }
@@ -60,7 +60,7 @@
 .eyebrow {
   display: inline-flex;
   background: #ecfdf5;
-  color: #059669;
+  color: #0F766E;
   border: 1px solid #a7f3d0;
   padding: 5px 14px;
   border-radius: 100px;
@@ -78,7 +78,7 @@
 }
 
 .titleAccent {
-  color: #10B981;
+  color: #0D9488;
 }
 
 .sub {
@@ -137,7 +137,7 @@
 }
 
 .check {
-  color: #10B981;
+  color: #0D9488;
   font-weight: 700;
   font-size: 0.85rem;
   flex-shrink: 0;
@@ -153,7 +153,7 @@
 
 .cta {
   display: inline-block;
-  background: #10B981;
+  background: #0D9488;
   color: white;
   padding: 14px 32px;
   border-radius: 10px;
@@ -164,7 +164,7 @@
   font-family: 'Be Vietnam Pro', system-ui;
 }
 .cta:hover {
-  background: #059669;
+  background: #0F766E;
   transform: translateY(-2px);
   box-shadow: 0 8px 24px rgba(16, 185, 129, 0.28);
   color: white;
