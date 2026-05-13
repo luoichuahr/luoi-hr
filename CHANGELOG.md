@@ -8,6 +8,12 @@
 
 ---
 
+## 2026-05-13
+
+- [DESIGN] **xay-dung-phong-nhan-su**: Thay markdown table → auto-grid HTML (icon + % badge), thay bullet list → stats-row HTML (số lớn xanh) — theo đúng thiết kế HTML reference của Andy
+
+---
+
 ## 2026-05-11
 
 - [DESIGN] Fix ảnh QR Zalo bị broken trên Vercel — đổi tên `zalo-qr.JPG` → `zalo-qr.jpg` (Linux case-sensitive, code gọi lowercase)

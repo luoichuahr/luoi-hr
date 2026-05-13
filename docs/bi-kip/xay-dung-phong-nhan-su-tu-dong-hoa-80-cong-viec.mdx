@@ -60,14 +60,56 @@ Trước khi nói đến tự động hóa, cần hiểu rõ phòng nhân sự c
 
 Với AI hiện nay — cụ thể là các mô hình ngôn ngữ lớn như Claude — **80% công việc hành chính trong nhân sự có thể được tự động hóa hoàn toàn**. Không phải "bán tự động" hay "hỗ trợ một phần" — mà là agent tự thực thi từ đầu đến cuối, chỉ dừng lại để xin HR confirm những điểm quan trọng.
 
-| Mảng công việc | Có thể tự động hóa |
-|---|---|
-| Tuyển dụng end-to-end (JD · CV · Offer · Reject) | ~90% |
-| Onboarding & Hợp đồng | ~85% |
-| C&B & Payroll | ~75% |
-| Báo cáo & Dashboard | ~95% |
-| L&D & Đánh giá năng lực | ~70% |
-| Policy & Nội quy | ~80% |
+<div style={{display:'grid',gridTemplateColumns:'repeat(2,1fr)',gap:'14px',margin:'20px 0'}}>
+  <div style={{background:'#fff',border:'1px solid #E2E8F0',borderRadius:'10px',padding:'16px',display:'flex',gap:'12px',alignItems:'flex-start'}}>
+    <div style={{width:'36px',height:'36px',borderRadius:'8px',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'18px',flexShrink:0,background:'#D1FAE5'}}>🎯</div>
+    <div style={{flex:1}}>
+      <div style={{fontSize:'13px',fontWeight:700,color:'#1E293B',marginBottom:'3px'}}>Tuyển dụng end-to-end</div>
+      <div style={{fontSize:'12px',color:'#94A3B8',lineHeight:1.5}}>Viết JD · Sàng lọc CV · Gửi lịch phỏng vấn · Soạn offer · Email từ chối ứng viên</div>
+    </div>
+    <div style={{marginLeft:'auto',fontSize:'11px',fontWeight:700,color:'#065F46',background:'#D1FAE5',padding:'2px 8px',borderRadius:'12px',whiteSpace:'nowrap',alignSelf:'center'}}>~90%</div>
+  </div>
+  <div style={{background:'#fff',border:'1px solid #E2E8F0',borderRadius:'10px',padding:'16px',display:'flex',gap:'12px',alignItems:'flex-start'}}>
+    <div style={{width:'36px',height:'36px',borderRadius:'8px',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'18px',flexShrink:0,background:'#DBEAFE'}}>📋</div>
+    <div style={{flex:1}}>
+      <div style={{fontSize:'13px',fontWeight:700,color:'#1E293B',marginBottom:'3px'}}>Onboarding &amp; Hợp đồng</div>
+      <div style={{fontSize:'12px',color:'#94A3B8',lineHeight:1.5}}>Tạo kit 30-60-90 ngày · Soạn hợp đồng · Checklist thiết bị · Welcome email</div>
+    </div>
+    <div style={{marginLeft:'auto',fontSize:'11px',fontWeight:700,color:'#065F46',background:'#D1FAE5',padding:'2px 8px',borderRadius:'12px',whiteSpace:'nowrap',alignSelf:'center'}}>~85%</div>
+  </div>
+  <div style={{background:'#fff',border:'1px solid #E2E8F0',borderRadius:'10px',padding:'16px',display:'flex',gap:'12px',alignItems:'flex-start'}}>
+    <div style={{width:'36px',height:'36px',borderRadius:'8px',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'18px',flexShrink:0,background:'#FEF3C7'}}>💰</div>
+    <div style={{flex:1}}>
+      <div style={{fontSize:'13px',fontWeight:700,color:'#1E293B',marginBottom:'3px'}}>C&amp;B &amp; Payroll</div>
+      <div style={{fontSize:'12px',color:'#94A3B8',lineHeight:1.5}}>Tính gross-to-net · Kiểm tra BHXH · Tổng hợp phụ cấp · Báo cáo lương tháng</div>
+    </div>
+    <div style={{marginLeft:'auto',fontSize:'11px',fontWeight:700,color:'#065F46',background:'#D1FAE5',padding:'2px 8px',borderRadius:'12px',whiteSpace:'nowrap',alignSelf:'center'}}>~75%</div>
+  </div>
+  <div style={{background:'#fff',border:'1px solid #E2E8F0',borderRadius:'10px',padding:'16px',display:'flex',gap:'12px',alignItems:'flex-start'}}>
+    <div style={{width:'36px',height:'36px',borderRadius:'8px',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'18px',flexShrink:0,background:'#EDE9FE'}}>📊</div>
+    <div style={{flex:1}}>
+      <div style={{fontSize:'13px',fontWeight:700,color:'#1E293B',marginBottom:'3px'}}>Báo cáo &amp; Dashboard</div>
+      <div style={{fontSize:'12px',color:'#94A3B8',lineHeight:1.5}}>Tổng hợp KPI · HR Dashboard tháng · Phân tích turnover · Headcount report</div>
+    </div>
+    <div style={{marginLeft:'auto',fontSize:'11px',fontWeight:700,color:'#065F46',background:'#D1FAE5',padding:'2px 8px',borderRadius:'12px',whiteSpace:'nowrap',alignSelf:'center'}}>~95%</div>
+  </div>
+  <div style={{background:'#fff',border:'1px solid #E2E8F0',borderRadius:'10px',padding:'16px',display:'flex',gap:'12px',alignItems:'flex-start'}}>
+    <div style={{width:'36px',height:'36px',borderRadius:'8px',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'18px',flexShrink:0,background:'#FCE7F3'}}>📚</div>
+    <div style={{flex:1}}>
+      <div style={{fontSize:'13px',fontWeight:700,color:'#1E293B',marginBottom:'3px'}}>L&amp;D &amp; Đánh giá</div>
+      <div style={{fontSize:'12px',color:'#94A3B8',lineHeight:1.5}}>Xây learning plan · Tổng hợp kết quả đánh giá · Cá nhân hóa lộ trình phát triển</div>
+    </div>
+    <div style={{marginLeft:'auto',fontSize:'11px',fontWeight:700,color:'#065F46',background:'#D1FAE5',padding:'2px 8px',borderRadius:'12px',whiteSpace:'nowrap',alignSelf:'center'}}>~70%</div>
+  </div>
+  <div style={{background:'#fff',border:'1px solid #E2E8F0',borderRadius:'10px',padding:'16px',display:'flex',gap:'12px',alignItems:'flex-start'}}>
+    <div style={{width:'36px',height:'36px',borderRadius:'8px',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'18px',flexShrink:0,background:'#D1FAE5'}}>📄</div>
+    <div style={{flex:1}}>
+      <div style={{fontSize:'13px',fontWeight:700,color:'#1E293B',marginBottom:'3px'}}>Policy &amp; Nội quy</div>
+      <div style={{fontSize:'12px',color:'#94A3B8',lineHeight:1.5}}>Soạn policy theo Luật Lao động · Cập nhật SOP · FAQ nội bộ tự động trả lời</div>
+    </div>
+    <div style={{marginLeft:'auto',fontSize:'11px',fontWeight:700,color:'#065F46',background:'#D1FAE5',padding:'2px 8px',borderRadius:'12px',whiteSpace:'nowrap',alignSelf:'center'}}>~80%</div>
+  </div>
+</div>
 
 <Callout type="tip" title="20% còn lại — đây mới là việc của HR thực thụ">
 Giải quyết xung đột nội bộ · Coaching nhân viên khó · Xây dựng văn hóa · Quyết định sa thải · Thương lượng lương cấp cao · Nhận diện tài năng tiềm năng. Không AI nào làm được những điều này tốt hơn một HR có kinh nghiệm.
@@ -91,9 +133,20 @@ Trong demo này, bạn sẽ thấy từng bước được thực hiện bởi c
 
 ## Kết luận: HR làm ít hơn — tác động nhiều hơn
 
-- **80%** công việc hành chính được tự động hóa hoàn toàn
-- **3×** nhanh hơn trong quy trình tuyển dụng và onboarding
-- **~0** sai sót do copy-paste hoặc quên checklist
+<div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:'16px',margin:'20px 0'}}>
+  <div style={{background:'#fff',border:'1px solid #E2E8F0',borderRadius:'10px',padding:'20px',textAlign:'center'}}>
+    <div style={{fontSize:'36px',fontWeight:800,color:'#10B981'}}>80%</div>
+    <div style={{fontSize:'12px',color:'#94A3B8',marginTop:'4px',lineHeight:1.4}}>công việc hành chính được tự động hóa hoàn toàn</div>
+  </div>
+  <div style={{background:'#fff',border:'1px solid #E2E8F0',borderRadius:'10px',padding:'20px',textAlign:'center'}}>
+    <div style={{fontSize:'36px',fontWeight:800,color:'#10B981'}}>3×</div>
+    <div style={{fontSize:'12px',color:'#94A3B8',marginTop:'4px',lineHeight:1.4}}>nhanh hơn trong quy trình tuyển dụng và onboarding</div>
+  </div>
+  <div style={{background:'#fff',border:'1px solid #E2E8F0',borderRadius:'10px',padding:'20px',textAlign:'center'}}>
+    <div style={{fontSize:'36px',fontWeight:800,color:'#10B981'}}>~0</div>
+    <div style={{fontSize:'12px',color:'#94A3B8',marginTop:'4px',lineHeight:1.4}}>sai sót do copy-paste hoặc quên checklist</div>
+  </div>
+</div>
 
 AI không làm HR biến mất. AI làm cho HR **giỏi hơn** — bằng cách loại bỏ phần công việc mà máy móc làm tốt hơn người, để người có thể tập trung vào phần mà chỉ người mới làm được.
 
