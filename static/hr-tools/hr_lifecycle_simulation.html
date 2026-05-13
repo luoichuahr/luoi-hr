@@ -1,0 +1,1220 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HR Lifecycle Simulation · TechVision Corp</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--kai:#7c3aed;--kai-bg:#f5f3ff;--linh:#db2777;--linh-bg:#fdf2f8;--ngoc:#059669;--ngoc-bg:#f0fdf4;--thu:#0284c7;--thu-bg:#f0f9ff;--andy:#d97706;--andy-bg:#fffbeb;--bg:#f7f6ff;--text:#1a1740;--muted:#6b7280;--dim:#d1d5db;--border:rgba(0,0,0,0.08);--shadow:0 4px 24px rgba(100,80,200,0.10);--shadow-lg:0 12px 48px rgba(100,80,200,0.18);}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden;}
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-track{background:#f0eeff;}
+::-webkit-scrollbar-thumb{background:#c4b5fd;border-radius:5px;}
+
+/* ── SPLASH ── */
+#splash{position:fixed;inset:0;z-index:1000;background:linear-gradient(135deg,#0f0c29,#302b63,#24243e);display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:40px;}
+.sp-badge{display:inline-block;padding:6px 18px;background:rgba(124,58,237,.28);border:1px solid rgba(124,58,237,.5);border-radius:20px;color:#c4b5fd;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;margin-bottom:28px;}
+.sp-title{font-size:clamp(36px,7vw,72px);font-weight:800;line-height:1.0;background:linear-gradient(130deg,#a78bfa,#f472b6,#38bdf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:18px;}
+.sp-sub{color:#94a3b8;font-size:15px;max-width:460px;margin:0 auto 36px;line-height:1.75;}
+.sp-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:20px 32px;margin-bottom:36px;display:flex;gap:40px;justify-content:center;flex-wrap:wrap;}
+.sp-ci{text-align:center;}
+.sp-cl{font-size:10px;color:#64748b;text-transform:uppercase;letter-spacing:2px;margin-bottom:5px;}
+.sp-cv{font-size:14px;font-weight:700;color:#e2e8f0;}
+.sp-btn{padding:15px 44px;border-radius:50px;background:linear-gradient(135deg,#7c3aed,#db2777);color:#fff;font-size:15px;font-weight:700;border:none;cursor:pointer;box-shadow:0 8px 32px rgba(124,58,237,.4);transition:transform .2s,box-shadow .2s;letter-spacing:.3px;}
+.sp-btn:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(124,58,237,.55);}
+.sp-tags{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;margin-top:28px;max-width:580px;}
+.sp-tag{padding:4px 12px;border-radius:12px;font-size:11px;font-weight:600;background:rgba(255,255,255,.07);color:#94a3b8;border:1px solid rgba(255,255,255,.1);}
+
+/* ── MAIN ── */
+#sim{display:none;min-height:100vh;padding-bottom:72px;}
+
+.sim-header{background:#fff;border-bottom:1px solid var(--border);padding:12px 28px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:200;box-shadow:0 1px 12px rgba(100,80,200,.07);}
+.sh-logo{font-size:14px;font-weight:800;color:var(--kai);}
+.sh-logo span{color:var(--muted);font-weight:400;}
+.sh-sep{width:1px;height:28px;background:var(--border);}
+.sh-cand{display:flex;align-items:center;gap:10px;margin-left:auto;}
+.sh-av{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#db2777);display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:800;flex-shrink:0;}
+.sh-name{font-size:13px;font-weight:700;}
+.sh-role{font-size:11px;color:var(--muted);}
+.sh-step-badge{padding:4px 12px;background:var(--kai-bg);color:var(--kai);border-radius:20px;font-size:11px;font-weight:700;margin-left:8px;}
+
+/* Phase bar */
+.phase-bar{background:#fff;border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none;}
+.phase-bar::-webkit-scrollbar{display:none;}
+.phase-row{display:flex;padding:0 16px;min-width:max-content;}
+.ph-item{display:flex;align-items:center;gap:7px;padding:10px 16px;font-size:12px;font-weight:600;color:var(--muted);white-space:nowrap;border-bottom:3px solid transparent;transition:color .2s,border-color .2s;cursor:pointer;}
+.ph-item .ph-icon{font-size:13px;}
+.ph-item.active{color:var(--kai);border-bottom-color:var(--kai);}
+.ph-item.done{color:#059669;border-bottom-color:#86efac;}
+.ph-ct{font-size:10px;background:#f3f4f6;color:var(--muted);padding:2px 7px;border-radius:10px;font-weight:500;}
+.ph-item.active .ph-ct{background:rgba(124,58,237,.1);color:var(--kai);}
+.ph-item.done .ph-ct{background:#d1fae5;color:#065f46;}
+
+/* Layout */
+.sim-body{display:grid;grid-template-columns:264px 1fr;}
+
+/* Sidebar */
+.sim-sidebar{background:#fff;border-right:1px solid var(--border);overflow-y:auto;position:sticky;top:93px;height:calc(100vh - 93px);}
+.sb-ph-label{padding:14px 18px 4px;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--dim);}
+.sb-step{display:flex;align-items:flex-start;gap:10px;padding:8px 18px;cursor:pointer;border-left:3px solid transparent;transition:background .15s;}
+.sb-step:hover{background:var(--bg);}
+.sb-step.active{background:rgba(124,58,237,.05);border-left-color:var(--kai);}
+.sb-step.done{opacity:.55;}
+.sb-num{width:20px;height:20px;border-radius:50%;background:#f3f4f6;color:var(--muted);font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.sb-step.active .sb-num{background:var(--kai);color:#fff;}
+.sb-step.done .sb-num{background:#d1fae5;color:#065f46;}
+.sb-step.done .sb-num::before{content:'✓';}
+.sb-txt{font-size:12px;font-weight:500;color:var(--text);line-height:1.35;}
+.sb-step.active .sb-txt{color:var(--kai);font-weight:600;}
+.sb-step.done .sb-txt{color:var(--muted);}
+.sb-step.sub{padding-left:34px;}
+.sb-sub-ind{color:var(--dim);font-size:13px;min-width:14px;flex-shrink:0;padding-top:2px;}
+.sb-step.sub .sb-txt{font-size:11px;}
+.sb-step.sub.active .sb-txt{color:var(--thu);font-weight:600;}
+.sb-type{font-size:10px;margin-top:2px;}
+.auto-tag{color:#059669;}.human-tag{color:#d97706;}.stop-tag{color:#dc2626;}
+
+/* Output */
+.sim-out{padding:28px 32px;overflow-y:auto;}
+
+.step-card{background:#fff;border-radius:20px;border:1px solid var(--border);box-shadow:var(--shadow);overflow:hidden;max-width:780px;margin-bottom:16px;}
+.sc-head{padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;}
+.sc-agent{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;flex-shrink:0;}
+.sc-info{flex:1;}
+.sc-title{font-size:15px;font-weight:700;color:var(--text);}
+.sc-sub{font-size:11px;color:var(--muted);margin-top:2px;}
+.sc-badge{padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;}
+.badge-auto{background:#d1fae5;color:#065f46;}
+.badge-human{background:#fed7aa;color:#7c2d12;}
+.badge-stop{background:#fee2e2;color:#991b1b;}
+.sc-body{padding:22px;}
+.sc-date{font-size:11px;color:var(--muted);padding:10px 22px;background:#fafafa;border-top:1px solid var(--border);font-style:italic;}
+
+/* Loading */
+.loading-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:56px 24px;gap:14px;}
+.ld-dots{display:flex;gap:7px;}
+.ld-dot{width:9px;height:9px;border-radius:50%;background:var(--kai);opacity:.3;animation:ldpulse 1.2s ease-in-out infinite;}
+.ld-dot:nth-child(2){animation-delay:.2s;}
+.ld-dot:nth-child(3){animation-delay:.4s;}
+@keyframes ldpulse{0%,100%{opacity:.3;transform:scale(1)}50%{opacity:1;transform:scale(1.25)}}
+.ld-txt{font-size:12px;color:var(--muted);font-weight:500;}
+
+/* Doc styles */
+.doc-tbl{width:100%;border-collapse:collapse;font-size:13px;}
+.doc-tbl th{background:#f9fafb;padding:7px 12px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);text-align:left;border-bottom:1px solid var(--border);}
+.doc-tbl td{padding:8px 12px;border-bottom:1px solid #f3f4f6;vertical-align:middle;}
+.doc-tbl tr:last-child td{border-bottom:none;}
+.doc-tbl tr:hover td{background:#fafafe;}
+.badge{display:inline-block;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:600;}
+.bg-green{background:#d1fae5;color:#065f46;} .bg-yellow{background:#fef3c7;color:#92400e;} .bg-red{background:#fee2e2;color:#991b1b;} .bg-blue{background:#dbeafe;color:#1e40af;} .bg-purple{background:#ede9fe;color:#5b21b6;} .bg-gray{background:#f3f4f6;color:#374151;}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.info-box{background:#f9fafb;border-radius:10px;padding:11px 14px;}
+.ib-label{font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;}
+.ib-val{font-size:14px;font-weight:700;color:var(--text);}
+.email-box{background:#f9fafb;border:1px solid var(--border);border-radius:12px;padding:18px;}
+.ef{display:flex;gap:8px;margin-bottom:6px;font-size:12px;}
+.ef-l{font-weight:700;color:var(--muted);min-width:55px;}
+.ef-v{color:var(--text);}
+.e-div{border:none;border-top:1px solid var(--border);margin:12px 0;}
+.e-body{font-size:13px;line-height:1.8;color:var(--text);}
+.score-bar{height:5px;border-radius:3px;background:#f3f4f6;margin-top:5px;overflow:hidden;}
+.score-fill{height:100%;border-radius:3px;}
+.sec-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-bottom:10px;}
+.highlight-box{background:rgba(124,58,237,.06);border:1px solid rgba(124,58,237,.15);border-radius:12px;padding:14px 16px;margin:12px 0;}
+.hb-title{font-size:12px;font-weight:700;color:var(--kai);margin-bottom:6px;}
+.stop-gate{background:#fff1f2;border:2px solid #fca5a5;border-radius:12px;padding:14px 18px;display:flex;align-items:center;gap:12px;margin-top:14px;}
+.sg-icon{font-size:22px;}
+.sg-txt{flex:1;}
+.sg-title{font-weight:700;color:#991b1b;font-size:13px;}
+.sg-sub{font-size:11px;color:#dc2626;margin-top:2px;}
+.sg-btn{padding:8px 18px;background:#dc2626;color:#fff;border:none;border-radius:8px;font-weight:700;font-size:13px;cursor:pointer;transition:background .2s;white-space:nowrap;}
+.sg-btn:hover{background:#b91c1c;}
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+.stat-box{background:#f9fafb;border-radius:12px;padding:14px;text-align:center;}
+.stat-val{font-size:26px;font-weight:800;}
+.stat-lbl{font-size:11px;color:var(--muted);margin-top:3px;}
+.kpi-row{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid #f3f4f6;}
+.kpi-name{flex:1;font-size:13px;font-weight:500;}
+.kpi-target{font-size:12px;color:var(--muted);min-width:90px;text-align:right;}
+.kpi-w{min-width:44px;text-align:right;font-size:12px;font-weight:700;color:var(--kai);}
+.nb-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;border:1px solid var(--border);border-radius:8px;overflow:hidden;font-size:11px;}
+.nb-cell{padding:10px 6px;text-align:center;background:#f9fafb;font-weight:600;color:var(--muted);}
+.nb-cell.hl{background:#fef3c7;color:#92400e;border:2px solid #f59e0b;font-weight:800;}
+.nb-label{font-size:9px;font-weight:500;display:block;margin-top:3px;}
+.tl-item{display:flex;gap:10px;margin-bottom:10px;}
+.tl-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;margin-top:6px;}
+.tl-c{flex:1;}
+.tl-ph{font-size:10px;font-weight:700;color:var(--muted);}
+.tl-txt{font-size:13px;font-weight:500;color:var(--text);margin-top:1px;}
+.q-item{font-size:13px;padding:10px 0;border-bottom:1px solid #f3f4f6;display:flex;gap:10px;}
+.q-num{font-size:11px;font-weight:700;color:var(--kai);min-width:22px;margin-top:1px;}
+.q-txt{flex:1;line-height:1.6;}
+.q-type{font-size:10px;background:var(--kai-bg);color:var(--kai);padding:2px 8px;border-radius:8px;font-weight:600;white-space:nowrap;height:fit-content;}
+.rating-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid #f3f4f6;}
+.rating-name{flex:1;font-size:13px;font-weight:500;}
+.stars{color:#f59e0b;font-size:14px;letter-spacing:1px;}
+.rating-score{min-width:38px;text-align:right;font-size:13px;font-weight:700;}
+.chip{display:inline-block;padding:3px 10px;border-radius:8px;font-size:11px;font-weight:600;border:1px solid;margin:3px 3px 3px 0;}
+.sum-hero{text-align:center;padding:20px 0 28px;}
+.sum-num{font-size:56px;font-weight:800;line-height:1;}
+.sum-lbl{font-size:12px;color:var(--muted);margin-top:4px;}
+.sum-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+.sum-box{background:#f9fafb;border-radius:12px;padding:16px;}
+.sum-box-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-bottom:10px;}
+.final-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 20px;background:linear-gradient(135deg,rgba(124,58,237,.1),rgba(219,39,119,.1));border:1px solid rgba(124,58,237,.2);border-radius:20px;font-size:13px;font-weight:700;color:var(--kai);}
+
+/* Controls */
+.ctrl-bar{position:fixed;bottom:0;left:0;right:0;z-index:100;background:#fff;border-top:1px solid var(--border);padding:12px 28px;display:flex;align-items:center;gap:12px;box-shadow:0 -4px 20px rgba(100,80,200,.08);}
+.ctrl-prog{flex:1;}
+.ctrl-pg-label{font-size:11px;color:var(--muted);margin-bottom:4px;}
+.ctrl-pg-bar{height:4px;border-radius:2px;background:#f3f4f6;overflow:hidden;}
+.ctrl-pg-fill{height:100%;background:linear-gradient(90deg,var(--kai),var(--linh));border-radius:2px;transition:width .5s;}
+.ctrl-btns{display:flex;gap:8px;align-items:center;}
+.ctrl-btn{padding:7px 15px;border-radius:8px;font-size:13px;font-weight:600;border:1px solid var(--border);background:#fff;color:var(--text);cursor:pointer;transition:all .15s;}
+.ctrl-btn:hover{background:var(--bg);}
+.ctrl-btn.primary{background:var(--kai);color:#fff;border-color:var(--kai);}
+.ctrl-btn.primary:hover{background:#6d28d9;}
+.ctrl-btn:disabled{opacity:.4;cursor:not-allowed;}
+.ctrl-step-lbl{font-size:12px;color:var(--muted);min-width:70px;text-align:center;}
+.speed-sel{padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-size:12px;color:var(--text);background:#fff;cursor:pointer;}
+
+@media(max-width:720px){.sim-body{grid-template-columns:1fr;}.sim-sidebar{display:none;}.info-grid{grid-template-columns:1fr;}.stat-row{grid-template-columns:repeat(2,1fr);}}
+</style>
+</head>
+<body>
+
+<!-- ═══ SPLASH ═══ -->
+<div id="splash">
+  <div class="sp-badge">Demo · HR Automation Simulation</div>
+  <div class="sp-title">HR Lifecycle<br>Automation</div>
+  <p class="sp-sub">Toàn bộ vòng đời nhân viên — từ CV đến Offboard<br>Chạy tự động bởi HR Agent System · Không cần con người cho 80% tác vụ</p>
+  <div class="sp-card">
+    <div class="sp-ci"><div class="sp-cl">Ứng viên</div><div class="sp-cv">Trần Thị Minh Anh</div></div>
+    <div class="sp-ci"><div class="sp-cl">Vị trí</div><div class="sp-cv">Marketing Manager</div></div>
+    <div class="sp-ci"><div class="sp-cl">Công ty</div><div class="sp-cv">TechVision Corp · 180 nhân sự</div></div>
+  </div>
+  <button class="sp-btn" onclick="startSim()">▶ Bắt đầu Simulation</button>
+  <div class="sp-tags">
+    <span class="sp-tag">🎯 Tuyển dụng</span>
+    <span class="sp-tag">🚀 Onboarding</span>
+    <span class="sp-tag">📋 Thử việc</span>
+    <span class="sp-tag">📚 Đào tạo</span>
+    <span class="sp-tag">⚡ Performance</span>
+    <span class="sp-tag">🌟 Thăng tiến</span>
+    <span class="sp-tag">👋 Offboarding</span>
+  </div>
+</div>
+
+<!-- ═══ MAIN SIM ═══ -->
+<div id="sim">
+  <div class="sim-header">
+    <div class="sh-logo">HR Agent <span>· TechVision Corp</span></div>
+    <div class="sh-sep"></div>
+    <div style="font-size:12px;color:var(--muted);">🤖 Tự động: <strong style="color:#059669">80%</strong> · 👤 Con người: <strong style="color:#d97706">15%</strong> · 🛑 STOP: <strong style="color:#dc2626">5%</strong></div>
+    <div class="sh-cand">
+      <div class="sh-av">M</div>
+      <div><div class="sh-name">Trần Thị Minh Anh</div><div class="sh-role">Marketing Manager</div></div>
+      <div class="sh-step-badge" id="hdr-step">Bước 1 / 25</div>
+    </div>
+  </div>
+
+  <div class="phase-bar">
+    <div class="phase-row" id="phase-row"></div>
+  </div>
+
+  <div class="sim-body">
+    <div class="sim-sidebar" id="sidebar"></div>
+    <div class="sim-out" id="output-panel">
+      <div id="step-content"></div>
+    </div>
+  </div>
+</div>
+
+<div class="ctrl-bar" id="ctrl-bar" style="display:none;">
+  <div class="ctrl-prog">
+    <div class="ctrl-pg-label" id="ctrl-label">Bước 1: CV nhận & scan tự động</div>
+    <div class="ctrl-pg-bar"><div class="ctrl-pg-fill" id="ctrl-fill" style="width:4%"></div></div>
+  </div>
+  <div class="ctrl-btns">
+    <select class="speed-sel" id="speed-sel">
+      <option value="2200">⏱ Bình thường</option>
+      <option value="900">⚡ Nhanh</option>
+      <option value="200">🚀 Demo nhanh</option>
+    </select>
+    <button class="ctrl-btn" id="btn-prev" onclick="goStep(-1)">◀</button>
+    <span class="ctrl-step-lbl" id="step-counter">1 / 25</span>
+    <button class="ctrl-btn primary" id="btn-next" onclick="goStep(1)">Tiếp theo ▶</button>
+  </div>
+</div>
+
+<script>
+// ═══ DATA ═══
+const AGENTS = {
+  linh:{name:'Linh',title:'Recruiter',c:'#db2777',bg:'#fce7f3',i:'L'},
+  ngoc:{name:'Ngọc',title:'L&D Trainer',c:'#059669',bg:'#d1fae5',i:'N'},
+  thu:{name:'Thu',title:'C&B Analyst',c:'#0284c7',bg:'#e0f2fe',i:'T'},
+  kai:{name:'Kai',title:'HR Business Partner',c:'#7c3aed',bg:'#ede9fe',i:'K'},
+  andy:{name:'Andy',title:'CHRO · Final Approver',c:'#d97706',bg:'#fef3c7',i:'A'},
+};
+const PHASES = [
+  {id:'rec',   title:'Tuyển dụng',  icon:'🎯'},
+  {id:'onb',   title:'Onboarding',  icon:'🚀'},
+  {id:'prob',  title:'Thử việc',    icon:'📋'},
+  {id:'train', title:'Đào tạo',     icon:'📚'},
+  {id:'perf',  title:'Performance', icon:'⚡'},
+  {id:'growth',title:'Thăng tiến',  icon:'🌟'},
+  {id:'off',   title:'Offboarding', icon:'👋'},
+];
+
+const STEPS = [
+// ─── 0 ─── CV Scan
+{phase:'rec',title:'CV nhận & scan tự động',agent:'linh',type:'auto',date:'Thứ Hai, 05/01/2026 · 08:32 SA',
+output:`
+<div class="info-grid">
+  <div class="info-box"><div class="ib-label">Ứng viên</div><div class="ib-val">Trần Thị Minh Anh</div></div>
+  <div class="info-box"><div class="ib-label">Match Score</div><div class="ib-val" style="color:#059669;font-size:22px;">87 / 100 ✅</div></div>
+  <div class="info-box"><div class="ib-label">Vị trí ứng tuyển</div><div class="ib-val">Marketing Manager</div></div>
+  <div class="info-box"><div class="ib-label">Kinh nghiệm</div><div class="ib-val">5 năm</div></div>
+</div>
+<div class="sec-title">Phân tích chi tiết — S02 CV Analyzer</div>
+<table class="doc-tbl">
+  <thead><tr><th>Tiêu chí</th><th>Đánh giá</th><th>Điểm</th></tr></thead>
+  <tbody>
+    <tr><td>Kinh nghiệm Marketing B2B/B2C</td><td><span class="badge bg-green">Rất phù hợp · 5 năm</span></td><td style="font-weight:700;color:#059669">25/25</td></tr>
+    <tr><td>Skills: Google Ads, Meta, SEO, Content</td><td><span class="badge bg-green">Đầy đủ · Certified</span></td><td style="font-weight:700;color:#059669">20/20</td></tr>
+    <tr><td>Kinh nghiệm quản lý team</td><td><span class="badge bg-green">Team 4 người · 2 năm</span></td><td style="font-weight:700;color:#059669">15/20</td></tr>
+    <tr><td>Industry fit (SaaS/Tech)</td><td><span class="badge bg-yellow">Một phần · Digital Agency</span></td><td style="font-weight:700;color:#d97706">12/20</td></tr>
+    <tr><td>Học vấn</td><td><span class="badge bg-blue">ĐH Ngoại Thương · Marketing</span></td><td style="font-weight:700;color:#059669">15/15</td></tr>
+  </tbody>
+</table>
+<div class="highlight-box" style="margin-top:14px;">
+  <div class="hb-title">💡 Đề xuất của Linh</div>
+  <div style="font-size:13px;line-height:1.7;">Score 87/100 — Vượt ngưỡng tuyển (75). Ứng viên có background Digital Agency phù hợp mảng Brand & Performance. Gap nhỏ về SaaS Product Marketing — có thể bù qua onboarding. <strong>→ Đề xuất MỜI PHỎNG VẤN.</strong></div>
+</div>`},
+
+// ─── 1 ─── Email mời PV
+{phase:'rec',title:'Email mời phỏng vấn tự động',agent:'linh',type:'auto',date:'05/01/2026 · 08:35 SA (3 phút sau scan)',
+output:`
+<div class="email-box">
+  <div class="ef"><div class="ef-l">From:</div><div class="ef-v">linh.nguyen@techvision.vn (Linh — HR Recruiter)</div></div>
+  <div class="ef"><div class="ef-l">To:</div><div class="ef-v">minhanh.tran@gmail.com</div></div>
+  <div class="ef"><div class="ef-l">Subject:</div><div class="ef-v"><strong>[TechVision] Mời phỏng vấn vòng 1 — Marketing Manager</strong></div></div>
+  <hr class="e-div">
+  <div class="e-body">
+    <p>Chào Minh Anh,</p><br>
+    <p>Cảm ơn bạn đã quan tâm và gửi hồ sơ ứng tuyển vị trí <strong>Marketing Manager</strong> tại TechVision Corp.</p><br>
+    <p>Sau khi xem xét hồ sơ, chúng tôi rất vui được mời bạn tham gia <strong>phỏng vấn vòng 1</strong> với các thông tin sau:</p><br>
+    <p>📅 <strong>Thời gian:</strong> Thứ Tư, 07/01/2026 · 14:00 – 15:00<br>
+    📍 <strong>Hình thức:</strong> Google Meet (link gửi trước 30 phút)<br>
+    👥 <strong>Người phỏng vấn:</strong> Andy Trần (CHRO) & Linh Nguyễn (Recruiter)</p><br>
+    <p>Vui lòng xác nhận tham dự bằng cách reply email này trước <strong>17:00 hôm nay</strong>.</p><br>
+    <p>Trân trọng,<br><strong>Linh Nguyễn</strong><br>HR Recruiter · TechVision Corp</p>
+  </div>
+</div>
+<div class="highlight-box" style="margin-top:12px;"><div class="hb-title">⚡ Tự động hóa</div><div style="font-size:13px;">Email soạn & gửi trong <strong>3 phút</strong> sau khi CV scan. Hệ thống tự đặt lịch dựa trên calendar của Andy & Linh · Tự gửi link xác nhận · Tự reminder 24h trước.</div></div>`},
+
+// ─── 2 ─── Chuẩn bị câu hỏi PV
+{phase:'rec',title:'Bộ câu hỏi phỏng vấn — S03',agent:'linh',type:'auto',date:'06/01/2026 · 09:00 SA',
+output:`
+<div class="info-grid" style="margin-bottom:14px;">
+  <div class="info-box"><div class="ib-label">Vị trí</div><div class="ib-val">Marketing Manager</div></div>
+  <div class="info-box"><div class="ib-label">Framework</div><div class="ib-val">STAR + Competency</div></div>
+</div>
+<div class="sec-title">Bộ câu hỏi — S03 Interview Questions Generator</div>
+<div class="q-item"><div class="q-num">01</div><div class="q-txt">Kể về một campaign marketing mà bạn tự hào nhất. Bạn đã setup, đo lường và tối ưu như thế nào? Kết quả cụ thể là gì?</div><div class="q-type">STAR · Performance</div></div>
+<div class="q-item"><div class="q-num">02</div><div class="q-txt">Giả sử budget marketing bị cắt 40% vào giữa quý. Bạn sẽ ra quyết định phân bổ lại như thế nào và ưu tiên kênh nào?</div><div class="q-type">Situational</div></div>
+<div class="q-item"><div class="q-num">03</div><div class="q-txt">Bạn đã từng conflict với một stakeholder về direction của campaign chưa? Bạn xử lý như thế nào?</div><div class="q-type">Behavioral</div></div>
+<div class="q-item"><div class="q-num">04</div><div class="q-txt">Với team 4 người, làm thế nào bạn phân công và track performance của từng thành viên?</div><div class="q-type">Leadership</div></div>
+<div class="q-item"><div class="q-num">05</div><div class="q-txt">Bạn biết gì về thị trường SaaS/Tech tại VN? TechVision nên approach segment nào trong 12 tháng tới?</div><div class="q-type">Industry Fit</div></div>
+<div class="q-item"><div class="q-num">06</div><div class="q-txt">Kể về lần bạn phải ra quyết định với data không đầy đủ. Bạn đã làm gì?</div><div class="q-type">Decision Making</div></div>
+<div class="q-item"><div class="q-num">07</div><div class="q-txt">Expectation lương và lý do bạn muốn chuyển khỏi công ty hiện tại?</div><div class="q-type">Expectation</div></div>
+<div class="q-item"><div class="q-num">08</div><div class="q-txt">Bạn có câu hỏi gì cho chúng tôi về vai trò này không?</div><div class="q-type">Culture Fit</div></div>`},
+
+// ─── 3 ─── Phỏng vấn
+{phase:'rec',title:'Phỏng vấn vòng 1 — Andy trực tiếp',agent:'andy',type:'human',date:'07/01/2026 · 14:00 – 15:00',
+output:`
+<div style="background:#fffbeb;border:1px solid #fde68a;border-radius:12px;padding:14px 18px;margin-bottom:16px;font-size:13px;color:#92400e;">
+  👤 <strong>Bước Human:</strong> Andy tổ chức phỏng vấn trực tiếp qua Google Meet. Hệ thống tự ghi nhận kết quả qua Interview Scorecard.
+</div>
+<div class="sec-title">Scorecard — Ghi nhận sau phỏng vấn</div>
+<div class="rating-row"><div class="rating-name">Marketing Strategy & Execution</div><div class="stars">★★★★★</div><div class="rating-score" style="color:#059669">5.0</div></div>
+<div class="rating-row"><div class="rating-name">Data & Analytics Mindset</div><div class="stars">★★★★☆</div><div class="rating-score" style="color:#0284c7">4.0</div></div>
+<div class="rating-row"><div class="rating-name">Leadership & Team Management</div><div class="stars">★★★★☆</div><div class="rating-score" style="color:#0284c7">4.0</div></div>
+<div class="rating-row"><div class="rating-name">Industry Knowledge (SaaS)</div><div class="stars">★★★☆☆</div><div class="rating-score" style="color:#d97706">3.5</div></div>
+<div class="rating-row"><div class="rating-name">Communication & Stakeholder</div><div class="stars">★★★★★</div><div class="rating-score" style="color:#059669">4.5</div></div>
+<div class="rating-row"><div class="rating-name">Culture Fit & Growth Mindset</div><div class="stars">★★★★★</div><div class="rating-score" style="color:#059669">5.0</div></div>
+<div style="display:flex;align-items:center;gap:16px;background:#f9fafb;border-radius:12px;padding:14px;margin-top:14px;">
+  <div style="text-align:center;padding:0 16px;border-right:1px solid var(--border);">
+    <div style="font-size:32px;font-weight:800;color:#7c3aed;">4.3</div>
+    <div style="font-size:11px;color:var(--muted);">/ 5.0 · Tổng điểm</div>
+  </div>
+  <div style="flex:1;">
+    <div style="font-size:12px;font-weight:700;color:#7c3aed;margin-bottom:6px;">Note của Andy:</div>
+    <div style="font-size:13px;color:var(--text);line-height:1.7;">"Ứng viên rất solid về execution. Culture fit tốt — tư duy growth rõ ràng. SaaS gap nhỏ, bù được qua 60-90 ngày onboarding. Recommend TUYỂN."</div>
+  </div>
+</div>`},
+
+// ─── 4 ─── Đánh giá sau PV
+{phase:'rec',title:'Đánh giá & đề xuất sau phỏng vấn',agent:'kai',type:'auto',date:'07/01/2026 · 15:30',
+output:`
+<div class="highlight-box">
+  <div class="hb-title">🎯 Kết luận — Kai phân tích tổng hợp</div>
+  <div style="font-size:13px;line-height:1.75;">
+    Tổng hợp CV Score (87/100) + Interview Score (4.3/5.0) → <strong style="color:#059669">Đề xuất TUYỂN DỤNG ✅</strong><br>
+    Weighted score: <strong>88.2/100</strong> — Xếp hạng: Top 15% ứng viên đã phỏng vấn quý này.
+  </div>
+</div>
+<div class="sec-title">Phân tích rủi ro & action plan</div>
+<table class="doc-tbl">
+  <thead><tr><th>Gap</th><th>Mức độ</th><th>Biện pháp</th></tr></thead>
+  <tbody>
+    <tr><td>SaaS Industry Knowledge</td><td><span class="badge bg-yellow">Trung bình</span></td><td>60 ngày immersion onboarding · Buddy là PM Lead</td></tr>
+    <tr><td>Team scaling (hiện 4→8 người)</td><td><span class="badge bg-green">Thấp</span></td><td>Coaching L&D tháng 3</td></tr>
+    <tr><td>B2B Lead Gen experience</td><td><span class="badge bg-yellow">Trung bình</span></td><td>Pair với Sales team Q1</td></tr>
+  </tbody>
+</table>
+<div class="info-grid" style="margin-top:14px;">
+  <div class="info-box"><div class="ib-label">Quyết định</div><div class="ib-val" style="color:#059669;">✅ TUYỂN DỤNG</div></div>
+  <div class="info-box"><div class="ib-label">Ngày bắt đầu đề xuất</div><div class="ib-val">19/01/2026</div></div>
+</div>`},
+
+// ─── 5 ─── Salary Benchmark
+{phase:'rec',title:'Salary benchmark & đề xuất lương',agent:'thu',type:'auto',date:'07/01/2026 · 16:00',
+output:`
+<div class="sec-title">S10 — Salary Benchmark · Marketing Manager · HCM 2026</div>
+<table class="doc-tbl">
+  <thead><tr><th>Mức</th><th>Thị trường (P25–P75)</th><th>Đánh giá</th></tr></thead>
+  <tbody>
+    <tr><td><strong>P25 (Entry-level)</strong></td><td>18 – 20 triệu</td><td><span class="badge bg-gray">Dưới kỳ vọng UV</span></td></tr>
+    <tr><td><strong>P50 (Market median)</strong></td><td>22 – 25 triệu</td><td><span class="badge bg-blue">Target zone</span></td></tr>
+    <tr><td><strong>P75 (Senior/Scarce)</strong></td><td>27 – 32 triệu</td><td><span class="badge bg-purple">Stretch offer</span></td></tr>
+  </tbody>
+</table>
+<div class="highlight-box" style="margin-top:14px;">
+  <div class="hb-title">💰 Đề xuất của Thu — S12 Salary Recommendation</div>
+  <div style="font-size:13px;line-height:1.8;">
+    Ứng viên hiện hưởng ~20M (est.). Expectation: 25M.<br>
+    Score tổng hợp 88.2/100 → Thu đề xuất offer ở <strong>P55: 24 triệu gross</strong><br>
+    + KPI bonus Q cuối: tối đa 2 tháng lương · Review sau 6 tháng thử việc.<br>
+    <strong>Lý do:</strong> Gap SaaS là rủi ro, cần probation để confirm. Offer fair nhưng có room tăng sau 6T.
+  </div>
+</div>
+<div class="stop-gate">
+  <div class="sg-icon">🛑</div>
+  <div class="sg-txt"><div class="sg-title">STOP-1 — Andy cần approve mức lương trước khi soạn offer</div><div class="sg-sub">Mức đề xuất: 24,000,000 VND gross/tháng · Nhấn Approve để Linh soạn Offer Letter</div></div>
+  <button class="sg-btn" onclick="document.querySelector('.stop-gate').style.background='#f0fdf4';document.querySelector('.stop-gate').style.borderColor='#86efac';document.querySelector('.sg-btn').textContent='✅ Đã approve';document.querySelector('.sg-btn').style.background='#059669';">Approve ✓</button>
+</div>`},
+
+// ─── 6 ─── Offer Letter
+{phase:'rec',title:'Offer Letter — gửi chính thức',agent:'linh',type:'stop',date:'08/01/2026 · 09:00 SA',
+output:`
+<div class="email-box">
+  <div class="ef"><div class="ef-l">From:</div><div class="ef-v">linh.nguyen@techvision.vn (Linh Nguyễn · HR Recruiter)</div></div>
+  <div class="ef"><div class="ef-l">To:</div><div class="ef-v">minhanh.tran@gmail.com</div></div>
+  <div class="ef"><div class="ef-l">Subject:</div><div class="ef-v"><strong>[TechVision] Thư đề nghị làm việc — Marketing Manager</strong></div></div>
+  <hr class="e-div">
+  <div class="e-body">
+    <p><strong>THƯ ĐỀ NGHỊ LÀM VIỆC</strong></p><br>
+    <p>Kính gửi: Chị Trần Thị Minh Anh,</p><br>
+    <p>Thay mặt TechVision Corp, chúng tôi trân trọng đề nghị chị tham gia vào vị trí <strong>Marketing Manager</strong> với các điều khoản như sau:</p><br>
+    <p>📌 <strong>Chức danh:</strong> Marketing Manager<br>
+    💰 <strong>Lương cơ bản:</strong> 24,000,000 VND gross/tháng<br>
+    🎯 <strong>KPI Bonus:</strong> Tối đa 2 tháng lương/năm<br>
+    📅 <strong>Ngày bắt đầu:</strong> 19/01/2026<br>
+    🔄 <strong>Thử việc:</strong> 2 tháng (theo Luật Lao động)<br>
+    🏥 <strong>Phúc lợi:</strong> Bảo hiểm sức khoẻ PVI · 12 ngày phép/năm · WFH 2 ngày/tuần</p><br>
+    <p>Vui lòng phản hồi chấp nhận offer trước <strong>10/01/2026</strong>.</p><br>
+    <p>Trân trọng,<br><strong>Andy Trần</strong> · Chief HR Officer<br>TechVision Corp</p>
+  </div>
+</div>
+<div style="background:#f0fdf4;border:1px solid #86efac;border-radius:10px;padding:12px 16px;margin-top:12px;font-size:13px;color:#065f46;">
+  ✅ <strong>08/01 · 11:32:</strong> Minh Anh reply xác nhận chấp nhận offer. Hệ thống tự trigger onboarding workflow.
+</div>`},
+
+// ─── 7 ─── Welcome & Onboarding Kit
+{phase:'onb',title:'Welcome email & Onboarding kit',agent:'linh',type:'auto',date:'16/01/2026 · 08:00 SA (3 ngày trước start)',
+output:`
+<div class="email-box">
+  <div class="ef"><div class="ef-l">From:</div><div class="ef-v">hr@techvision.vn</div></div>
+  <div class="ef"><div class="ef-l">To:</div><div class="ef-v">minhanh.tran@gmail.com</div></div>
+  <div class="ef"><div class="ef-l">Subject:</div><div class="ef-v"><strong>🎉 Chào mừng Minh Anh — Checklist chuẩn bị ngày đầu tiên</strong></div></div>
+  <hr class="e-div">
+  <div class="e-body">
+    <p>Xin chào Minh Anh! 👋</p><br>
+    <p>Chúng mình rất vui khi bạn sắp gia nhập team TechVision. Dưới đây là những việc cần chuẩn bị trước ngày đầu <strong>19/01/2026</strong>:</p><br>
+    <p>☑️ Hoàn thiện hồ sơ qua link: <em>[Portal link]</em><br>
+    ☑️ Cài Google Workspace (email công ty)<br>
+    ☑️ Cài Slack, Notion, Jira theo hướng dẫn<br>
+    ☑️ Mang CCCD bản gốc để ký HĐLĐ<br>
+    ☑️ Đến văn phòng lúc 9:00 SA — hỏi lễ tân, sẽ có Linh đón</p><br>
+    <p>Ngày đầu tiên của bạn:<br>
+    🕘 09:00 — Chào hỏi team · Nhận thiết bị<br>
+    🕙 10:00 — Meeting với Andy (CHRO)<br>
+    🕛 12:00 — Lunch cùng team Marketing<br>
+    🕑 14:00 — Orientation với Ngọc (L&D)</p>
+  </div>
+</div>`},
+
+// ─── 7a ─── C&B onboarding details
+{phase:'onb',sub:true,label:'7a',title:'Chi tiết lương & phụ cấp onboarding',agent:'thu',type:'auto',date:'19/01/2026 · 10:00 SA · Ngày đầu tiên',
+output:`
+<div class="sec-title">C&B Onboarding Package · Trần Thị Minh Anh</div>
+<div class="info-grid">
+  <div class="info-box"><div class="ib-label">Lương cơ bản</div><div class="ib-val" style="color:#059669;">24,000,000 VND gross</div></div>
+  <div class="info-box"><div class="ib-label">Thực lãnh (ước tính)</div><div class="ib-val">~20,400,000 VND net</div></div>
+</div>
+<div class="sec-title" style="margin-top:14px;">Bảng phụ cấp & trợ cấp</div>
+<table class="doc-tbl">
+  <thead><tr><th>Khoản</th><th>Mức</th><th>Ghi chú</th></tr></thead>
+  <tbody>
+    <tr><td>Phụ cấp xăng xe</td><td>500,000 VND/tháng</td><td>Tính vào lương, không đóng BHXH</td></tr>
+    <tr><td>Phụ cấp điện thoại</td><td>300,000 VND/tháng</td><td>Tính vào lương, không đóng BHXH</td></tr>
+    <tr><td>Trợ cấp ăn trưa</td><td>730,000 VND/tháng</td><td>~35k/ngày · Chuyển khoản cuối tháng</td></tr>
+    <tr><td>Phụ cấp chức vụ (Manager)</td><td>1,000,000 VND/tháng</td><td>Đóng BHXH</td></tr>
+    <tr><td>KPI Bonus (hàng quý)</td><td>Tối đa 2 tháng lương/năm</td><td>Dựa trên KPI đạt được</td></tr>
+    <tr><td>Thưởng Tết (tháng 13)</td><td>1 tháng lương cơ bản</td><td>Trả trước Tết Nguyên Đán</td></tr>
+  </tbody>
+</table>
+<div class="sec-title" style="margin-top:14px;">Chế độ nghỉ phép</div>
+<table class="doc-tbl">
+  <thead><tr><th>Loại phép</th><th>Số ngày/năm</th><th>Điều kiện</th></tr></thead>
+  <tbody>
+    <tr><td>Phép năm</td><td>12 ngày</td><td>Theo Luật LĐ · Cộng dồn sau 12 tháng</td></tr>
+    <tr><td>Phép cưới (bản thân)</td><td>3 ngày</td><td>Có giấy đăng ký kết hôn</td></tr>
+    <tr><td>Phép tang</td><td>3 ngày</td><td>Người thân trực hệ</td></tr>
+    <tr><td>Nghỉ ốm BHXH</td><td>Theo chế độ BHXH</td><td>Có giấy của bác sĩ</td></tr>
+    <tr><td>WFH</td><td>2 ngày/tuần</td><td>Thứ 3 và Thứ 5 (cố định)</td></tr>
+  </tbody>
+</table>
+<div class="highlight-box" style="margin-top:12px;">
+  <div class="hb-title">📋 Ngày chốt lương & chu kỳ trả</div>
+  <div style="font-size:13px;line-height:1.75;">Chốt công: cuối tháng · Thanh toán: mùng 5 tháng sau · Slip lương gửi qua email nội bộ trước ngày thanh toán.</div>
+</div>`},
+
+// ─── 8 ─── 30-60-90 Plan
+{phase:'onb',title:'Lộ trình onboarding 30-60-90 ngày',agent:'ngoc',type:'auto',date:'19/01/2026 · 14:00',
+output:`
+<div class="sec-title">S05 — Onboarding Roadmap · Trần Thị Minh Anh</div>
+<div class="tl-item"><div class="tl-dot" style="background:#db2777;"></div><div class="tl-c"><div class="tl-ph">THÁNG 1 — Learn (Ngày 1–30)</div><div class="tl-txt">Shadow 3 phòng ban: Sales · Product · Customer Success. Đọc toàn bộ Product docs. Phỏng vấn 5 khách hàng cùng Sales. Tham dự mọi meeting Marketing không nói gì — chỉ observe.</div></div></div>
+<div class="tl-item"><div class="tl-dot" style="background:#7c3aed;"></div><div class="tl-c"><div class="tl-ph">THÁNG 2 — Contribute (Ngày 31–60)</div><div class="tl-txt">Audit toàn bộ kênh marketing hiện tại (Traffic, Conversion, CAC). Trình bày findings + 3 đề xuất quick win cho Andy. Bắt đầu sở hữu 1 kênh (đề xuất tự chọn). Setup KPI dashboard đầu tiên.</div></div></div>
+<div class="tl-item"><div class="tl-dot" style="background:#059669;"></div><div class="tl-c"><div class="tl-ph">THÁNG 3 — Lead (Ngày 61–90)</div><div class="tl-txt">Trình Q1 Marketing Plan đầy đủ. Bắt đầu 1-on-1 weekly với team marketing. Propose budget allocation Q2. Chạy campaign đầu tiên — end to end ownership.</div></div></div>
+<div style="background:#f9fafb;border-radius:12px;padding:14px;margin-top:12px;">
+  <div class="sec-title">Buddy được phân công</div>
+  <div style="display:flex;gap:12px;align-items:center;">
+    <div style="width:36px;height:36px;border-radius:50%;background:#dbeafe;display:flex;align-items:center;justify-content:center;font-weight:800;color:#1e40af;font-size:13px;">H</div>
+    <div><div style="font-size:13px;font-weight:700;">Hùng Lê — Product Manager Lead</div><div style="font-size:11px;color:var(--muted);">Buddy cho 90 ngày đầu · Weekly 1-on-1 vào thứ 6</div></div>
+  </div>
+</div>`},
+
+// ─── 9 ─── Welcome letter từ Andy
+{phase:'onb',title:'Thư chào mừng gia nhập từ Andy',agent:'andy',type:'auto',date:'19/01/2026 · 09:30 SA · Ngày đầu tiên',
+output:`
+<div class="email-box">
+  <div class="ef"><div class="ef-l">From:</div><div class="ef-v">andy.tran@techvision.vn (Andy Trần · CHRO)</div></div>
+  <div class="ef"><div class="ef-l">To:</div><div class="ef-v">all-hands@techvision.vn · <strong>180 người</strong></div></div>
+  <div class="ef"><div class="ef-l">CC:</div><div class="ef-v">minhanh.tran@techvision.vn</div></div>
+  <div class="ef"><div class="ef-l">Subject:</div><div class="ef-v"><strong>🎉 Chào mừng Minh Anh — Marketing Manager mới của chúng ta!</strong></div></div>
+  <hr class="e-div">
+  <div class="e-body">
+    <p>Hi cả team,</p><br>
+    <p>Mình rất vui được giới thiệu <strong>Trần Thị Minh Anh</strong> — thành viên mới gia nhập TechVision hôm nay với vai trò <strong>Marketing Manager</strong>.</p><br>
+    <p>Một vài điều thú vị về Minh Anh:<br>
+    🎯 5 năm kinh nghiệm Marketing B2B/B2C tại các digital agency lớn<br>
+    📊 Chuyên sâu về Performance Marketing — Google Ads, Meta, SEO<br>
+    👥 Đã build và manage team marketing từ 0<br>
+    🏆 Campaign gần nhất đạt CPL thấp hơn target 30%</p><br>
+    <p>Minh Anh sẽ dẫn dắt toàn bộ mảng Marketing tại TechVision — từ Brand đến Demand Gen. Nếu bạn nào cần collaborate, đừng ngại ping trực tiếp!</p><br>
+    <p>Please give Minh Anh a warm welcome. Hôm nay cô ấy ngồi tại khu Marketing (tầng 3, gần cửa sổ). 👋</p><br>
+    <p>Cảm ơn team!<br><strong>Andy Trần</strong> · CHRO · TechVision Corp</p>
+  </div>
+</div>
+<div class="highlight-box" style="margin-top:12px;">
+  <div class="hb-title">⚡ Tự động hóa</div>
+  <div style="font-size:13px;line-height:1.75;">Email được hệ thống tự soạn từ profile ứng viên + kết quả phỏng vấn. Andy chỉ cần <strong>review 30 giây và nhấn Gửi</strong>. Tự động CC Minh Anh · Schedule đúng 9:30 ngày đầu tiên · Tự archive vào Employee File.</div>
+</div>`},
+
+// ─── 10 ─── KPI Thử việc
+{phase:'prob',title:'KPI thử việc thiết lập',agent:'thu',type:'auto',date:'20/01/2026 · 10:00',
+output:`
+<div class="sec-title">S17 — KPI Framework · Thử việc 2 tháng · Minh Anh</div>
+<div class="kpi-row" style="font-weight:700;font-size:11px;color:var(--muted);border-bottom:2px solid var(--border);"><div class="kpi-name">KPI</div><div class="kpi-target">Mục tiêu</div><div class="kpi-w">Trọng số</div></div>
+<div class="kpi-row"><div class="kpi-name">Hoàn thành 30-60-90 roadmap đúng hạn</div><div class="kpi-target">100% milestone</div><div class="kpi-w">25%</div></div>
+<div class="kpi-row"><div class="kpi-name">Audit marketing hiện tại + 3 đề xuất</div><div class="kpi-target">Trình trước ngày 20/2</div><div class="kpi-w">20%</div></div>
+<div class="kpi-row"><div class="kpi-name">Chạy 1 campaign (any channel)</div><div class="kpi-target">CPL ≤ 350k</div><div class="kpi-w">25%</div></div>
+<div class="kpi-row"><div class="kpi-name">Peer review từ team</div><div class="kpi-target">≥ 4.0 / 5.0</div><div class="kpi-w">15%</div></div>
+<div class="kpi-row" style="border-bottom:none;"><div class="kpi-name">Attendance & collaboration</div><div class="kpi-target">≥ 95% đúng giờ</div><div class="kpi-w">15%</div></div>
+<div class="highlight-box" style="margin-top:14px;">
+  <div class="hb-title">📋 Quy trình đánh giá thử việc</div>
+  <div style="font-size:13px;line-height:1.75;">Check-in tháng 1: <strong>20/02</strong> — Thu & Minh Anh 1-on-1<br>Đánh giá cuối: <strong>19/03</strong> — Kai (HR BP) tổng hợp + Andy approve</div>
+</div>`},
+
+// ─── 11 ─── Check-in tháng 1
+{phase:'prob',title:'Check-in tháng 1 thử việc',agent:'thu',type:'auto',date:'20/02/2026 · 14:00',
+output:`
+<div class="info-grid">
+  <div class="info-box"><div class="ib-label">Tiến độ tổng thể</div><div class="ib-val" style="color:#059669;">78% ✅</div></div>
+  <div class="info-box"><div class="ib-label">Đánh giá sơ bộ</div><div class="ib-val" style="color:#059669;">Đang tốt</div></div>
+</div>
+<div class="sec-title">Tiến độ từng KPI</div>
+<table class="doc-tbl">
+  <thead><tr><th>KPI</th><th>Tiến độ</th><th>Trạng thái</th></tr></thead>
+  <tbody>
+    <tr><td>30-60-90 roadmap milestones</td><td>Tháng 1 hoàn thành đủ</td><td><span class="badge bg-green">On track</span></td></tr>
+    <tr><td>Audit marketing</td><td>Đang viết — 60% xong</td><td><span class="badge bg-yellow">In progress</span></td></tr>
+    <tr><td>Campaign thử nghiệm</td><td>Đang setup Facebook Ads</td><td><span class="badge bg-blue">Starting</span></td></tr>
+    <tr><td>Peer review</td><td>Chưa đến kỳ đánh giá</td><td><span class="badge bg-gray">Pending</span></td></tr>
+  </tbody>
+</table>
+<div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:12px;padding:12px 16px;margin-top:12px;font-size:13px;color:#0369a1;">
+  <strong>💬 Feedback từ Hùng (Buddy):</strong><br>
+  "Minh Anh học rất nhanh về product. Đặt câu hỏi chất lượng, không ngại hỏi. Phần SaaS metric (MRR, Churn) cần thêm thời gian nhưng đang tiến bộ tốt."
+</div>`},
+
+// ─── 12a ─── Bảng chấm công
+{phase:'prob',sub:true,label:'12a',title:'Bảng chấm công tháng 2/2026',agent:'thu',type:'auto',date:'01/03/2026 · 08:00 SA',
+output:`
+<div class="sec-title">Bảng chấm công · Trần Thị Minh Anh · Tháng 02/2026</div>
+<div class="info-grid">
+  <div class="info-box"><div class="ib-label">Tổng ngày công chuẩn</div><div class="ib-val">20 ngày</div></div>
+  <div class="info-box"><div class="ib-label">Thực tế có mặt</div><div class="ib-val" style="color:#059669;">20 ngày ✅</div></div>
+  <div class="info-box"><div class="ib-label">Đi muộn / về sớm</div><div class="ib-val" style="color:#059669;">0 lần</div></div>
+  <div class="info-box"><div class="ib-label">Nghỉ phép sử dụng</div><div class="ib-val">0 ngày (còn 12)</div></div>
+</div>
+<div class="sec-title" style="margin-top:14px;">Chi tiết theo tuần</div>
+<table class="doc-tbl">
+  <thead><tr><th>Tuần</th><th>T2</th><th>T3</th><th>T4</th><th>T5</th><th>T6</th><th>Tổng</th></tr></thead>
+  <tbody>
+    <tr><td>Tuần 1 (03–07/02)</td><td>✅</td><td>WFH</td><td>✅</td><td>WFH</td><td>✅</td><td>5 ngày</td></tr>
+    <tr><td>Tuần 2 (10–14/02)</td><td>✅</td><td>WFH</td><td>✅</td><td>WFH</td><td>✅</td><td>5 ngày</td></tr>
+    <tr><td>Tuần 3 (17–21/02)</td><td>✅</td><td>WFH</td><td>✅</td><td>WFH</td><td>✅</td><td>5 ngày</td></tr>
+    <tr><td>Tuần 4 (24–28/02)</td><td>✅</td><td>WFH</td><td>✅</td><td>WFH</td><td>✅</td><td>5 ngày</td></tr>
+  </tbody>
+</table>
+<div style="background:#f0fdf4;border:1px solid #86efac;border-radius:10px;padding:10px 14px;margin-top:10px;font-size:12px;color:#065f46;">✅ Đã gửi sang Payroll · Hệ thống tự động chốt công ngày 28/02 và sync với bảng lương.</div>`},
+
+// ─── 12b ─── Bảng lương Team Marketing
+{phase:'prob',sub:true,label:'12b',title:'Bảng lương Team Marketing tháng 2',agent:'thu',type:'auto',date:'01/03/2026 · 08:05 SA',
+output:`
+<div class="sec-title">Bảng lương · Team Marketing · Tháng 02/2026</div>
+<table class="doc-tbl">
+  <thead><tr><th>Nhân viên</th><th>Chức danh</th><th>Lương cơ bản</th><th>Phụ cấp</th><th>Gross</th><th>BHXH NLĐ (8%)</th><th>TNCN</th><th>Net thực lãnh</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Trần Thị Minh Anh</strong></td><td>Marketing Manager (TV)</td><td>24,000,000</td><td>2,530,000</td><td>26,530,000</td><td>1,920,000</td><td>840,000</td><td style="font-weight:700;color:#059669;">23,770,000</td></tr>
+    <tr><td>Phạm Hữu Đức</td><td>Content Specialist</td><td>14,000,000</td><td>1,530,000</td><td>15,530,000</td><td>1,120,000</td><td>320,000</td><td>14,090,000</td></tr>
+    <tr><td>Lê Thị Hoa</td><td>Performance Marketer</td><td>16,000,000</td><td>1,530,000</td><td>17,530,000</td><td>1,280,000</td><td>480,000</td><td>15,770,000</td></tr>
+  </tbody>
+</table>
+<div class="info-grid" style="margin-top:12px;">
+  <div class="info-box"><div class="ib-label">Tổng gross Team</div><div class="ib-val">59,590,000 VND</div></div>
+  <div class="info-box"><div class="ib-label">Tổng net chi trả</div><div class="ib-val" style="color:#059669;">53,630,000 VND</div></div>
+</div>
+<div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:10px;padding:10px 14px;margin-top:10px;font-size:12px;color:#0369a1;">💡 Thu (C&B) tổng hợp bảng lương tự động từ dữ liệu chấm công + phụ cấp. Chuyển khoản batch ngày 05/03/2026.</div>`},
+
+// ─── 12c ─── Phiếu lương Minh Anh
+{phase:'prob',sub:true,label:'12c',title:'Phiếu lương của Minh Anh',agent:'thu',type:'auto',date:'04/03/2026 · Gửi trước ngày thanh toán',
+output:`
+<div class="email-box">
+  <div class="ef"><div class="ef-l">From:</div><div class="ef-v">payroll@techvision.vn (C&B System)</div></div>
+  <div class="ef"><div class="ef-l">To:</div><div class="ef-v">minhanh.tran@techvision.vn</div></div>
+  <div class="ef"><div class="ef-l">Subject:</div><div class="ef-v"><strong>[Confidential] Phiếu lương tháng 02/2026 — Trần Thị Minh Anh</strong></div></div>
+  <hr class="e-div">
+  <div class="e-body">
+    <p><strong>PHIẾU LƯƠNG THÁNG 02/2026</strong></p><br>
+    <table class="doc-tbl" style="margin:0;">
+      <tbody>
+        <tr><td style="color:var(--muted);">Họ tên</td><td><strong>Trần Thị Minh Anh</strong></td></tr>
+        <tr><td style="color:var(--muted);">Chức danh</td><td>Marketing Manager (Thử việc)</td></tr>
+        <tr><td style="color:var(--muted);">Ngày công thực tế</td><td>20 / 20 ngày</td></tr>
+        <tr style="border-top:2px solid var(--border);"><td style="color:var(--muted);font-weight:700;">A. THU NHẬP</td><td></td></tr>
+        <tr><td style="padding-left:16px;color:var(--muted);">Lương cơ bản</td><td>24,000,000</td></tr>
+        <tr><td style="padding-left:16px;color:var(--muted);">PC xăng xe</td><td>500,000</td></tr>
+        <tr><td style="padding-left:16px;color:var(--muted);">PC điện thoại</td><td>300,000</td></tr>
+        <tr><td style="padding-left:16px;color:var(--muted);">PC ăn trưa</td><td>730,000</td></tr>
+        <tr><td style="padding-left:16px;color:var(--muted);">PC chức vụ</td><td>1,000,000</td></tr>
+        <tr><td style="font-weight:700;">Tổng thu nhập (Gross)</td><td style="font-weight:700;">26,530,000</td></tr>
+        <tr style="border-top:2px solid var(--border);"><td style="color:var(--muted);font-weight:700;">B. KHẤU TRỪ</td><td></td></tr>
+        <tr><td style="padding-left:16px;color:var(--muted);">BHXH (8%)</td><td>1,920,000</td></tr>
+        <tr><td style="padding-left:16px;color:var(--muted);">BHYT (1.5%)</td><td>360,000</td></tr>
+        <tr><td style="padding-left:16px;color:var(--muted);">BHTN (1%)</td><td>240,000</td></tr>
+        <tr><td style="padding-left:16px;color:var(--muted);">Thuế TNCN</td><td>840,000</td></tr>
+        <tr style="border-top:2px solid var(--border);"><td style="font-weight:800;font-size:14px;">THỰC LÃNH (NET)</td><td style="font-weight:800;font-size:16px;color:#059669;">23,170,000 VND</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div style="background:#f0fdf4;border:1px solid #86efac;border-radius:10px;padding:10px 14px;margin-top:10px;font-size:12px;color:#065f46;">✅ Chuyển khoản 05/03/2026 · Ngân hàng Vietcombank · Đã xác nhận thành công</div>`},
+
+// ─── 11 ─── Đánh giá cuối thử việc
+{phase:'prob',title:'Đánh giá cuối thử việc',agent:'kai',type:'auto',date:'19/03/2026 · 10:00',
+output:`
+<div style="text-align:center;padding:20px 0 16px;">
+  <div style="display:inline-flex;flex-direction:column;align-items:center;justify-content:center;width:90px;height:90px;border-radius:50%;border:5px solid #059669;background:#f0fdf4;">
+    <div style="font-size:28px;font-weight:800;color:#059669;">88</div>
+    <div style="font-size:10px;color:#065f46;font-weight:700;">/ 100</div>
+  </div>
+  <div style="margin-top:12px;font-size:18px;font-weight:800;color:#059669;">✅ ĐẠT — Kết quả xuất sắc</div>
+</div>
+<div class="sec-title">Chi tiết đánh giá từng KPI</div>
+<table class="doc-tbl">
+  <thead><tr><th>KPI</th><th>Kết quả thực tế</th><th>Điểm</th><th>Trọng số</th></tr></thead>
+  <tbody>
+    <tr><td>30-60-90 roadmap</td><td>Hoàn thành 100% đúng hạn</td><td style="color:#059669;font-weight:700">95/100</td><td>25%</td></tr>
+    <tr><td>Marketing audit + đề xuất</td><td>Trình 15/03 — 5 đề xuất</td><td style="color:#059669;font-weight:700">90/100</td><td>20%</td></tr>
+    <tr><td>Campaign Facebook Ads</td><td>CPL: 280k (target 350k)</td><td style="color:#059669;font-weight:700">95/100</td><td>25%</td></tr>
+    <tr><td>Peer review</td><td>4.2 / 5.0</td><td style="color:#0284c7;font-weight:700">84/100</td><td>15%</td></tr>
+    <tr><td>Attendance</td><td>100% đúng giờ</td><td style="color:#059669;font-weight:700">100/100</td><td>15%</td></tr>
+  </tbody>
+</table>
+<div class="highlight-box" style="margin-top:12px;">
+  <div class="hb-title">Nhận xét Kai (HR BP)</div>
+  <div style="font-size:13px;line-height:1.75;">"Minh Anh exceed expectation ở execution speed. Campaign đầu tiên vượt target CPL 20%. Culture fit tốt — team feedback rất tích cực. Đề xuất chuyển chính thức và review lương sau 6 tháng."</div>
+</div>`},
+
+// ─── 12 ─── Xác nhận chính thức
+{phase:'prob',title:'Andy xác nhận chuyển chính thức',agent:'andy',type:'stop',date:'19/03/2026 · 11:00',
+output:`
+<div class="email-box">
+  <div class="ef"><div class="ef-l">From:</div><div class="ef-v">andy.tran@techvision.vn</div></div>
+  <div class="ef"><div class="ef-l">To:</div><div class="ef-v">minhanh.tran@techvision.vn</div></div>
+  <div class="ef"><div class="ef-l">CC:</div><div class="ef-v">hr@techvision.vn · team-marketing@techvision.vn</div></div>
+  <div class="ef"><div class="ef-l">Subject:</div><div class="ef-v"><strong>🎉 Chúc mừng — Xác nhận chuyển nhân viên chính thức</strong></div></div>
+  <hr class="e-div">
+  <div class="e-body">
+    <p>Minh Anh thân mến,</p><br>
+    <p>Thay mặt Ban lãnh đạo TechVision Corp, mình rất vui thông báo: bạn đã <strong>hoàn thành xuất sắc thời gian thử việc</strong> với điểm đánh giá <strong>88/100</strong>.</p><br>
+    <p>Hiệu lực từ <strong>19/03/2026</strong>, bạn chính thức là <strong>Marketing Manager</strong> của TechVision Corp.<br>Hợp đồng lao động xác định thời hạn 1 năm sẽ được HR chuẩn bị trong hôm nay.</p><br>
+    <p>Cảm ơn bạn vì những đóng góp tuyệt vời trong 2 tháng qua.<br>Keep up the amazing work! 🚀</p><br>
+    <p><strong>Andy Trần</strong> · CHRO · TechVision Corp</p>
+  </div>
+</div>
+<div style="background:#f0fdf4;border:1px solid #86efac;border-radius:10px;padding:12px 16px;margin-top:10px;font-size:12px;color:#065f46;">✅ Hệ thống tự động: Cập nhật HRIS · Activate full benefits · Trigger TNA workflow · Notify Payroll</div>`},
+
+// ─── 13 ─── TNA
+{phase:'train',title:'Training Needs Analysis — S06',agent:'ngoc',type:'auto',date:'25/03/2026 · 09:00',
+output:`
+<div class="sec-title">S06 TNA Report · Trần Thị Minh Anh · Tháng 3/2026</div>
+<div class="info-grid">
+  <div class="info-box"><div class="ib-label">Gap tổng số</div><div class="ib-val">3 nhóm kỹ năng</div></div>
+  <div class="info-box"><div class="ib-label">Ưu tiên đào tạo</div><div class="ib-val">Q2 2026</div></div>
+</div>
+<table class="doc-tbl" style="margin-top:12px;">
+  <thead><tr><th>Gap kỹ năng</th><th>Mức độ</th><th>Phương pháp</th><th>Timeline</th></tr></thead>
+  <tbody>
+    <tr><td><strong>SaaS Metrics & PLG</strong><br><span style="font-size:11px;color:var(--muted);">MRR, ARR, Churn, NPS, PLG funnel</span></td><td><span class="badge bg-red">Cần gấp</span></td><td>Workshop 2 ngày + Self-study course</td><td>Tháng 4/2026</td></tr>
+    <tr><td><strong>B2B Marketing Strategy</strong><br><span style="font-size:11px;color:var(--muted);">ABM, Demand Gen, Pipeline marketing</span></td><td><span class="badge bg-yellow">Quan trọng</span></td><td>External trainer + Job rotation</td><td>Tháng 5/2026</td></tr>
+    <tr><td><strong>People Management nâng cao</strong><br><span style="font-size:11px;color:var(--muted);">Coaching, Delegation, Performance talks</span></td><td><span class="badge bg-yellow">Phát triển</span></td><td>Coaching 1-on-1 với Kai (HR BP)</td><td>Tháng 6/2026</td></tr>
+  </tbody>
+</table>`},
+
+// ─── 14 ─── Training Plan
+{phase:'train',title:'Training Program Q2 2026',agent:'ngoc',type:'auto',date:'01/04/2026',
+output:`
+<div class="sec-title">S07 — Training Outline · Q2/2026 · Minh Anh</div>
+<table class="doc-tbl">
+  <thead><tr><th>Tuần</th><th>Module</th><th>Hình thức</th><th>Trainer</th></tr></thead>
+  <tbody>
+    <tr><td>W1–2 (Apr)</td><td>SaaS Fundamentals: MRR, ARR, Churn, PLG</td><td>Workshop 2 ngày + Video course (Reforge)</td><td>Hùng PM + External</td></tr>
+    <tr><td>W3–4 (Apr)</td><td>B2B Marketing: Account-Based Marketing basics</td><td>Workshop 1 ngày + Case study</td><td>External trainer</td></tr>
+    <tr><td>W1–2 (May)</td><td>Demand Generation & Pipeline Marketing</td><td>Hands-on project (real campaign)</td><td>Andy + Minh Anh tự thực hành</td></tr>
+    <tr><td>W3–4 (May)</td><td>People Management: Coaching framework</td><td>1-on-1 với Kai · 4 buổi × 1h</td><td>Kai (HR BP)</td></tr>
+    <tr><td>W1–4 (Jun)</td><td>Final project: Q3 Full Marketing Strategy</td><td>Tự làm + Present trước Andy</td><td>Andy (mentor)</td></tr>
+  </tbody>
+</table>
+<div class="info-grid" style="margin-top:12px;">
+  <div class="info-box"><div class="ib-label">Tổng thời gian</div><div class="ib-val">3 tháng · ~40 giờ</div></div>
+  <div class="info-box"><div class="ib-label">Eval method</div><div class="ib-val">S08 Eval Form sau mỗi module</div></div>
+</div>`},
+
+// ─── 15 ─── IDP
+{phase:'train',title:'Individual Development Plan — 12 tháng',agent:'ngoc',type:'auto',date:'01/04/2026',
+output:`
+<div class="sec-title">S09 IDP · Trần Thị Minh Anh · 2026</div>
+<div class="highlight-box">
+  <div class="hb-title">🎯 Career Goal — 12 tháng</div>
+  <div style="font-size:13px;line-height:1.75;">Phát triển từ Marketing Manager → Senior Marketing Manager trong 12-18 tháng. Điều kiện: (1) Chạy campaign ROI dương liên tiếp 2 quý · (2) Scale team lên 6 người · (3) Chứng minh B2B pipeline marketing impact.</div>
+</div>
+<table class="doc-tbl" style="margin-top:12px;">
+  <thead><tr><th>Quý</th><th>Mục tiêu phát triển</th><th>Action</th><th>Success metric</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Q2/2026</strong></td><td>Master SaaS metrics & B2B marketing</td><td>Training plan Q2</td><td>Pass eval ≥ 80%</td></tr>
+    <tr><td><strong>Q3/2026</strong></td><td>Lead full-funnel B2B campaign</td><td>Own Q3 marketing plan</td><td>Qualified leads +40%</td></tr>
+    <tr><td><strong>Q4/2026</strong></td><td>Scale team từ 2 → 4 người</td><td>Tham gia tuyển dụng + onboard</td><td>Team NPS ≥ 4.0</td></tr>
+    <tr><td><strong>Q1/2027</strong></td><td>Reach Senior level</td><td>360-review + Andy assessment</td><td>KPI ≥ 90% · Score ≥ 4.5</td></tr>
+  </tbody>
+</table>`},
+
+// ─── Ngọc: Đánh giá hiệu quả sau đào tạo
+{phase:'train',title:'Đánh giá kết quả sau đào tạo — S08',agent:'ngoc',type:'auto',date:'30/06/2026 · Sau khi hoàn thành training Q2',
+output:`
+<div class="sec-title">S08 Training Evaluation · Minh Anh · Q2/2026</div>
+<div class="info-grid">
+  <div class="info-box"><div class="ib-label">Tổng số giờ đào tạo</div><div class="ib-val">42 giờ / 40 giờ kế hoạch</div></div>
+  <div class="info-box"><div class="ib-label">Điểm đánh giá tổng thể</div><div class="ib-val" style="color:#059669;">4.4 / 5.0 ✅</div></div>
+</div>
+<div class="sec-title" style="margin-top:14px;">Kết quả từng module (Kirkpatrick Level 1–3)</div>
+<table class="doc-tbl">
+  <thead><tr><th>Module</th><th>L1 Reaction</th><th>L2 Learning</th><th>L3 Behavior</th></tr></thead>
+  <tbody>
+    <tr><td>SaaS Fundamentals</td><td><span class="badge bg-green">4.6/5</span></td><td><span class="badge bg-green">Pass (88%)</span></td><td><span class="badge bg-green">Áp dụng vào dashboard</span></td></tr>
+    <tr><td>B2B Marketing / ABM</td><td><span class="badge bg-green">4.5/5</span></td><td><span class="badge bg-green">Pass (82%)</span></td><td><span class="badge bg-yellow">Đang pilot 1 campaign</span></td></tr>
+    <tr><td>People Management</td><td><span class="badge bg-green">4.2/5</span></td><td><span class="badge bg-blue">Pass (76%)</span></td><td><span class="badge bg-yellow">Coaching đang tiếp tục</span></td></tr>
+  </tbody>
+</table>
+<div class="highlight-box" style="margin-top:12px;">
+  <div class="hb-title">💡 Ngọc nhận xét</div>
+  <div style="font-size:13px;line-height:1.75;">Minh Anh học nhanh, đặc biệt module SaaS đã áp dụng ngay vào dashboard thực tế. Module People Management cần thêm 3 tháng coaching vì scope mở rộng team. <strong>Đề xuất: thêm 1 coaching session Q3 về delegation & feedback framework.</strong></div>
+</div>`},
+
+// ─── Ngọc: L&D ROI Report
+{phase:'train',title:'L&D ROI Report — hiệu quả đào tạo',agent:'ngoc',type:'auto',date:'15/07/2026',
+output:`
+<div class="sec-title">L&D ROI Report · Q2/2026 · Marketing Department</div>
+<div class="stat-row" style="margin-bottom:16px;">
+  <div class="stat-box"><div class="stat-val" style="color:#059669;">42h</div><div class="stat-lbl">Giờ đào tạo</div></div>
+  <div class="stat-box"><div class="stat-val" style="color:#7c3aed;">4.4</div><div class="stat-lbl">Satisfaction (/ 5)</div></div>
+  <div class="stat-box"><div class="stat-val" style="color:#db2777;">+67%</div><div class="stat-lbl">SQL sau training</div></div>
+  <div class="stat-box"><div class="stat-val" style="color:#0284c7;">320%</div><div class="stat-lbl">ROI ước tính</div></div>
+</div>
+<div class="sec-title">Tính ROI đào tạo</div>
+<table class="doc-tbl">
+  <thead><tr><th>Hạng mục</th><th>Giá trị</th></tr></thead>
+  <tbody>
+    <tr><td>Chi phí đào tạo (trainer + material)</td><td>12,000,000 VND</td></tr>
+    <tr><td>Thời gian học = opportunity cost</td><td>~8,400,000 VND (42h × 200k/h)</td></tr>
+    <tr><td><strong>Tổng đầu tư</strong></td><td><strong>20,400,000 VND</strong></td></tr>
+    <tr><td>Tăng SQL/tháng nhờ B2B skill mới (~41 leads × 1.5M avg deal)</td><td>61,500,000 VND/tháng</td></tr>
+    <tr><td><strong>ROI ước tính (6 tháng)</strong></td><td><strong style="color:#059669;">369,000,000 VND (~320% ROI)</strong></td></tr>
+  </tbody>
+</table>
+<div class="highlight-box" style="margin-top:12px;">
+  <div class="hb-title">📊 Ngọc đề xuất cho Q3</div>
+  <div style="font-size:13px;line-height:1.75;">Tiếp tục coaching People Management (1 buổi/tháng). Bổ sung module Advanced Analytics cho team. ROI training team Marketing cao nhất trong công ty — ưu tiên budget L&D cho phòng này.</div>
+</div>`},
+
+// ─── Thu: Cập nhật C&B sau xác nhận chính thức
+{phase:'perf',title:'Thu cập nhật C&B chính thức sau thử việc',agent:'thu',type:'auto',date:'20/03/2026',
+output:`
+<div class="sec-title">C&B Update — Chuyển từ Thử việc → Chính thức</div>
+<div class="info-grid">
+  <div class="info-box"><div class="ib-label">Trạng thái trước</div><div class="ib-val">Thử việc (85% lương)</div></div>
+  <div class="info-box"><div class="ib-label">Trạng thái mới</div><div class="ib-val" style="color:#059669;">Nhân viên chính thức ✅</div></div>
+  <div class="info-box"><div class="ib-label">Lương thử việc</div><div class="ib-val">20,400,000 VND/tháng</div></div>
+  <div class="info-box"><div class="ib-label">Lương chính thức</div><div class="ib-val" style="color:#059669;">24,000,000 VND/tháng</div></div>
+</div>
+<div class="sec-title" style="margin-top:14px;">Actions tự động sau confirm</div>
+<table class="doc-tbl">
+  <thead><tr><th>Action</th><th>Status</th></tr></thead>
+  <tbody>
+    <tr><td>Update HRIS: employee type → Chính thức</td><td><span class="badge bg-green">Done ✅</span></td></tr>
+    <tr><td>Activate BHXH, BHYT, BHTN full (employer 17.5%)</td><td><span class="badge bg-green">Done ✅</span></td></tr>
+    <tr><td>Activate 12 ngày phép năm đầy đủ</td><td><span class="badge bg-green">Done ✅</span></td></tr>
+    <tr><td>Activate KPI Bonus scheme Q2</td><td><span class="badge bg-green">Done ✅</span></td></tr>
+    <tr><td>Ký HĐLĐ xác định thời hạn 1 năm</td><td><span class="badge bg-yellow">Pending ký tay</span></td></tr>
+    <tr><td>Thông báo Payroll điều chỉnh từ tháng 4</td><td><span class="badge bg-green">Sent ✅</span></td></tr>
+  </tbody>
+</table>`},
+
+// ─── Thu: Policy C&B cập nhật mid-year
+{phase:'perf',title:'Policy C&B mid-year review — S13',agent:'thu',type:'auto',date:'01/07/2026',
+output:`
+<div class="sec-title">S13 Policy Review · C&B Mid-Year · TechVision Corp · H2/2026</div>
+<div class="highlight-box">
+  <div class="hb-title">📋 3 thay đổi chính sách từ 01/07/2026</div>
+  <div style="font-size:13px;line-height:1.85;">
+    1. <strong>Tăng PC ăn trưa</strong>: 730k → 800k/tháng (theo CPI H1/2026)<br>
+    2. <strong>WFH policy mở rộng</strong>: từ 2 ngày → 3 ngày/tuần cho Manager level+<br>
+    3. <strong>KPI Bonus Q2</strong>: Team Marketing đạt 94% KPI → trigger bonus 0.8 tháng lương
+  </div>
+</div>
+<div class="sec-title" style="margin-top:14px;">KPI Bonus Q2 — Tính cho Minh Anh</div>
+<table class="doc-tbl">
+  <thead><tr><th>Hạng mục</th><th>Giá trị</th></tr></thead>
+  <tbody>
+    <tr><td>KPI đạt được (Q2)</td><td>94% — Tốt</td></tr>
+    <tr><td>Hệ số bonus (94% → 0.8x)</td><td>0.8 tháng lương</td></tr>
+    <tr><td>Lương cơ bản</td><td>24,000,000 VND</td></tr>
+    <tr><td><strong>KPI Bonus Q2 thực nhận</strong></td><td><strong style="color:#059669;">19,200,000 VND (gross)</strong></td></tr>
+    <tr><td>Net sau thuế (est.)</td><td>~16,500,000 VND</td></tr>
+  </tbody>
+</table>
+<div style="background:#f0fdf4;border:1px solid #86efac;border-radius:10px;padding:10px 14px;margin-top:10px;font-size:12px;color:#065f46;">✅ Thu gửi payroll notify · Bonus chuyển khoản cùng lương tháng 7 (05/07/2026)</div>`},
+
+// ─── 16 ─── Q4 KPI Review
+{phase:'perf',title:'Annual KPI Review — Q4/2026',agent:'thu',type:'auto',date:'15/12/2026',
+output:`
+<div class="sec-title">S18 Performance Data · Minh Anh · Năm 2026</div>
+<div class="stat-row" style="margin-bottom:16px;">
+  <div class="stat-box"><div class="stat-val" style="color:#059669;">94%</div><div class="stat-lbl">KPI Achievement</div></div>
+  <div class="stat-box"><div class="stat-val" style="color:#7c3aed;">4.2</div><div class="stat-lbl">360 Review (/ 5.0)</div></div>
+  <div class="stat-box"><div class="stat-val" style="color:#db2777;">+67%</div><div class="stat-lbl">Qualified Leads YoY</div></div>
+  <div class="stat-box"><div class="stat-val" style="color:#0284c7;">3→6</div><div class="stat-lbl">Team headcount</div></div>
+</div>
+<table class="doc-tbl">
+  <thead><tr><th>KPI</th><th>Target</th><th>Thực tế</th><th>Đạt</th></tr></thead>
+  <tbody>
+    <tr><td>SQL (Sales Qualified Leads)</td><td>80/quý</td><td>121/quý (avg)</td><td><span class="badge bg-green">151% ✅</span></td></tr>
+    <tr><td>CAC (Cost per Acquisition)</td><td>≤ 2.5M</td><td>1.8M</td><td><span class="badge bg-green">128% ✅</span></td></tr>
+    <tr><td>Brand awareness (survey)</td><td>Top 3 nhận biết</td><td>Top 2</td><td><span class="badge bg-green">Vượt ✅</span></td></tr>
+    <tr><td>Team satisfaction</td><td>≥ 4.0</td><td>4.4</td><td><span class="badge bg-green">✅</span></td></tr>
+    <tr><td>Budget adherence</td><td>±5%</td><td>+2.3%</td><td><span class="badge bg-green">✅</span></td></tr>
+  </tbody>
+</table>`},
+
+// ─── 17 ─── Annual Review
+{phase:'perf',title:'Annual Performance Review — Đánh giá năm',agent:'kai',type:'auto',date:'20/12/2026',
+output:`
+<div style="text-align:center;padding:18px 0 14px;">
+  <div style="display:inline-flex;flex-direction:column;align-items:center;justify-content:center;width:84px;height:84px;border-radius:50%;border:5px solid #7c3aed;background:#f5f3ff;">
+    <div style="font-size:26px;font-weight:800;color:#7c3aed;">4.2</div>
+    <div style="font-size:9px;color:#5b21b6;font-weight:700;">EXCEEDS</div>
+  </div>
+  <div style="margin-top:10px;font-size:17px;font-weight:800;color:#7c3aed;">Exceeds Expectations — Top 10% công ty</div>
+</div>
+<div class="sec-title">Đánh giá theo competency</div>
+<div class="rating-row"><div class="rating-name">Marketing Strategy Execution</div><div class="stars">★★★★★</div><div class="rating-score" style="color:#059669">4.8</div></div>
+<div class="rating-row"><div class="rating-name">People Leadership</div><div class="stars">★★★★☆</div><div class="rating-score" style="color:#0284c7">4.0</div></div>
+<div class="rating-row"><div class="rating-name">Data-driven Decision Making</div><div class="stars">★★★★☆</div><div class="rating-score" style="color:#0284c7">4.2</div></div>
+<div class="rating-row"><div class="rating-name">Cross-functional Collaboration</div><div class="stars">★★★★★</div><div class="rating-score" style="color:#059669">4.5</div></div>
+<div class="rating-row"><div class="rating-name">Business Acumen (SaaS)</div><div class="stars">★★★★☆</div><div class="rating-score" style="color:#0284c7">3.8</div></div>
+<div class="highlight-box" style="margin-top:12px;">
+  <div class="hb-title">Kai nhận xét</div>
+  <div style="font-size:13px;line-height:1.75;">"Minh Anh đã exceed target trên hầu hết KPI. Nổi bật nhất là lead gen +67% YoY và việc scale team từ 3→6 người trong 6 tháng. Ready cho Senior level."</div>
+</div>`},
+
+// ─── 18 ─── Salary Increase
+{phase:'perf',title:'Đề xuất tăng lương — Andy approve',agent:'thu',type:'stop',date:'22/12/2026',
+output:`
+<div class="sec-title">S12 Salary Increase Recommendation</div>
+<div class="info-grid">
+  <div class="info-box"><div class="ib-label">Lương hiện tại</div><div class="ib-val">24,000,000 VND</div></div>
+  <div class="info-box"><div class="ib-label">Mức đề xuất</div><div class="ib-val" style="color:#059669;">30,000,000 VND (+25%)</div></div>
+  <div class="info-box"><div class="ib-label">Benchmark P75 MM</div><div class="ib-val">28–32 triệu</div></div>
+  <div class="info-box"><div class="ib-label">Hiệu lực</div><div class="ib-val">01/01/2027</div></div>
+</div>
+<div class="highlight-box" style="margin-top:12px;">
+  <div class="hb-title">Lý do đề xuất +25% — Thu giải thích</div>
+  <div style="font-size:13px;line-height:1.75;">
+    (1) Performance: Exceeds — Top 10% công ty<br>
+    (2) Market: Hiện tại P50, tăng lên P70 phù hợp với contribution<br>
+    (3) Retention risk: Profile cao, market đang active recruit MM tại HCM<br>
+    (4) Equity: So sánh ngang team — mức mới fair với 2 MM cùng band
+  </div>
+</div>
+<div class="stop-gate">
+  <div class="sg-icon">🛑</div>
+  <div class="sg-txt"><div class="sg-title">STOP — Andy cần approve trước khi HR thông báo</div><div class="sg-sub">24M → 30M (+6M/tháng · +72M/năm) · Budget FY2027 đã allocate</div></div>
+  <button class="sg-btn" onclick="this.textContent='✅ Approved 30M';this.style.background='#059669';this.parentElement.style.background='#f0fdf4';this.parentElement.style.borderColor='#86efac';">Approve ✓</button>
+</div>`},
+
+// ─── 19 ─── Talent Matrix
+{phase:'growth',title:'Talent Matrix — 9-box update',agent:'kai',type:'auto',date:'10/01/2027',
+output:`
+<div class="sec-title">S21 Talent Matrix · TechVision Corp · Q1/2027</div>
+<div style="display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start;">
+  <div style="font-size:11px;color:var(--muted);writing-mode:vertical-rl;text-orientation:mixed;transform:rotate(180deg);padding:8px 0;text-align:center;font-weight:600;">POTENTIAL →</div>
+  <div>
+    <div class="nb-grid">
+      <div class="nb-cell"><span style="font-size:16px;">⭐</span><span class="nb-label">Solid Professional</span></div>
+      <div class="nb-cell"><span style="font-size:16px;">🌟</span><span class="nb-label">High Professional</span></div>
+      <div class="nb-cell"><span style="font-size:16px;">🚀</span><span class="nb-label">Star / Future Leader</span></div>
+      <div class="nb-cell"><span style="font-size:16px;">👤</span><span class="nb-label">Core Contributor</span></div>
+      <div class="nb-cell"><span style="font-size:16px;">✅</span><span class="nb-label">High Performer</span></div>
+      <div class="nb-cell hl"><span style="font-size:16px;">🌟</span><span class="nb-label">★ Minh Anh<br>Hi-Perf / Hi-Pot</span></div>
+      <div class="nb-cell"><span style="font-size:16px;">⚠️</span><span class="nb-label">Risk / Develop</span></div>
+      <div class="nb-cell"><span style="font-size:16px;">📈</span><span class="nb-label">Developing</span></div>
+      <div class="nb-cell"><span style="font-size:16px;">💡</span><span class="nb-label">Potential Gem</span></div>
+    </div>
+    <div style="text-align:center;font-size:10px;color:var(--muted);margin-top:6px;font-weight:600;">← PERFORMANCE →</div>
+  </div>
+</div>
+<div class="highlight-box" style="margin-top:14px;">
+  <div class="hb-title">Positioning: High Performer / High Potential</div>
+  <div style="font-size:13px;line-height:1.75;">Minh Anh được xếp vào ô tốt nhất — <strong>Star Contributor</strong>. Đây là nhóm ưu tiên retain & develop. Action: Fast-track lên Senior · Đưa vào Succession Pipeline cho Head of Marketing trong 2–3 năm.</div>
+</div>`},
+
+// ─── 20 ─── Thăng chức
+{phase:'growth',title:'Thăng chức — Senior Marketing Manager',agent:'andy',type:'stop',date:'01/02/2027',
+output:`
+<div style="text-align:center;background:linear-gradient(135deg,rgba(124,58,237,.06),rgba(219,39,119,.06));border:1px solid rgba(124,58,237,.15);border-radius:16px;padding:28px;margin-bottom:16px;">
+  <div style="font-size:40px;margin-bottom:12px;">🌟</div>
+  <div style="font-size:22px;font-weight:800;color:var(--kai);margin-bottom:6px;">Thăng chức chính thức</div>
+  <div style="font-size:14px;color:var(--muted);">Marketing Manager → <strong style="color:var(--text);">Senior Marketing Manager</strong></div>
+  <div style="margin-top:16px;display:flex;justify-content:center;gap:24px;">
+    <div><div style="font-size:11px;color:var(--muted);">Hiệu lực</div><div style="font-weight:700;">01/02/2027</div></div>
+    <div><div style="font-size:11px;color:var(--muted);">Lương mới</div><div style="font-weight:700;color:#059669;">30M + Senior allowance 2M</div></div>
+    <div><div style="font-size:11px;color:var(--muted);">Team size</div><div style="font-weight:700;">6 người trực tiếp</div></div>
+  </div>
+</div>
+<div class="highlight-box">
+  <div class="hb-title">Announcement được tự động gửi</div>
+  <div style="font-size:13px;line-height:1.75;">✅ Email all-hands từ Andy · Slack #general announcement · Cập nhật org chart · Update HRIS + payroll · Điều chỉnh quyền hạn hệ thống · Welcome package gửi Minh Anh</div>
+</div>`},
+
+// ─── 21 ─── Nghỉ việc
+{phase:'off',title:'Đơn xin nghỉ việc nhận được',agent:'linh',type:'auto',date:'01/11/2027 · 09:15',
+output:`
+<div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:12px;padding:16px;margin-bottom:14px;">
+  <div style="font-size:13px;font-weight:700;color:#92400e;margin-bottom:8px;">📩 Hệ thống nhận đơn nghỉ việc</div>
+  <div style="font-size:13px;line-height:1.75;color:var(--text);">
+    <strong>Nhân viên:</strong> Trần Thị Minh Anh — Senior Marketing Manager<br>
+    <strong>Ngày nghỉ đề xuất:</strong> 30/11/2027 (notice period: 30 ngày)<br>
+    <strong>Lý do:</strong> Cơ hội mới — Startup stage Head of Marketing
+  </div>
+</div>
+<div class="sec-title">Hệ thống tự động trigger</div>
+<table class="doc-tbl">
+  <thead><tr><th>Action tự động</th><th>Timeline</th><th>Trạng thái</th></tr></thead>
+  <tbody>
+    <tr><td>Email xác nhận nhận đơn</td><td>Ngay lập tức</td><td><span class="badge bg-green">Done ✅</span></td></tr>
+    <tr><td>Notify Andy + direct manager</td><td>Ngay lập tức</td><td><span class="badge bg-green">Done ✅</span></td></tr>
+    <tr><td>Schedule exit interview với Kai</td><td>Tuần 1 tháng 11</td><td><span class="badge bg-blue">Scheduled</span></td></tr>
+    <tr><td>Start offboarding checklist</td><td>05/11/2027</td><td><span class="badge bg-yellow">Pending</span></td></tr>
+    <tr><td>Open headcount request — Marketing Manager</td><td>01/11/2027</td><td><span class="badge bg-green">Auto-created ✅</span></td></tr>
+  </tbody>
+</table>`},
+
+// ─── 22 ─── Exit Interview
+{phase:'off',title:'Exit Interview — Kai phân tích',agent:'kai',type:'auto',date:'07/11/2027',
+output:`
+<div class="info-grid">
+  <div class="info-box"><div class="ib-label">Thời gian làm việc</div><div class="ib-val">22 tháng</div></div>
+  <div class="info-box"><div class="ib-label">Exit reason (primary)</div><div class="ib-val">Career growth</div></div>
+</div>
+<div class="sec-title">S25 Exit Interview Insights</div>
+<table class="doc-tbl">
+  <thead><tr><th>Câu hỏi</th><th>Câu trả lời</th></tr></thead>
+  <tbody>
+    <tr><td>Lý do nghỉ thực sự</td><td>"Nhận offer Head of Marketing tại startup Series A — scope lớn hơn"</td></tr>
+    <tr><td>Điều bạn thích nhất tại TechVision</td><td>"Team marketing tốt, autonomy cao, được học nhiều về SaaS"</td></tr>
+    <tr><td>Điều có thể cải thiện</td><td>"Cần thêm budget marketing B2B · Decision-making đôi khi chậm"</td></tr>
+    <tr><td>Sẽ giới thiệu bạn bè apply không?</td><td>"Có — chắc chắn" (NPS: 9/10)</td></tr>
+  </tbody>
+</table>
+<div class="highlight-box" style="margin-top:12px;">
+  <div class="hb-title">Phân tích Kai — Action items</div>
+  <div style="font-size:13px;line-height:1.75;">
+    Loại exit: <strong>Regrettable</strong> — talent tốt, ra vì growth không phải push factor.<br>
+    → Recommend: Review Marketing budget Q1/2028 · Tăng tốc độ decision cho Senior+ · Consider Head of Marketing role nếu team scale 10+ người.
+  </div>
+</div>`},
+
+// ─── 23 ─── Offboarding
+{phase:'off',title:'Offboarding checklist & bàn giao',agent:'linh',type:'auto',date:'10/11/2027',
+output:`
+<div class="sec-title">Offboarding Checklist · Minh Anh · 30/11/2027</div>
+<table class="doc-tbl">
+  <thead><tr><th>Hạng mục</th><th>Owner</th><th>Deadline</th><th>Status</th></tr></thead>
+  <tbody>
+    <tr><td>Bàn giao tài liệu, campaign docs, passwords</td><td>Minh Anh</td><td>25/11</td><td><span class="badge bg-yellow">In progress</span></td></tr>
+    <tr><td>Training người kế thừa (15 giờ)</td><td>Minh Anh + Linh</td><td>28/11</td><td><span class="badge bg-yellow">Planned</span></td></tr>
+    <tr><td>Thu hồi thiết bị, pass thẻ từ</td><td>IT + Admin</td><td>30/11</td><td><span class="badge bg-gray">Pending</span></td></tr>
+    <tr><td>Quyết toán lương, phép tồn, bảo hiểm</td><td>Thu (C&B)</td><td>05/12</td><td><span class="badge bg-gray">Pending</span></td></tr>
+    <tr><td>Xoá tài khoản hệ thống (G-Suite, Jira...)</td><td>IT</td><td>30/11</td><td><span class="badge bg-gray">Pending</span></td></tr>
+    <tr><td>Invite vào Alumni Network</td><td>HR Bot</td><td>Auto · 30/11</td><td><span class="badge bg-green">Auto ✅</span></td></tr>
+    <tr><td>Gửi LinkedIn recommendation (Andy ký)</td><td>Andy</td><td>01/12</td><td><span class="badge bg-green">Drafted ✅</span></td></tr>
+  </tbody>
+</table>
+<div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:10px;padding:12px 16px;margin-top:10px;font-size:12px;color:#0369a1;">
+  🤝 <strong>Alumni Network:</strong> Minh Anh được tự động thêm vào TechVision Alumni Slack. Tất cả regrettable leavers được giữ kết nối — 23% boomerang hire trong ngành tech.
+</div>`},
+
+// ─── 24 ─── Summary
+{phase:'off',title:'Tổng kết vòng đời · Full lifecycle summary',agent:'kai',type:'auto',date:'01/12/2027',
+output:`
+<div class="sum-hero">
+  <div style="font-size:13px;color:var(--muted);margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:2px;">Vòng đời hoàn tất</div>
+  <div class="sum-num" style="background:linear-gradient(130deg,#7c3aed,#db2777);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">22 tháng</div>
+  <div class="sum-lbl">Trần Thị Minh Anh · Marketing Manager → Senior · TechVision Corp</div>
+</div>
+<div class="stat-row" style="margin-bottom:20px;">
+  <div class="stat-box"><div class="stat-val" style="color:#059669;">25</div><div class="stat-lbl">Bước được tự động hóa</div></div>
+  <div class="stat-box"><div class="stat-val" style="color:#7c3aed;">80%</div><div class="stat-lbl">Không cần can thiệp</div></div>
+  <div class="stat-box"><div class="stat-val" style="color:#db2777;">~160h</div><div class="stat-lbl">Giờ HR được tiết kiệm</div></div>
+  <div class="stat-box"><div class="stat-val" style="color:#0284c7;">5★</div><div class="stat-lbl">Employee Experience</div></div>
+</div>
+<div class="sum-grid">
+  <div class="sum-box">
+    <div class="sum-box-title">Tuyển dụng → Offer</div>
+    <div style="font-size:13px;line-height:1.85;">
+      ⏱ CV scan: <strong>3 phút</strong> (vs 2 ngày thủ công)<br>
+      📧 Email mời PV: <strong>tự động</strong><br>
+      📋 Interview kit: <strong>5 phút</strong><br>
+      💰 Salary benchmark: <strong>real-time</strong><br>
+      📄 Offer letter: <strong>tự soạn</strong>
+    </div>
+  </div>
+  <div class="sum-box">
+    <div class="sum-box-title">Onboarding & Thử việc</div>
+    <div style="font-size:13px;line-height:1.85;">
+      🚀 Welcome kit: <strong>tự động ngày T-3</strong><br>
+      🗺 30-60-90 plan: <strong>5 phút</strong><br>
+      📊 KPI setup: <strong>tự động</strong><br>
+      🔔 Check-in reminder: <strong>auto-schedule</strong><br>
+      ✅ Probation eval: <strong>AI tổng hợp</strong>
+    </div>
+  </div>
+  <div class="sum-box">
+    <div class="sum-box-title">L&D & Performance</div>
+    <div style="font-size:13px;line-height:1.85;">
+      📚 TNA: <strong>tự phân tích gap</strong><br>
+      🎓 Training plan: <strong>customized</strong><br>
+      📈 IDP: <strong>12-tháng roadmap</strong><br>
+      📊 KPI dashboard: <strong>real-time</strong><br>
+      ⭐ Performance review: <strong>AI-aided</strong>
+    </div>
+  </div>
+  <div class="sum-box">
+    <div class="sum-box-title">Growth & Offboarding</div>
+    <div style="font-size:13px;line-height:1.85;">
+      🌟 Talent matrix: <strong>tự xếp loại</strong><br>
+      🚀 Promotion flow: <strong>end-to-end</strong><br>
+      💼 Exit interview: <strong>AI phân tích</strong><br>
+      ✅ Offboarding: <strong>auto-checklist</strong><br>
+      🤝 Alumni: <strong>tự động kết nối</strong>
+    </div>
+  </div>
+</div>
+`},
+];
+
+// ═══ ENGINE ═══
+let current = 0;
+let isLoading = false;
+
+function agentBadge(key){
+  const a=AGENTS[key];
+  return `<div class="sc-agent" style="background:${a.bg};color:${a.c}">${a.i}</div>`;
+}
+function typeBadge(type){
+  const map={auto:'🤖 Tự động',human:'👤 Con người',stop:'🛑 STOP · Andy'};
+  const cls={auto:'badge-auto',human:'badge-human',stop:'badge-stop'};
+  return `<span class="sc-badge ${cls[type]}">${map[type]}</span>`;
+}
+function getPhase(stepIdx){
+  return PHASES.find(p=>p.id===STEPS[stepIdx].phase)||PHASES[0];
+}
+
+function buildSidebar(){
+  const sb=document.getElementById('sidebar');
+  sb.innerHTML='';
+  let lastPhase='';
+  let mainN=0;
+  STEPS.forEach((s,i)=>{
+    const ph=getPhase(i);
+    if(ph.id!==lastPhase && !s.sub){
+      const lbl=document.createElement('div');
+      lbl.className='sb-ph-label';
+      lbl.textContent=ph.icon+' '+ph.title;
+      sb.appendChild(lbl);
+      lastPhase=ph.id;
+    }
+    if(!s.sub) mainN++;
+    const isDone=i<current, isActive=i===current;
+    const div=document.createElement('div');
+    div.className='sb-step'+(isActive?' active':isDone?' done':'')+(s.sub?' sub':'');
+    div.id='sb-'+i;
+    div.onclick=()=>jumpTo(i);
+    if(s.sub){
+      div.innerHTML=`<div class="sb-sub-ind">↳</div><div><div class="sb-txt">${s.label} — ${s.title}</div><div class="sb-type"><span class="${s.type}-tag">${s.type==='auto'?'🤖 auto':s.type==='human'?'👤 human':'🛑 stop'}</span></div></div>`;
+    } else {
+      div.innerHTML=`<div class="sb-num">${isDone?'✓':mainN}</div><div><div class="sb-txt">${s.title}</div><div class="sb-type"><span class="${s.type}-tag">${s.type==='auto'?'🤖 auto':s.type==='human'?'👤 human':'🛑 stop'}</span></div></div>`;
+    }
+    sb.appendChild(div);
+  });
+}
+
+function buildPhaseBar(){
+  const row=document.getElementById('phase-row');
+  row.innerHTML='';
+  const curPh=getPhase(current);
+  PHASES.forEach(p=>{
+    const phIdxs=STEPS.map((_,i)=>i).filter(i=>STEPS[i].phase===p.id);
+    const isDone=PHASES.indexOf(p)<PHASES.indexOf(curPh);
+    const isActive=p.id===curPh.id;
+    const doneCount=phIdxs.filter(i=>i<current).length;
+    const div=document.createElement('div');
+    div.className='ph-item'+(isActive?' active':isDone?' done':'');
+    div.innerHTML=`<span class="ph-icon">${p.icon}</span>${p.title}<span class="ph-ct">${doneCount}/${phIdxs.length}</span>`;
+    row.appendChild(div);
+  });
+}
+
+function showStep(idx, withLoading){
+  const s=STEPS[idx];
+  const panel=document.getElementById('step-content');
+  const a=AGENTS[s.agent];
+  const loadingTxt=['AI đang phân tích dữ liệu…','Đang tổng hợp thông tin…','Đang soạn output…','Đang cross-check với policy…','Đang format tài liệu…'];
+  const lt=loadingTxt[idx%loadingTxt.length];
+
+  if(withLoading && s.type==='auto'){
+    panel.innerHTML=`
+      <div class="step-card">
+        <div class="sc-head">${agentBadge(s.agent)}<div class="sc-info"><div class="sc-title">${s.title}</div><div class="sc-sub">${a.name} · ${a.title}</div></div>${typeBadge(s.type)}</div>
+        <div class="loading-state"><div class="ld-dots"><div class="ld-dot"></div><div class="ld-dot"></div><div class="ld-dot"></div></div><div class="ld-txt">${lt}</div></div>
+      </div>`;
+    const delay=parseInt(document.getElementById('speed-sel').value)||2200;
+    isLoading=true;
+    document.getElementById('btn-next').disabled=true;
+    setTimeout(()=>{ isLoading=false; revealStep(idx); }, delay);
+  } else {
+    revealStep(idx);
+  }
+}
+
+function revealStep(idx){
+  const s=STEPS[idx];
+  const a=AGENTS[s.agent];
+  const panel=document.getElementById('step-content');
+  panel.innerHTML=`
+    <div class="step-card">
+      <div class="sc-head">${agentBadge(s.agent)}<div class="sc-info"><div class="sc-title">${s.sub?`<span style="color:var(--thu);font-size:13px;margin-right:6px;">${s.label}</span>`:''}${s.title}</div><div class="sc-sub">${a.name} · ${a.title}</div></div>${typeBadge(s.type)}</div>
+      <div class="sc-body">${s.output}</div>
+      <div class="sc-date">📅 ${s.date}</div>
+    </div>`;
+  document.getElementById('btn-next').disabled=false;
+  panel.scrollTop=0;
+  // scroll sidebar
+  const el=document.getElementById('sb-'+idx);
+  if(el) el.scrollIntoView({block:'nearest',behavior:'smooth'});
+}
+
+function goStep(dir){
+  if(isLoading) return;
+  const next=current+dir;
+  if(next<0||next>=STEPS.length) return;
+  current=next;
+  updateUI(true);
+}
+function jumpTo(idx){
+  if(isLoading) return;
+  current=idx;
+  updateUI(false);
+}
+
+function updateUI(withLoading){
+  const s=STEPS[current];
+  const pct=Math.round((current+1)/STEPS.length*100);
+  document.getElementById('ctrl-fill').style.width=pct+'%';
+  document.getElementById('ctrl-label').textContent=`Bước ${current+1}: ${s.title}`;
+  document.getElementById('step-counter').textContent=`${current+1} / ${STEPS.length}`;
+  document.getElementById('hdr-step').textContent=`Bước ${current+1} / ${STEPS.length}`;
+  document.getElementById('btn-prev').disabled=current===0;
+  document.getElementById('btn-next').textContent=current===STEPS.length-1?'🎉 Kết thúc':'Tiếp theo ▶';
+  buildPhaseBar();
+  buildSidebar();
+  showStep(current, withLoading);
+}
+
+function startSim(){
+  document.getElementById('splash').style.display='none';
+  document.getElementById('sim').style.display='block';
+  document.getElementById('ctrl-bar').style.display='flex';
+  current=0;
+  updateUI(true);
+}
+</script>
+</body>
+</html>
