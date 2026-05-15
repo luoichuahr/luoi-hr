@@ -51,7 +51,7 @@ const config = {
   ],
 
   themeConfig: ({
-    image: 'img/social-card.png',
+    image: 'img/social-card-v2.png',
     colorMode: { disableSwitch: true, respectPrefersColorScheme: true },
     navbar: {
       title: '🦥 Lười HR',

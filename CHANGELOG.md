@@ -1,5 +1,9 @@
 # CHANGELOG — Lười HR Website
 
+## 2026-05-15
+
+[DESIGN] Đổi tên OG image từ social-card.png → social-card-v2.png để force Zalo re-scrape preview (cache cũ đang giữ hình con khủng long Docusaurus)
+
 ## Quy ước
 - `[DESIGN]` — quyết định giao diện/UX
 - `[ARCH]` — quyết định kiến trúc kỹ thuật
