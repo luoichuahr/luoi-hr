@@ -1,0 +1,197 @@
+---
+sidebar_position: 2
+slug: cv-matching-tool-claude
+title: Lọc CV tự động bằng Claude Projects
+description: "Lọc và chấm điểm CV tự động bằng Claude Projects — upload CV + JD, gõ 1 lệnh, nhận bảng xếp hạng ứng viên sau 12 phút. Không cần code, không cần copy-paste."
+tags: [claude-projects, tuyen-dung, loc-cv, cv-matching, automation, claude-ai]
+---
+
+import Callout from '@site/src/components/Callout';
+import PromptBlock from '@site/src/components/PromptBlock';
+
+<div className="badge-row">
+  <span className="doc-badge badge-tool">🤖 Claude Projects</span>
+  <span className="doc-badge badge-tool">Claude AI</span>
+  <span className="doc-badge badge-time">🕐 Đọc 8 phút</span>
+  <span className="doc-badge badge-new">🆕 Cập nhật 05/2026</span>
+</div>
+
+# Lọc CV tự động bằng Claude Projects
+
+Upload CV và JD vào một project, gõ đúng một lệnh, đi pha cà phê — quay lại là có bảng chấm điểm màu sắc xếp hạng từng ứng viên kèm thông tin liên hệ đầy đủ.
+
+---
+
+## Bài trước đã làm được gì — bước tiếp theo là gì?
+
+Bài trước, tôi đã hướng dẫn cách dùng Google Apps Script + Gemini để **extract thông tin từ CV**: họ tên, SĐT, email, vị trí ứng tuyển — tự động điền vào Google Sheets mà không cần mở từng file.
+
+Nhưng extract xong thì còn một việc nữa: **ai trong số đó phù hợp với vị trí đang tuyển?**
+
+Nếu bạn có 30–50 CV, bước đọc và so với JD vẫn đang là thủ công — đọc từng file, ghi chú, xếp loại. Bài này giải quyết đúng chỗ đó: để Claude đọc, so sánh, chấm điểm, và xếp hạng thay bạn.
+
+<Callout type="info" title="Hai công cụ, hai việc khác nhau">
+  CV Extract Tool (bài trước): lấy dữ liệu thô từ CV → Google Sheets.<br />CV Matching Tool (bài này): đọc nội dung CV + so với JD → chấm điểm + xếp hạng.
+</Callout>
+
+---
+
+## Claude Projects là gì?
+
+**Projects** là tính năng trên claude.ai cho phép bạn tạo một "phòng làm việc riêng" với Claude — nơi bạn upload file, viết instructions một lần, và Claude nhớ context đó trong suốt project.
+
+Khác với chat thông thường, khi dùng Projects:
+
+- Claude đọc được tất cả file bạn upload (CV, JD, tài liệu tham khảo)
+- Instructions được áp dụng tự động — không cần nhắc lại mỗi lần
+- Mỗi lần thêm CV mới, chỉ cần gõ lại lệnh — không cần setup lại từ đầu
+
+<Callout type="warn" title="Yêu cầu tối thiểu">
+  Tính năng Projects cần tài khoản Claude Pro (hoặc Team). Gói Free không có Projects. Nếu chưa có Pro, xem bài *Nhân sự nên chọn gói Claude nào* để biết nên upgrade không.
+</Callout>
+
+---
+
+## Setup trong 5 phút — 4 bước đơn giản
+
+**Bước 1 — Tạo Project mới trên claude.ai**
+
+Vào **claude.ai** → chọn **Projects** ở sidebar trái → **New Project** → đặt tên dễ nhớ, ví dụ: *"Screening CB Executive T5/2026"*
+
+**Bước 2 — Upload file vào Project Knowledge**
+
+Kéo thả tất cả CV ứng viên (PDF) vào phần **Project Knowledge**. Thêm 1 file JD dạng `.md` hoặc `.txt` — đặt tên rõ, ví dụ: *JD_CB_Executive.md*
+
+**Bước 3 — Dán Project Instructions**
+
+Vào **Project Settings** → phần **Project Instructions** → copy đoạn instructions bên dưới → paste vào → Save
+
+**Bước 4 — Mở conversation mới trong project → gõ: `chạy screening`**
+
+Đừng mở conversation ngoài project — phải mở từ bên trong project mới Claude đọc được file đã upload.
+
+### Project Instructions — copy nguyên, paste vào bước 3
+
+<PromptBlock
+  title="Project Instructions — CV Screener"
+  lang="text"
+  code={`Bạn là AI Screener chuyên lọc CV. Khi người dùng gõ "chạy screening":
+
+### BƯỚC 1 — Đọc JD
+Tìm file .md trong project → đọc toàn bộ nội dung → xác định:
+- Vị trí tuyển dụng
+- Yêu cầu bắt buộc (must-have)
+- Yêu cầu thêm (nice-to-have)
+- Số năm kinh nghiệm yêu cầu
+
+Thông báo: "✅ Đã đọc JD: [tên vị trí] — Bắt đầu đọc CV..."
+
+### BƯỚC 2 — Đọc và Extract từng CV
+Đọc lần lượt từng file PDF trong project. Với mỗi CV trích xuất:
+- Họ tên, SĐT, Email
+- Vị trí ứng tuyển / chức danh gần nhất
+- Số năm kinh nghiệm
+- Học vấn
+- Kỹ năng nổi bật
+
+Sau mỗi 5 CV thông báo tiến độ: "📄 Đã đọc X/Y CV..."
+
+### BƯỚC 3 — Chấm điểm từng CV theo JD
+Chấm 5 tiêu chí, mỗi tiêu chí cho điểm 0–100:
+
+Tiêu chí              | Trọng số
+Số năm kinh nghiệm    | 20%
+Kỹ năng chuyên môn    | 30%
+Trình độ học vấn      | 15%
+Kinh nghiệm ngành     | 20%
+Kỹ năng mềm & Leadership | 15%
+
+Tổng điểm = weighted average. Phân loại:
+🟢 ≥ 80%: Tiềm năng cao — Mời phỏng vấn
+🟡 60–79%: Xem xét thêm
+🔴 < 60%: Không phù hợp
+
+### BƯỚC 4 — Xuất kết quả
+Xuất bảng HTML artifact đẹp, có:
+
+Header thống kê:
+- Tổng CV đã xử lý, thời gian chạy
+- Phân bổ: 🟢 X · 🟡 X · 🔴 X
+
+Bảng kết quả (sort theo % giảm dần):
+Họ tên | SĐT | Email | Năm KN | Kỹ năng | Học vấn | Ngành | Mềm | % Match | Đề xuất | Nhận xét ngắn
+
+Màu dòng: xanh ≥80% · vàng 60–79% · đỏ <60%
+
+QUY TẮC:
+- Ghi timestamp bắt đầu và kết thúc mỗi phase
+- Không bỏ qua CV nào — nếu không đọc được PDF thì ghi "Lỗi đọc file"
+- Không phân biệt giới tính, tuổi, ngoại hình
+- Chấm điểm dựa trên nội dung CV, không suy đoán
+- Ghi rõ lý do từng điểm số — không chấm cảm tính`}
+/>
+
+---
+
+## Gõ "chạy screening" và đi uống cà phê
+
+Sau khi gõ lệnh, Claude bắt đầu làm việc theo 4 pha. Với khoảng 20–30 CV, toàn bộ quá trình mất **khoảng 10–15 phút**.
+
+Bạn sẽ thấy Claude tự thông báo tiến độ:
+
+```text
+✅ Đã đọc JD: C&B Executive — Bắt đầu đọc CV...
+📄 Đã đọc 5/23 CV...
+📄 Đã đọc 10/23 CV...
+📄 Đã đọc 15/23 CV...
+⏳ Đang chấm điểm và xếp hạng...
+✅ Hoàn thành — xuất bảng kết quả
+```
+
+Trong lúc chờ, bạn có thể nhâm nhi ly cà phê, trả lời email, hay làm việc khác — Claude sẽ tự chạy đến cuối mà không cần bạn theo dõi.
+
+<Callout type="tip" title="CV càng rõ, kết quả càng chính xác">
+  CV có nhiều text trực tiếp (không phải ảnh scan) → Claude đọc được tốt hơn. JD càng chi tiết về must-have / nice-to-have → điểm càng chuẩn với tiêu chí thực tế.
+</Callout>
+
+---
+
+## Bảng kết quả bạn nhận được
+
+Claude xuất một bảng HTML artifact ngay trong chat. Ví dụ trông như thế này:
+
+| Họ tên | Năm KN | Kỹ năng nổi bật | % Match | Đề xuất | Nhận xét |
+|--------|--------|-----------------|---------|---------|---------|
+| Nguyễn Thị A | 6 năm | C&B, HRIS, Payroll | 🟢 87% | Mời PV | Đủ must-have, có kinh nghiệm HRIS |
+| Trần Văn B | 4 năm | Tuyển dụng, C&B cơ bản | 🟡 68% | Xem xét | Thiếu kinh nghiệm HRIS, có tiềm năng |
+| Lê Thị C | 2 năm | Admin, hỗ trợ HR | 🔴 41% | Không PH | Chưa đủ năm KN, thiếu kỹ năng chuyên môn |
+
+Mỗi ứng viên đều có **nhận xét ngắn gọn kèm lý do** — không chỉ là điểm số. Bạn biết ngay tại sao người đó được 87% hay 41%, thay vì phải đoán.
+
+Bảng đã sort theo điểm từ cao đến thấp — người phù hợp nhất ở trên cùng, không cần sắp xếp thủ công.
+
+---
+
+## Tại sao tool này đáng dùng
+
+- 🚫 **Không copy-paste thủ công** — Họ tên, SĐT, email được extract tự động trong quá trình chấm — không cần mở từng file để lấy thông tin liên lạc
+- 📋 **Có căn cứ để lọc** — Mỗi điểm số đều có lý do rõ ràng theo tiêu chí JD — bạn lọc dựa trên dữ liệu, không phải cảm tính
+- ⏱️ **Tiết kiệm ~50% thời gian** — Thay vì mất 2-3 phút để copy thông tin và screening cho một cv, giờ giảm 1/2
+- 🔄 **Dùng lại cho đợt sau** — Project đã setup sẵn instructions — đợt tuyển dụng sau chỉ cần upload CV mới + JD mới → gõ lại "chạy screening" là xong
+
+<Callout type="tip" title="Tip: Thêm CV theo đợt">
+  Khi có thêm CV mới trong tuần, upload thêm vào project → gõ lại "chạy screening". Claude có thể chỉ chấm file chưa có trong bảng cũ nếu bạn ghi rõ: *"chỉ chấm các CV chưa có trong bảng kết quả trước"*.
+</Callout>
+
+---
+
+Tool này không thay thế phán đoán của bạn — nó cho bạn **thêm thời gian để phán đoán đúng chỗ**. 50 CV mà chỉ 6 người được 80%+ thì bạn chỉ cần đọc kỹ 6 hồ sơ đó, thay vì đọc cả 50.
+
+Bước tiếp theo: thử với một đợt tuyển dụng thật — upload JD đang có + một batch CV → xem Claude chấm như thế nào so với đánh giá của bạn. **Tips:** *bảng chấm điểm của bạn càng chi tiết thì kết quả càng ra chính xác.*
+
+---
+
+## Đọc thêm
+
+- [CV Extract Tool — Tự động đọc CV bằng AI](./cv-extract-tool) — Bước trước: extract thông tin từ hàng chục CV trong vài phút
+- [Claude AI là gì? Dân HR nên dùng vào việc gì](./claude-ai-la-gi-cho-nhan-su) — Hiểu Claude trước khi bắt đầu dùng trong HR

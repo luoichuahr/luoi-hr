@@ -1,5 +1,20 @@
 # CHANGELOG — Lười HR Website
 
+## 2026-05-19 — Content: CV Matching Tool — Claude Projects
+
+- `[CONTENT]` **docs/bi-kip/cv-matching-tool-claude.mdx: Thêm bài mới** — Hướng dẫn lọc và chấm điểm CV tự động bằng Claude Projects. Bài tiếp nối cv-extract-tool, giải quyết bước còn thiếu: so CV với JD, chấm 5 tiêu chí, xuất bảng xếp hạng màu sắc. PromptBlock với Project Instructions copy-paste sẵn. sidebar_position: 2.
+
+---
+
+## 2026-05-16 — AI Career Wingman: Job Search Architecture
+
+- `[ARCH]` **wingman-scraper.py: Thay Gmail OAuth2 bằng LinkedIn Guest API** — phát hiện endpoint `linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search` không cần login, trả về job thật với URL `www.linkedin.com/jobs/view/{id}/`. Script lưu vào `jobs.json`, user upload cho Wingman phân tích thay vì kết nối Gmail.
+- `[ARCH]` **ai-career-wingman-skill-v1.0.md: Cập nhật Bước 4B + Hard Rule #11** — xóa toàn bộ luồng Gmail OAuth2, thay bằng luồng `scraper.py → jobs.json → upload`. Lý do: Gmail OAuth2 vẫn phụ thuộc user setup; LinkedIn guest API cho data thật không cần auth.
+- `[ARCH]` **Research: TopCV/VietnamWorks/CareerViet đều chặn scraping đơn giản** — TopCV dùng Vue.js + Cloudflare; VietnamWorks dùng Algolia (app ID cũ đã hết hạn, cần extract credentials mới từ JS bundle); CareerViet load dynamic. Cả 3 cần Playwright hoặc Algolia API. **Chưa implement — để backlog.**
+- `[ARCH]` **Phát hiện: VietnamWorks dùng Algolia làm search engine** — credentials public trong frontend JS (`appId`, `apiKey`, index `vnw_job_v2`). Cần extract app ID mới. Khi làm được → không cần Playwright, query thẳng Algolia API.
+
+---
+
 ## 2026-05-15
 
 [DESIGN] Đổi tên OG image từ social-card.png → social-card-v2.png để force Zalo re-scrape preview (cache cũ đang giữ hình con khủng long Docusaurus)
