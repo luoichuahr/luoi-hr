@@ -1,0 +1,124 @@
+---
+sidebar_position: 11
+slug: danh-gia-ncc
+title: Cách đánh giá hàng chục phần mềm nhân sự bằng skill
+description: Skill "đánh giá NCC" giúp AI tự crawl, chấm điểm vendor và đề xuất lựa chọn tối ưu — thay vì HR loay hoay hàng chục tab và bảng Excel thủ công.
+tags: [phan-mem-hr, cong-cu-ai, vendor, chon-phan-mem]
+---
+
+import Callout from '@site/src/components/Callout';
+
+# Cách đánh giá hàng chục phần mềm nhân sự bằng skill
+
+Có một bài toán nan giải đặt ra là: Công ty khoảng 120 người đang scale up trong năm 2026 và muốn chuyển đổi số nhân sự, Bạn nhận được hàng tá lời chào, bán hàng từ các nhà cung cấp. Và rồi, nhân sự "điên cái đầu" xoay mòng mòng với hàng chục vendor và không biết bắt đầu từ đâu? Skill "đánh giá NCC" giúp bạn tự crawl internet, chấm điểm và đưa ra đề xuất cho bạn lựa chọn. Quá đã và nhanh chóng. Nào, bắt đầu thôi
+
+---
+
+## Thực trạng — Công ty 120 người và bài toán chọn phần mềm
+
+Công ty bạn đang ở mốc 80–120 nhân viên. Scale-up đang tăng tốc — onboarding nhiều hơn, chấm công và lương phức tạp hơn, giấy tờ nghỉ phép đi qua Google Sheets không còn kiểm soát được nữa.
+
+Ban lãnh đạo quyết định: **năm nay chuyển đổi số nhân sự**. HR được giao nhiệm vụ tìm và đề xuất phần mềm thích hợp.
+
+Bạn bắt đầu Google và hỏi trên LinkedIn. Lập tức xuất hiện hàng chục cái tên. Mỗi vendor đều có landing page đẹp, video demo hấp dẫn, bảng tính năng dài vô tận — và giá thì *liên hệ để được tư vấn*.
+
+Bạn mở 6 tab song song. Gọi điện cho 4 sales. Ngồi lập bảng Excel so sánh thủ công. Sau 3 ngày — bảng vẫn chưa xong vì mỗi vendor nói theo kiểu khác nhau, tính năng tương tự nhưng đặt tên khác, và không ai chịu báo giá thẳng.
+
+<Callout type="warning" title="Vấn đề cốt lõi">
+  Không phải bạn thiếu thông tin — mà thông tin quá nhiều, không cùng format, không thể so sánh trực tiếp được. Bạn cần một quy trình, không phải thêm tab.
+</Callout>
+
+---
+
+## Skill "đánh giá NCC" là gì
+
+Đây là một quy trình **2 giai đoạn**, AI giúp làm thay phần thu thập và chuẩn hóa thông tin — việc mà HR đang làm thủ công qua hàng chục tab trình duyệt.
+
+### Giai đoạn 1 — Sàng lọc ra Top 3
+
+- Bạn điền form: profile công ty, tính năng cần (bắt buộc / có thì tốt), danh sách vendor muốn xét
+- AI tự crawl từng trang web vendor, thu thập thông tin tính năng và giá niêm yết
+- AI chấm điểm theo trọng số (tính năng bắt buộc = 2x, có thì tốt = 1x) → chọn **Top 3** phù hợp nhất với công ty bạn
+- Output: bảng so sánh đầy đủ + hướng dẫn liên hệ từng vendor trong Top 3 để xin báo giá chính thức
+
+### Giai đoạn 2 — Ra quyết định sau báo giá
+
+- Bạn gặp gỡ Top 3 vendor, nhận báo giá chính thức (PDF hoặc email)
+- Nạp nội dung báo giá vào form Phase 2 — AI chuẩn hóa về cùng format
+- AI đối chiếu báo giá thực tế vs yêu cầu ban đầu → đưa ra **1 vendor được khuyến nghị** với lý do cụ thể
+
+<Callout type="tip" title="Tại sao chia 2 giai đoạn?">
+  Giai đoạn 1 dựa trên thông tin công khai — có thể thiếu hoặc chưa cập nhật. Giai đoạn 2 mới dựa trên báo giá thực từ vendor, nên mới đưa ra quyết định cuối được.
+</Callout>
+
+---
+
+## Demo: từ danh sách → Top 3 → 1 quyết định
+
+### Kết quả giai đoạn 1 — Bảng so sánh
+
+*Ví dụ: Công ty sản xuất, 80 nhân viên, ngân sách ~70 triệu/năm · Đánh giá 4 vendor (NCC1–4)*
+
+| Tính năng | NCC 1 | NCC 2 | NCC 3 | NCC 4 |
+|-----------|:-----:|:-----:|:-----:|:-----:|
+| Quản lý hồ sơ nhân viên **★** | ✓ | ✓ | ✓ | ✓ |
+| Chấm công (app / máy / QR) **★** | ✓ | ✓ | ~ | ✓ |
+| Tính lương & thưởng tự động **★** | ✓ | ~ | ✓ | ~ |
+| Quản lý nghỉ phép & phúc lợi **★** | ✓ | ✓ | ✓ | ✓ |
+| Tuyển dụng / ATS *○* | ~ | ✓ | ~ | ✗ |
+| KPI / Đánh giá hiệu suất *○* | ~ | ✓ | ✗ | ✗ |
+| App mobile *○* | ✓ | ✓ | ✓ | ~ |
+| Báo cáo & analytics *○* | ✓ | ✓ | ~ | ✗ |
+| **Điểm tổng (thang 10)** | **8.1** | **8.8** | **7.2** | **5.4** |
+| **Giá / user / tháng** | 65.000 ₫ | 120.000 ₫ | 55.000 ₫ | 35.000 ₫ |
+| **Lọt Top 3?** | ✓ Vào | ✓ Vào | ✓ Vào | ✗ Loại |
+
+**★** Must-have (trọng số 2) · *○* Nice-to-have (trọng số 1) | ✓ Có đầy đủ · ~ Có một phần / addon · ✗ Không có
+
+### Kết quả giai đoạn 2 — Final recommendation
+
+Sau khi gặp Top 3 và nạp báo giá chính thức, AI đối chiếu lại với ngân sách và yêu cầu ban đầu:
+
+- **NCC 2:** báo giá xác nhận 120.000 ₫/user/tháng → tổng năm ~115 triệu → **vượt ngân sách**, loại
+- **NCC 3:** báo giá xác nhận module KPI là addon riêng (+15 triệu/năm) → tổng ~67 triệu, điểm sau cập nhật: 7.4
+- **NCC 1:** báo giá xác nhận đầy đủ tính năng, tổng ~62 triệu → trong ngân sách, điểm giữ nguyên: 8.1
+
+> 🎯 **Khuyến nghị cuối: NCC 1** — đáp ứng toàn bộ must-have, trong ngân sách (~62/70 triệu), điểm cao nhất trong 2 vendor còn lại (8.1 vs 7.4), có hỗ trợ tiếng Việt và hotline trong nước.
+
+---
+
+## Cách dùng skill
+
+Skill chạy trực tiếp trên Claude — không cần cài thêm gì. Toàn bộ quy trình nằm trong 1 file duy nhất, bạn mở một lần và dùng cho cả 2 giai đoạn.
+
+1. **Tải skill** từ link bên dưới → upload file vào Claude Project của bạn
+2. **Giai đoạn 1:** Điền form profile công ty + tính năng cần + danh sách vendor → Copy → Paste vào chat → nhận bảng so sánh và Top 3
+3. **Giai đoạn 2:** Sau khi gặp vendor và có báo giá → mở form Phase 2 → nạp nội dung báo giá → nhận Final Recommendation
+
+<Callout type="info" title="Giá niêm yết vs báo giá chính thức">
+  Giai đoạn 1 dùng giá tìm được trên website — chỉ để sàng lọc. Giai đoạn 2 mới dùng báo giá thực từ vendor để ra quyết định. Đừng quyết định chỉ dựa vào giai đoạn 1.
+</Callout>
+
+**[→ Tải Skill "Đánh giá NCC" về Google Drive](https://drive.google.com/drive/folders/1mVs_aSw1R0oov_YLbQ-trqyJK0R5VrjI?usp=sharing)** · Miễn phí
+
+---
+
+## Ứng dụng mở rộng
+
+Quy trình 2 giai đoạn này không chỉ dùng cho phần mềm HR. Bất cứ khi nào bạn cần **đánh giá nhiều nhà cung cấp theo tiêu chí cụ thể** — đều áp dụng được.
+
+### Đánh giá nhà thầu IT / xây dựng
+
+Thay "module tính năng" bằng "hạng mục năng lực / dịch vụ". Giai đoạn 1 lọc nhà thầu theo kinh nghiệm và portfolio. Giai đoạn 2 so sánh hồ sơ thầu và báo giá thi công chính thức.
+
+### So sánh báo giá vật tư / thiết bị
+
+Đánh giá nhà cung cấp máy móc sản xuất, thiết bị văn phòng, hoặc hạ tầng IT. AI chuẩn hóa các báo giá về cùng format để so sánh tổng chi phí sở hữu (TCO) — không chỉ giá mua ban đầu.
+
+### Tìm đối tác dịch vụ tối ưu
+
+Công ty bảo hiểm nhóm, đơn vị đào tạo nội bộ, agency tuyển dụng — bất cứ dịch vụ nào có nhiều nhà cung cấp đều có thể đưa vào quy trình này. Nguyên tắc không đổi: càng định nghĩa rõ tiêu chí must-have từ đầu, kết quả càng chính xác.
+
+<Callout type="tip" title="Mẹo khi áp dụng cho các loại NCC khác">
+  Với mua sắm lớn hoặc quyết định chiến lược, hãy điều chỉnh trọng số: tăng weight cho tiêu chí quan trọng nhất (ví dụ: giá, compliance, SLA). AI tính điểm theo đúng ưu tiên của bạn.
+</Callout>
