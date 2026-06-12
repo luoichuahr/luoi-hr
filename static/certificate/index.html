@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Certificate — Cotecons HR Automation Workshop</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #1a1a2e; font-family: 'Segoe UI', sans-serif; color: #fff; min-height: 100vh; }
+
+  /* ── GATE ── */
+  #gate {
+    min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #0f3460 100%);
+  }
+  .gate-card {
+    background: #16213e; border: 1px solid #1e3a5f; border-radius: 16px;
+    padding: 48px 40px; max-width: 420px; width: 100%; text-align: center;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+  }
+  .gate-card .logo {
+    font-size: 40px; margin-bottom: 16px;
+  }
+  .gate-card h1 {
+    font-size: 22px; font-weight: 700; color: #e2e8f0; margin-bottom: 6px;
+  }
+  .gate-card p {
+    font-size: 14px; color: #64748b; margin-bottom: 32px; line-height: 1.5;
+  }
+  .gate-input-wrap { position: relative; margin-bottom: 16px; }
+  .gate-input {
+    width: 100%; padding: 14px 18px; border-radius: 10px;
+    border: 2px solid #334155; background: #0f172a; color: #e2e8f0;
+    font-size: 16px; outline: none; text-align: center; letter-spacing: 3px;
+    transition: border-color 0.2s;
+  }
+  .gate-input:focus { border-color: #3b82f6; }
+  .gate-input.error { border-color: #ef4444; animation: shake 0.4s ease; }
+  .gate-error {
+    color: #f87171; font-size: 13px; margin-top: 8px; min-height: 20px;
+    transition: opacity 0.2s;
+  }
+  .gate-btn {
+    width: 100%; padding: 14px; border-radius: 10px;
+    background: #3b82f6; border: none; color: #fff;
+    font-size: 15px; font-weight: 700; cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    margin-top: 8px;
+  }
+  .gate-btn:hover { background: #2563eb; }
+  .gate-btn:active { transform: scale(0.98); }
+  .gate-hint { font-size: 12px; color: #475569; margin-top: 20px; }
+
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    20%      { transform: translateX(-8px); }
+    40%      { transform: translateX(8px); }
+    60%      { transform: translateX(-6px); }
+    80%      { transform: translateX(6px); }
+  }
+
+  /* ── CERTIFICATE UI ── */
+  #app { display: none; }
+
+  .header { padding: 20px 32px; background: #16213e; border-bottom: 1px solid #0f3460; }
+  .header h1 { font-size: 19px; font-weight: 600; color: #e2e8f0; }
+  .header p  { font-size: 13px; color: #94a3b8; margin-top: 4px; }
+
+  .controls {
+    display: flex; align-items: center; gap: 16px;
+    padding: 16px 32px; background: #16213e;
+    border-bottom: 1px solid #0f3460; flex-wrap: wrap;
+  }
+
+  .tab-group { display: flex; gap: 8px; }
+  .tab {
+    padding: 8px 20px; border-radius: 6px; border: 1.5px solid #334155;
+    background: transparent; color: #94a3b8; cursor: pointer;
+    font-size: 14px; font-weight: 500; transition: all 0.2s;
+  }
+  .tab.active { background: #3b82f6; border-color: #3b82f6; color: #fff; }
+  .tab:hover:not(.active) { border-color: #64748b; color: #cbd5e1; }
+
+  .name-input {
+    padding: 8px 14px; border-radius: 6px; border: 1.5px solid #334155;
+    background: #0f172a; color: #e2e8f0; font-size: 14px; width: 280px;
+    outline: none; transition: border-color 0.2s;
+  }
+  .name-input:focus { border-color: #3b82f6; }
+  .name-input::placeholder { color: #475569; }
+
+  .export-group {
+    display: flex; gap: 8px; margin-left: auto; align-items: center;
+    flex-wrap: wrap;
+  }
+  .export-label { font-size: 11px; color: #475569; white-space: nowrap; }
+  .dl-btn {
+    padding: 8px 14px; border-radius: 6px;
+    border: none; color: #fff; font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: all 0.2s; white-space: nowrap;
+  }
+  .dl-btn.orig   { background: #3b82f6; }
+  .dl-btn.orig:hover  { background: #2563eb; }
+  .dl-btn.fb     { background: #1877f2; }
+  .dl-btn.fb:hover    { background: #1558b0; }
+  .dl-btn.locket { background: #e11d48; }
+  .dl-btn.locket:hover{ background: #be123c; }
+
+  .template-label {
+    text-align: center; padding: 12px 32px 4px;
+    font-size: 13px; color: #64748b; letter-spacing: 0.5px;
+  }
+  .canvas-wrap { padding: 24px 32px 40px; display: flex; justify-content: center; }
+  canvas {
+    border-radius: 4px;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+    max-width: 100%; width: 900px; height: auto;
+  }
+</style>
+</head>
+<body>
+
+<!-- ── GATE ── -->
+<div id="gate">
+  <div class="gate-card">
+    <div class="logo">🏆</div>
+    <h1>Cotecons HR Automation Workshop</h1>
+    <p>Nhập mã lớp để truy cập trang tạo chứng chỉ<br>của bạn.</p>
+    <div class="gate-input-wrap">
+      <input id="gateInput" class="gate-input" type="password"
+        placeholder="Mã lớp học" maxlength="20"
+        onkeydown="if(event.key==='Enter') checkGate()">
+    </div>
+    <div class="gate-error" id="gateError"></div>
+    <button class="gate-btn" onclick="checkGate()">Vào trang chứng chỉ →</button>
+    <p class="gate-hint">Mã được cung cấp trong buổi workshop</p>
+  </div>
+</div>
+
+<!-- ── CERTIFICATE UI ── -->
+<div id="app">
+  <div class="header">
+    <h1>Certificate — Cotecons HR Automation Workshop</h1>
+    <p>Chọn template · Nhập tên · Tải về</p>
+  </div>
+
+  <div class="controls">
+    <div class="tab-group">
+      <button class="tab active" onclick="switchTemplate('gold', this)">A — Classic Gold</button>
+      <button class="tab" onclick="switchTemplate('cotecons', this)">B — Cotecons Brand</button>
+    </div>
+    <input class="name-input" id="nameInput" type="text"
+      placeholder="Nhập tên học viên..."
+      oninput="render()" value="Nguyễn Văn A">
+    <div class="export-group">
+      <span class="export-label">Export:</span>
+      <button class="dl-btn orig"   onclick="exportAs('orig')">↓ Gốc 1200×848</button>
+      <button class="dl-btn fb"     onclick="exportAs('fb')">↓ FB / LinkedIn 1200×630</button>
+      <button class="dl-btn locket" onclick="exportAs('locket')">↓ Locket 1080×1080</button>
+    </div>
+  </div>
+
+  <div class="template-label" id="templateLabel">Template A — Classic Gold</div>
+  <div class="canvas-wrap">
+    <canvas id="cv" width="1200" height="848"></canvas>
+  </div>
+</div>
+
+<script>
+/* ─────────────────────────────────────────
+   GATE
+───────────────────────────────────────── */
+const CLASS_CODE = 'june2026';
+
+function checkGate() {
+  const val = document.getElementById('gateInput').value.trim().toLowerCase();
+  const inp = document.getElementById('gateInput');
+  const err = document.getElementById('gateError');
+
+  if (val === CLASS_CODE) {
+    document.getElementById('gate').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    render();
+  } else {
+    inp.classList.remove('error');
+    void inp.offsetWidth; // reflow để reset animation
+    inp.classList.add('error');
+    err.textContent = 'Mã không đúng. Vui lòng kiểm tra lại.';
+    inp.value = '';
+    inp.focus();
+    setTimeout(() => { inp.classList.remove('error'); }, 500);
+  }
+}
+
+/* ─────────────────────────────────────────
+   CANVAS
+───────────────────────────────────────── */
+const W = 1200, H = 848;
+let currentTemplate = 'gold';
+
+const CTC = {
+  navy:   '#16315E',
+  coral:  '#E86042',
+  teal:   '#5FD1C1',
+  bg:     '#EFF2F7',
+  dark:   '#1B1B1B',
+  gray:   '#434447',
+  white:  '#FFFFFF',
+};
+
+function switchTemplate(id, btn) {
+  currentTemplate = id;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  const labels = {
+    gold:     'Template A — Classic Gold',
+    cotecons: 'Template B — Cotecons Brand',
+  };
+  document.getElementById('templateLabel').textContent = labels[id];
+  render();
+}
+
+function getName() {
+  return document.getElementById('nameInput').value.trim() || 'Nguyễn Văn A';
+}
+
+function render() {
+  const canvas = document.getElementById('cv');
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, W, H);
+  if (currentTemplate === 'gold') drawGold(ctx);
+  else drawCotecons(ctx);
+}
+
+/* ═══════════════════════════════════════
+   TEMPLATE A — CLASSIC GOLD
+═══════════════════════════════════════ */
+function drawGold(ctx) {
+  const name = getName();
+
+  ctx.fillStyle = '#fefcf7';
+  ctx.fillRect(0, 0, W, H);
+
+  ctx.strokeStyle = '#c9a84c';
+  ctx.lineWidth = 8;
+  ctx.strokeRect(20, 20, W - 40, H - 40);
+
+  ctx.strokeStyle = '#c9a84c';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(36, 36, W - 72, H - 72);
+
+  drawGoldCorner(ctx, 20, 20, 1, 1);
+  drawGoldCorner(ctx, W - 20, 20, -1, 1);
+  drawGoldCorner(ctx, 20, H - 20, 1, -1);
+  drawGoldCorner(ctx, W - 20, H - 20, -1, -1);
+
+  ctx.fillStyle = '#c9a84c';
+  ctx.fillRect(120, 110, W - 240, 1.5);
+  ctx.fillRect(120, 115, W - 240, 0.5);
+
+  ctx.fillStyle = '#8a6914';
+  ctx.font = 'bold 15px "Times New Roman", serif';
+  ctx.textAlign = 'center';
+  ctx.letterSpacing = '6px';
+  ctx.fillText('CERTIFICATE OF COMPLETION', W / 2, 168);
+  ctx.letterSpacing = '0px';
+
+  ctx.font = '22px serif';
+  ctx.fillStyle = '#c9a84c';
+  ctx.fillText('✦  ❧  ✦', W / 2, 218);
+
+  ctx.fillStyle = '#5a4a2a';
+  ctx.font = 'italic 22px "Times New Roman", serif';
+  ctx.fillText('This is to certify that', W / 2, 274);
+
+  ctx.fillStyle = '#2d1a0e';
+  ctx.font = 'bold 68px "Times New Roman", serif';
+  ctx.fillText(name, W / 2, 372);
+
+  const nameW = ctx.measureText(name).width;
+  ctx.fillStyle = '#c9a84c';
+  ctx.fillRect(W / 2 - nameW / 2, 386, nameW, 2);
+
+  ctx.fillStyle = '#5a4a2a';
+  ctx.font = 'italic 22px "Times New Roman", serif';
+  ctx.fillText('has successfully completed the course', W / 2, 434);
+
+  ctx.fillStyle = '#2d1a0e';
+  ctx.font = 'bold 30px "Times New Roman", serif';
+  ctx.fillText('HR Automation Workshop', W / 2, 490);
+
+  ctx.fillStyle = '#c9a84c';
+  ctx.fillRect(120, 528, W - 240, 1.5);
+  ctx.fillRect(120, 533, W - 240, 0.5);
+
+  ctx.fillStyle = '#8a6914';
+  ctx.font = 'italic 17px "Times New Roman", serif';
+  ctx.fillText('June 2026 · Ho Chi Minh City', W / 2, 600);
+
+  ctx.strokeStyle = '#c9a84c';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(W / 2 - 140, 682);
+  ctx.lineTo(W / 2 + 140, 682);
+  ctx.stroke();
+
+  ctx.fillStyle = '#5a4a2a';
+  ctx.font = 'italic 15px "Times New Roman", serif';
+  ctx.fillText('Facilitator - Andy Tran', W / 2, 710);
+}
+
+function drawGoldCorner(ctx, x, y, dx, dy) {
+  ctx.strokeStyle = '#c9a84c';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(x + dx * 15, y + dy * 50);
+  ctx.lineTo(x + dx * 15, y + dy * 15);
+  ctx.lineTo(x + dx * 50, y + dy * 15);
+  ctx.stroke();
+}
+
+/* ═══════════════════════════════════════
+   TEMPLATE B — COTECONS BRAND
+   Navy #16315E · Coral #E86042 · Teal #5FD1C1
+═══════════════════════════════════════ */
+function drawCotecons(ctx) {
+  const name = getName();
+
+  ctx.fillStyle = CTC.bg;
+  ctx.fillRect(0, 0, W, H);
+
+  ctx.fillStyle = CTC.white;
+  roundRect(ctx, 40, 40, W - 80, H - 80, 6);
+
+  ctx.fillStyle = CTC.navy;
+  roundRectTop(ctx, 40, 40, W - 80, 120, 6);
+
+  ctx.fillStyle = CTC.coral;
+  ctx.fillRect(40, 40, 10, H - 80);
+
+  ctx.fillStyle = CTC.teal;
+  ctx.fillRect(W - 50, 40, 10, H - 80);
+
+  ctx.fillStyle = 'rgba(255,255,255,0.75)';
+  ctx.font = '11px "Segoe UI", sans-serif';
+  ctx.textAlign = 'left';
+  ctx.letterSpacing = '2px';
+  ctx.fillText('HR AUTOMATION WORKSHOP', 80, 80);
+  ctx.letterSpacing = '0px';
+  ctx.fillStyle = 'rgba(255,255,255,0.55)';
+  ctx.font = '11px "Segoe UI", sans-serif';
+  ctx.fillText('Powered by AI · 2026', 80, 98);
+
+  ctx.fillStyle = CTC.coral;
+  ctx.beginPath();
+  ctx.arc(W - 80, 100, 26, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = CTC.white;
+  ctx.font = 'bold 10px "Segoe UI", sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('CERT', W - 80, 97);
+  ctx.fillText('2026', W - 80, 111);
+
+  ctx.fillStyle = CTC.navy;
+  ctx.font = 'bold 13px "Segoe UI", sans-serif';
+  ctx.textAlign = 'center';
+  ctx.letterSpacing = '5px';
+  ctx.fillText('CERTIFICATE OF COMPLETION', W / 2, 212);
+  ctx.letterSpacing = '0px';
+
+  ctx.fillStyle = CTC.coral;
+  ctx.fillRect(W / 2 - 50, 224, 100, 3);
+
+  ctx.fillStyle = CTC.gray;
+  ctx.font = '16px "Segoe UI", sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Proudly presented to', W / 2, 274);
+
+  ctx.fillStyle = CTC.navy;
+  ctx.font = 'bold 70px "Segoe UI", sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(name, W / 2, 374);
+
+  const nameW = ctx.measureText(name).width;
+  ctx.fillStyle = CTC.coral;
+  ctx.fillRect(W / 2 - nameW / 2, 388, nameW, 4);
+
+  ctx.fillStyle = CTC.gray;
+  ctx.font = '19px "Segoe UI", sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('has successfully completed', W / 2, 440);
+
+  ctx.fillStyle = CTC.navy;
+  roundRect(ctx, 180, 460, W - 360, 72, 6);
+  ctx.fillStyle = CTC.white;
+  ctx.font = 'bold 30px "Segoe UI", sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('HR Automation Workshop', W / 2, 505);
+
+  ctx.fillStyle = '#e2e8f0';
+  ctx.fillRect(80, 566, W - 160, 1);
+
+  const stats = [
+    { label: 'NGÀY HOÀN THÀNH', value: 'June 2026' },
+    { label: 'ĐỊA ĐIỂM', value: 'TP. Hồ Chí Minh' },
+    { label: 'TỔNG THỜI LƯỢNG', value: '4 Giờ Thực Hành' },
+  ];
+  stats.forEach((s, i) => {
+    const sx = 230 + i * 370;
+    ctx.fillStyle = CTC.coral;
+    ctx.font = 'bold 10px "Segoe UI", sans-serif';
+    ctx.letterSpacing = '2px';
+    ctx.textAlign = 'center';
+    ctx.fillText(s.label, sx, 602);
+    ctx.letterSpacing = '0px';
+    ctx.fillStyle = CTC.navy;
+    ctx.font = 'bold 19px "Segoe UI", sans-serif';
+    ctx.fillText(s.value, sx, 628);
+  });
+
+  ctx.fillStyle = '#e2e8f0';
+  ctx.fillRect(230 + 370 - 1 - 100, 588, 1, 52);
+  ctx.fillRect(230 + 370 + 100, 588, 1, 52);
+
+  ctx.fillStyle = '#e2e8f0';
+  ctx.fillRect(80, 672, W - 160, 1);
+
+  ctx.strokeStyle = CTC.coral;
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([5, 4]);
+  ctx.beginPath();
+  ctx.moveTo(W / 2 - 160, 740);
+  ctx.lineTo(W / 2 + 160, 740);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  ctx.fillStyle = CTC.navy;
+  ctx.font = '15px "Segoe UI", sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Facilitator - Andy Tran', W / 2, 768);
+
+  ctx.fillStyle = CTC.teal;
+  ctx.fillRect(50, H - 50, W - 100, 4);
+}
+
+/* ─── helpers ─── */
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+  ctx.fill();
+}
+
+function roundRectTop(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h);
+  ctx.lineTo(x, y + h);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+  ctx.fill();
+}
+
+/* ─── export ─── */
+function exportAs(format) {
+  const src = document.getElementById('cv');
+  const name = getName().replace(/\s+/g, '-').toLowerCase();
+  const tmpl = currentTemplate === 'gold' ? 'gold' : 'ctc';
+  let out, filename;
+  const bgColor = currentTemplate === 'gold' ? '#fefcf7' : '#EFF2F7';
+
+  if (format === 'orig') {
+    out = src;
+    filename = `certificate-${name}-${tmpl}-1200x848.png`;
+  } else if (format === 'fb') {
+    const TW = 1200, TH = 630;
+    const offsetY = (H - TH) / 2;
+    out = document.createElement('canvas');
+    out.width = TW; out.height = TH;
+    out.getContext('2d').drawImage(src, 0, offsetY, TW, TH, 0, 0, TW, TH);
+    filename = `certificate-${name}-${tmpl}-fb-1200x630.png`;
+  } else {
+    const SQ = 1080;
+    const scale = SQ / W;
+    const rh = Math.round(H * scale);
+    const padY = Math.round((SQ - rh) / 2);
+    out = document.createElement('canvas');
+    out.width = SQ; out.height = SQ;
+    const octx = out.getContext('2d');
+    octx.fillStyle = bgColor;
+    octx.fillRect(0, 0, SQ, SQ);
+    octx.drawImage(src, 0, 0, W, H, 0, padY, SQ, rh);
+    filename = `certificate-${name}-${tmpl}-locket-1080x1080.png`;
+  }
+
+  const a = document.createElement('a');
+  a.download = filename;
+  a.href = out.toDataURL('image/png');
+  a.click();
+}
+</script>
+</body>
+</html>

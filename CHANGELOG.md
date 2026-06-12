@@ -1,5 +1,11 @@
 # CHANGELOG — Lười HR Website
 
+## 2026-06-12 — Content: Certificate Page — Cotecons Workshop
+
+- `[CONTENT]` **static/certificate/index.html: Tạo trang /certificate cho workshop Cotecons** — Class code gate "june2026", 2 template (Classic Gold + Cotecons Brand), input tên học viên, 3 nút export (Gốc 1200×848 / FB-LinkedIn 1200×630 / Locket 1080×1080). Single HTML file, Vercel serve tĩnh.
+
+---
+
 ## 2026-05-19 — Content: CV Matching Tool — Claude Projects
 
 - `[CONTENT]` **docs/bi-kip/cv-matching-tool-claude.mdx: Thêm bài mới** — Hướng dẫn lọc và chấm điểm CV tự động bằng Claude Projects. Bài tiếp nối cv-extract-tool, giải quyết bước còn thiếu: so CV với JD, chấm 5 tiêu chí, xuất bảng xếp hạng màu sắc. PromptBlock với Project Instructions copy-paste sẵn. sidebar_position: 2.
