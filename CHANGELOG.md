@@ -1,5 +1,11 @@
 # CHANGELOG — Lười HR Website
 
+## 2026-07-25 — Content: HR Office Sim Page
+
+- `[CONTENT]` **static/hr-office-sim/index.html: Tạo trang /hr-office-sim** — Mô phỏng phòng nhân sự sống (neumorphism), copy nguyên từ `HR Agent/tempo/hr-office-sim/`. Single HTML file + assets/icons, Vercel serve tĩnh (giống pattern certificate page). Nút "Đưa lên CHRO Council" tạm ẩn (`display:none`) — link trỏ ra ngoài repo, chưa có bản deploy web cho CHRO Council Room, sẽ bật lại sau khi build xong.
+
+---
+
 ## 2026-06-12 — Content: Certificate Page — Cotecons Workshop
 
 - `[CONTENT]` **static/certificate/index.html: Tạo trang /certificate cho workshop Cotecons** — Class code gate "june2026", 2 template (Classic Gold + Cotecons Brand), input tên học viên, 3 nút export (Gốc 1200×848 / FB-LinkedIn 1200×630 / Locket 1080×1080). Single HTML file, Vercel serve tĩnh.

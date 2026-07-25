@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HR Office · Văn phòng Nhân sự</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#e8ecf5; --bg2:#eef1f8;
+  --surf:#eaeef7;
+  --text:#3a4a63; --head:#26324a; --muted:#8b98b0; --dim:#aab4c8;
+  --lo:#c7cfe0; --hi:#ffffff;
+  --sh-out: 7px 7px 16px var(--lo), -7px -7px 16px var(--hi);
+  --sh-out-sm: 4px 4px 9px var(--lo), -4px -4px 9px var(--hi);
+  --sh-in: inset 5px 5px 11px var(--lo), inset -5px -5px 11px var(--hi);
+  --sh-in-sm: inset 3px 3px 6px var(--lo), inset -3px -3px 6px var(--hi);
+  --r:24px; --r2:18px; --r3:14px;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{
+  font-family:'Be Vietnam Pro',system-ui,sans-serif;
+  background:linear-gradient(135deg,var(--bg),var(--bg2));
+  color:var(--text); line-height:1.5; overflow:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-thumb{background:var(--dim);border-radius:8px}
+::-webkit-scrollbar-track{background:transparent}
+
+.app{display:grid;grid-template-columns:264px 1fr;height:100vh;gap:0}
+
+/* ─────────── SIDEBAR ─────────── */
+.sidebar{
+  padding:22px 16px; display:flex;flex-direction:column;gap:16px;
+  overflow-y:auto; overflow-x:hidden;
+}
+.brand{display:flex;align-items:center;gap:12px;padding:6px 8px 2px}
+.brand .logo{
+  width:44px;height:44px;border-radius:14px;flex:none;
+  background:linear-gradient(135deg,#7c9cff,#a78bff);
+  box-shadow:var(--sh-out-sm);
+  display:grid;place-items:center;color:#fff;font-weight:800;font-size:18px;
+}
+.brand h1{font-size:15px;font-weight:800;color:var(--head);line-height:1.15}
+.brand span{font-size:11px;color:var(--muted);font-weight:500}
+
+.nav-group{margin-top:4px}
+.nav-title{font-size:10.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--dim);padding:0 10px 8px}
+.nav-title.tog{cursor:pointer;display:flex;align-items:center;justify-content:space-between;user-select:none;
+  font-size:19px;font-weight:800;letter-spacing:0;text-transform:none;color:var(--head);
+  padding:12px 14px;margin-bottom:6px;border-radius:var(--r3);box-shadow:var(--sh-out-sm)}
+.nav-title.tog:hover{box-shadow:var(--sh-out)}
+.nav-title.tog:active{box-shadow:var(--sh-in-sm)}
+.car{transition:transform .25s;font-size:16px;font-weight:800}
+#empList{overflow:hidden;transition:max-height .32s ease,opacity .25s;max-height:600px;opacity:1}
+.collapsed #empList{max-height:0;opacity:0}
+.collapsed .car{transform:rotate(-90deg)}
+.nav-item{
+  display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:var(--r3);
+  cursor:pointer;font-size:13.5px;font-weight:600;color:var(--text);
+  transition:.18s; margin-bottom:4px;
+}
+.nav-item .ic{width:18px;text-align:center;font-size:15px;opacity:.85}
+.nav-item:hover{box-shadow:var(--sh-out-sm)}
+.nav-item.active{box-shadow:var(--sh-in-sm);color:var(--head)}
+
+/* employee rows */
+.emp{
+  display:flex;align-items:center;gap:11px;padding:8px 10px;border-radius:var(--r3);
+  cursor:pointer;transition:.18s;margin-bottom:5px;
+}
+.emp:hover{box-shadow:var(--sh-out-sm)}
+.emp.active{box-shadow:var(--sh-in-sm)}
+.emp .ava{width:34px;height:34px;border-radius:11px;flex:none;box-shadow:var(--sh-out-sm);overflow:hidden;background:var(--surf)}
+.emp .ava svg{width:100%;height:100%;display:block}
+.emp .meta{min-width:0;flex:1}
+.emp .nm{font-size:13px;font-weight:700;color:var(--head);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.emp .rl{font-size:10.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.emp .st{width:8px;height:8px;border-radius:50%;flex:none;background:var(--dim)}
+.emp .st.on{background:#3ddb8f;box-shadow:0 0 0 3px rgba(61,219,143,.18)}
+
+/* ─────────── MAIN ─────────── */
+.stage{padding:20px 22px 22px 6px;display:flex;flex-direction:column;gap:16px;min-width:0;overflow:hidden}
+.topbar{display:flex;align-items:center;gap:16px}
+.topbar .tt{flex:1;min-width:0}
+.topbar h2{font-size:19px;font-weight:800;color:var(--head)}
+.topbar .sub{font-size:12.5px;color:var(--muted);font-weight:500}
+.chips{display:flex;gap:12px}
+.chip{
+  padding:9px 15px;border-radius:var(--r2);box-shadow:var(--sh-out-sm);
+  display:flex;flex-direction:column;line-height:1.2;min-width:74px;
+}
+.chip b{font-size:16px;font-weight:800;color:var(--head)}
+.chip span{font-size:10.5px;color:var(--muted);font-weight:600}
+.btn{
+  padding:11px 17px;border:none;border-radius:var(--r2);background:var(--surf);
+  box-shadow:var(--sh-out-sm);color:var(--head);font-family:inherit;font-weight:700;
+  font-size:13px;cursor:pointer;transition:.15s;display:inline-flex;align-items:center;gap:8px;
+}
+.btn:hover{box-shadow:var(--sh-out)}
+.btn:active{box-shadow:var(--sh-in-sm)}
+.btn.primary{background:linear-gradient(135deg,#7c9cff,#a78bff);color:#fff}
+
+/* ─────────── FLOOR ─────────── */
+.floor{
+  flex:1;position:relative;border-radius:var(--r);box-shadow:var(--sh-in);
+  overflow:hidden;min-height:0;
+  background:
+     repeating-linear-gradient(90deg, rgba(180,150,110,.05) 0 2px, transparent 2px 46px),
+     linear-gradient(#f3ece0, #efe6d6);           /* sàn gỗ ấm */
+}
+/* ─── TƯỜNG TRÊN + ỐNG LẠNH + ĐÈN + BẢNG ─── */
+.wall{position:absolute;top:0;left:0;right:0;height:12%;z-index:1;
+  background:linear-gradient(#dfe6ef,#d3dbe6);border-bottom:2px solid #c3ccd8}
+.duct{position:absolute;top:14%;left:6%;right:6%;height:12px;border-radius:6px;
+  background:repeating-linear-gradient(90deg,#c2cad6 0 14px,#b3bcca 14px 16px);box-shadow:0 2px 4px rgba(80,95,120,.18)}
+.pendant{position:absolute;top:0;width:3px;height:34px;background:#b9c2cf}
+.pendant::after{content:"";position:absolute;left:50%;bottom:-9px;transform:translateX(-50%);
+  width:26px;height:12px;border-radius:0 0 20px 20px;background:radial-gradient(circle at 50% 0,#fff3cf,#ffd772);box-shadow:0 6px 18px rgba(255,205,90,.5)}
+.board{position:absolute;top:2.2%;height:7.4%;border-radius:5px;background:linear-gradient(#ffffff,#eef1f6);
+  border:3px solid #cbd3df;box-shadow:0 2px 6px rgba(80,95,120,.15);z-index:2;overflow:hidden}
+.board::before{content:"";position:absolute;left:8%;top:26%;width:52%;height:5px;border-radius:3px;background:#ff8fb0}
+.board::after{content:"";position:absolute;left:8%;top:54%;width:70%;height:5px;border-radius:3px;background:#7cc0ff}
+.clockw{position:absolute;top:2.6%;width:26px;height:26px;border-radius:50%;background:#fff;border:3px solid #cbd3df;z-index:2}
+.clockw::before,.clockw::after{content:"";position:absolute;left:50%;top:50%;background:#6b7688;transform-origin:bottom;border-radius:2px}
+.clockw::before{width:2px;height:7px;transform:translate(-50%,-100%)}
+.clockw::after{width:2px;height:9px;transform:translate(-50%,-100%) rotate(75deg)}
+
+/* ─── CỬA TỰ ĐỘNG bên trái — trên tường trái, mở theo phối cảnh chéo, chỉ mở khi có người ─── */
+.door{position:absolute;left:0;z-index:4;transform:skewY(-15deg);transform-origin:left center}
+.door .dframe{position:absolute;inset:0;border:4px solid #9fb0c6;border-left:none;border-radius:0 5px 5px 0;background:linear-gradient(90deg,#d3e2ee,#c2d6e6)}
+.door .dtrack{position:absolute;left:2px;top:4px;bottom:4px;width:4px;background:#8ea1ba;border-radius:3px}
+.door .dpanel{position:absolute;left:8px;right:5px;height:44%;background:linear-gradient(120deg,rgba(196,226,242,.9),rgba(150,198,228,.6));border:2px solid #9cbdd6;box-shadow:inset 0 0 10px rgba(255,255,255,.6);transition:transform .55s ease}
+.door .dpanel::after{content:"";position:absolute;top:22%;left:10%;width:74%;height:16%;background:rgba(255,255,255,.45);border-radius:2px}
+.door .dpanel.t{top:6px}
+.door .dpanel.b{bottom:6px}
+.door.open .dpanel.t{transform:translateY(-88%)}
+.door.open .dpanel.b{transform:translateY(88%)}
+.door .dsensor{position:absolute;top:-4px;left:50%;transform:translateX(-50%);width:12px;height:5px;border-radius:3px;background:#c7ced8;transition:.3s}
+.door.open .dsensor{background:#3ddb8f;box-shadow:0 0 8px #3ddb8f}
+.door .dmat{position:absolute;right:-22px;top:50%;transform:translateY(-50%) skewY(15deg);width:20px;height:56%;border-radius:7px;background:rgba(150,175,205,.2)}
+
+/* ─── máy chiếu · màn chiếu/bảng · cây nước · photocopy ─── */
+.screen{position:absolute;top:20%;left:12%;width:76%;height:17%;border-radius:4px;background:linear-gradient(135deg,#f6faff,#dde8f5);border:3px solid #c3cedd;box-shadow:0 2px 6px rgba(80,95,120,.15);display:grid;place-items:center;font-size:15px;color:rgba(90,110,140,.5);z-index:2}
+.projector{position:absolute;top:31%;left:50%;transform:translateX(-50%);width:18px;height:10px;border-radius:3px;background:#c0c8d4;box-shadow:0 2px 3px rgba(0,0,0,.2);z-index:2}
+.projector::after{content:"";position:absolute;top:100%;left:50%;transform:translateX(-50%);border-left:15px solid transparent;border-right:15px solid transparent;border-top:30px solid rgba(255,242,200,.28)}
+.cooler{position:absolute;width:22px;height:38px;z-index:3}
+.cooler .jug{position:absolute;top:0;left:50%;transform:translateX(-50%);width:16px;height:13px;border-radius:7px 7px 3px 3px;background:rgba(120,195,238,.7);border:1px solid #8fb8d8}
+.cooler .base{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:19px;height:24px;border-radius:4px;background:linear-gradient(#eef2f8,#d9e1ec);box-shadow:var(--sh-out-sm)}
+.cooler .base::after{content:"";position:absolute;top:7px;left:50%;transform:translateX(-50%);width:8px;height:5px;border-radius:2px;background:#9fb4d0}
+.copier{position:absolute;width:36px;height:34px;z-index:3;border-radius:6px;background:linear-gradient(#e8edf5,#d4dce9);box-shadow:var(--sh-out-sm)}
+.copier::before{content:"";position:absolute;top:6px;left:6px;right:6px;height:5px;border-radius:2px;background:#9aa8be}
+.copier::after{content:"📄";position:absolute;bottom:2px;left:50%;transform:translateX(-50%);font-size:11px}
+
+/* ─── ZONES / BÀN HỌP / PANTRY / CÂY ─── */
+.zone{position:absolute;border-radius:16px;background:rgba(255,255,255,.34);border:2px dashed rgba(150,164,196,.4);z-index:1}
+.zone.solid{background:linear-gradient(135deg,#eef3f4,#e2ebec);border:none;box-shadow:var(--sh-out-sm)}
+.zone.plain{background:rgba(244,247,252,.4);border:none;box-shadow:none}
+.zl{position:absolute;top:8px;left:12px;font-size:10px;font-weight:800;color:#8a97ad;letter-spacing:.05em;z-index:4}
+/* khu thư giãn: sofa · bàn tròn · đệm lười */
+.sofa{position:absolute;border-radius:11px 11px 7px 7px;background:linear-gradient(#a9c4e6,#8caeda);box-shadow:var(--sh-out-sm)}
+.sofa::before{content:"";position:absolute;left:5px;right:5px;top:4px;height:42%;border-radius:7px;background:rgba(255,255,255,.28)}
+.rtable{position:absolute;border-radius:50%;background:radial-gradient(circle at 40% 35%,#ecd8bb,#cdb492);box-shadow:var(--sh-out-sm)}
+.beanbag{position:absolute;width:24px;height:22px;border-radius:50% 50% 46% 46%;box-shadow:var(--sh-out-sm)}
+.partition{position:absolute;border:3px solid rgba(150,170,200,.55);border-radius:12px;background:rgba(190,210,235,.14);z-index:1}
+.mtable{position:absolute;border-radius:50%;background:radial-gradient(circle at 40% 35%,#d7ad78,#b98c5e);box-shadow:var(--sh-out-sm),inset 0 2px 6px rgba(255,255,255,.3)}
+.mchair{position:absolute;width:16px;height:16px;border-radius:6px;background:#8fb8e0;box-shadow:var(--sh-out-sm)}
+.counter{position:absolute;border-radius:10px;background:linear-gradient(#e9d9c2,#dcc7a8);box-shadow:var(--sh-out-sm);display:grid;place-items:center;font-size:19px}
+.plant{position:absolute;z-index:3}
+.plant .pot{width:22px;height:16px;border-radius:4px 4px 8px 8px;background:linear-gradient(#e08b5a,#c9713f);margin:0 auto}
+.plant .leaf{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);font-size:26px;line-height:1}
+.deco{position:absolute;font-size:20px;z-index:3}
+
+/* ─── BÀN LÀM VIỆC (gỗ + màn hình sáng) ─── */
+.desk{position:absolute;transform:translate(-50%,-50%);z-index:2;border-radius:10px;
+  background:linear-gradient(#d7ad78,#c69760);box-shadow:0 4px 10px rgba(120,90,50,.25),inset 0 2px 3px rgba(255,255,255,.35)}
+.desk .scr{position:absolute;top:50%;transform:translateY(-50%);width:26px;height:20px;border-radius:4px;
+  background:linear-gradient(135deg,#3a4b66,#26344c);box-shadow:0 2px 4px rgba(0,0,0,.25)}
+.desk .scr::before{content:"";position:absolute;inset:2px;border-radius:2px;background:linear-gradient(135deg,#8fd3ff,#6aa8ff);opacity:.85}
+.desk .scr.l{left:8px}.desk .scr.r{right:8px;transform:translateY(-50%) scaleX(-1)}
+.desk .lap{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:22px;height:15px;border-radius:3px;background:#b9c2d0}
+.desk .lap::before{content:"";position:absolute;left:2px;right:2px;top:2px;bottom:5px;border-radius:2px;background:linear-gradient(#9fe0ff,#7ab8ff)}
+.desk .obj{position:absolute;font-size:11px;top:-2px}
+
+/* ─────────── VIEW ROUTER (KPI / 9-box / IDP / Chính sách) ─────────── */
+.view{display:none;flex:1;min-height:0;flex-direction:column;gap:14px;overflow-y:auto;padding-right:4px}
+.view.active{display:flex}
+.vhead{display:flex;align-items:center;justify-content:space-between;gap:14px}
+.vhead h2{font-size:18px;font-weight:800;color:var(--head)}
+.vhead .sub{font-size:12px;color:var(--muted);font-weight:500;margin-top:2px}
+.grid4{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.statc{border-radius:var(--r2);box-shadow:var(--sh-out-sm);padding:14px 16px}
+.statc b{display:block;font-size:21px;font-weight:800;color:var(--head)}
+.statc span{font-size:11px;color:var(--muted);font-weight:600}
+.statc .tr{font-size:10.5px;font-weight:700;margin-top:4px;display:inline-block;padding:2px 8px;border-radius:7px}
+.statc .tr.ok{background:rgba(61,219,143,.16);color:#1f9e63}
+.statc .tr.warn{background:rgba(255,120,120,.16);color:#d85a5a}
+.contrib{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.ccard{border-radius:var(--r2);box-shadow:var(--sh-out-sm);padding:13px 15px;cursor:pointer;transition:.15s}
+.ccard:hover{box-shadow:var(--sh-out)}
+.ccard .who{display:flex;align-items:center;gap:9px;margin-bottom:9px}
+.ccard .ava{width:28px;height:28px;border-radius:9px;overflow:hidden;flex:none;box-shadow:var(--sh-out-sm)}
+.ccard .ava svg{width:100%;height:100%}
+.ccard .nm{font-size:12.5px;font-weight:700;color:var(--head)}
+.ccard .rl{font-size:10px;color:var(--muted);font-weight:600}
+.insight{font-size:11.5px;line-height:1.5;color:var(--muted);padding:10px 13px;border-radius:var(--r3);box-shadow:var(--sh-in-sm);margin-top:2px}
+.insight b{color:var(--head)}
+.hbars{display:flex;flex-direction:column;gap:10px}
+.hbrow{display:grid;grid-template-columns:110px 1fr 74px;align-items:center;gap:10px;font-size:12px}
+.hbrow .lb{font-weight:700;color:var(--head);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hbrow .tk{height:16px;border-radius:8px;box-shadow:var(--sh-in-sm);overflow:hidden}
+.hbrow .tk i{display:block;height:100%;border-radius:8px}
+.hbrow .vl{font-weight:700;color:var(--muted);text-align:right}
+/* 9-box */
+.nb9{display:grid;grid-template-columns:auto repeat(3,1fr);grid-template-rows:repeat(3,1fr) auto;gap:8px;flex:1;min-height:340px}
+.nb9 .axy{writing-mode:vertical-rl;transform:rotate(180deg);font-size:11px;font-weight:700;color:var(--dim);grid-row:1/4;display:flex;align-items:center;justify-content:center}
+.nb9 .cell{border-radius:var(--r3);box-shadow:var(--sh-in-sm);padding:8px;display:flex;flex-direction:column;gap:6px;position:relative;min-height:90px}
+.nb9 .cell .lbl{font-size:9.5px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;opacity:.6}
+.nb9 .cell .avs{display:flex;flex-wrap:wrap;gap:5px}
+.nb9 .cell .avs .ava{width:30px;height:30px;border-radius:10px;overflow:hidden;box-shadow:var(--sh-out-sm);cursor:pointer;transition:.15s}
+.nb9 .cell .avs .ava:hover{transform:scale(1.12)}
+.nb9 .axx{grid-column:2/5;text-align:center;font-size:11px;font-weight:700;color:var(--dim)}
+.nbtable{width:100%;border-collapse:collapse;font-size:12px}
+.nbtable th{text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--dim);padding:6px 8px;font-weight:700}
+.nbtable td{padding:8px;border-top:1px solid rgba(140,152,176,.14);color:var(--text)}
+.nbtable td b{color:var(--head)}
+/* IDP timeline */
+.idpwrap{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.idpcol h5{font-size:11.5px;font-weight:800;color:var(--head);margin-bottom:9px;text-align:center;padding:6px;border-radius:10px;box-shadow:var(--sh-in-sm)}
+.idpcard{border-radius:var(--r3);box-shadow:var(--sh-out-sm);padding:10px 11px;margin-bottom:9px;font-size:12px}
+.idpcard .w{display:flex;align-items:center;gap:7px;margin-bottom:5px}
+.idpcard .ava{width:22px;height:22px;border-radius:7px;overflow:hidden;flex:none}
+.idpcard .ava svg{width:100%;height:100%}
+.idpcard .tp{color:var(--text);line-height:1.4}
+/* status pill dùng chung .pill; thêm biến thể */
+.pill.plan{background:rgba(140,152,176,.16);color:#6b7896}
+.pill.inprogress{background:rgba(255,180,60,.16);color:#c78a12}
+.pill.done{background:rgba(61,219,143,.16);color:#1f9e63}
+/* Chính sách */
+.pol-cat{border-radius:var(--r2);box-shadow:var(--sh-out-sm);padding:15px 17px}
+.pol-cat h4{font-size:13px;font-weight:800;color:var(--head);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.pol-cat ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:5px}
+.pol-cat li{font-size:12px;color:var(--text);line-height:1.5}
+.infog{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.infocard{border-radius:var(--r2);box-shadow:var(--sh-out-sm);padding:15px;position:relative;overflow:hidden}
+.infocard .tag{font-size:9.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:#fff;padding:3px 9px;border-radius:8px;display:inline-block;margin-bottom:9px}
+.infocard .big{font-size:23px;font-weight:800;color:var(--head);line-height:1.15}
+.infocard .arrow{font-size:12px;font-weight:700;margin:3px 0 6px}
+.infocard .arrow.up{color:#d85a5a}
+.infocard .note{font-size:11px;color:var(--muted);line-height:1.5}
+.srcnote{font-size:10.5px;color:var(--dim);text-align:right;padding-top:6px}
+.srcnote a{color:var(--dim)}
+/* Infographic VOV — icon-flow, khác kiểu stat-card của .infog để không lặp bố cục */
+.vov-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.vov-sec{border-radius:var(--r2);box-shadow:var(--sh-out-sm);padding:16px 18px;display:flex;flex-direction:column;gap:9px}
+.vov-sec.full{grid-column:1/-1}
+.vov-top{display:flex;align-items:center;gap:12px}
+.vov-ic{width:54px;height:54px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;box-shadow:var(--sh-out-sm);overflow:hidden}
+.vov-ic img{width:40px;height:40px;object-fit:contain}
+.vov-stat{font-size:19px;font-weight:800;color:var(--head);line-height:1.2}
+.vov-cap{font-size:11.5px;color:var(--muted);line-height:1.5}
+.vov-legal{align-self:flex-start;font-size:9.5px;font-weight:700;letter-spacing:.03em;color:#fff;padding:3px 9px;border-radius:8px}
+.vov-sub{display:flex;flex-direction:column;gap:4px;padding-left:66px}
+.vov-sub-row{display:flex;gap:6px;font-size:11px;color:var(--text);line-height:1.4}
+.vov-sub-row b{color:var(--head);white-space:nowrap}
+.vov-body3{display:flex;gap:22px;flex-wrap:wrap}
+.vov-body3>div{flex:1;min-width:200px}
+.vov-list3{flex:1.4;min-width:220px;margin:0;padding-left:18px;display:flex;flex-direction:column;gap:5px}
+.vov-list3 li{font-size:11.5px;color:var(--text);line-height:1.5}
+
+/* person token */
+.person{position:absolute;width:52px;transform:translate(-50%,-50%);transition-property:left,top;transition-timing-function:linear;transition-duration:0ms;cursor:pointer;z-index:5}
+.person.walking{z-index:16}
+.person .body{position:relative;width:46px;height:56px;margin:0 auto;transition:filter .2s}
+.person .body svg{display:block;transform:scaleX(var(--f,1));transition:transform .2s}
+.person:hover{z-index:18}.person:hover .body{filter:drop-shadow(0 5px 6px rgba(90,105,140,.35))}
+.person .tag{position:absolute;top:-33px;left:50%;transform:translateX(-50%);text-align:center;white-space:nowrap;background:rgba(255,255,255,.94);padding:2px 9px;border-radius:9px;box-shadow:var(--sh-out-sm);pointer-events:none;line-height:1.18;z-index:3}
+.person .tag .nm{font-size:10px;font-weight:800;color:var(--head)}
+.person .tag .rl{font-size:7.5px;font-weight:600;color:var(--muted);display:block}
+.person .bubble{position:absolute;top:-30px;left:50%;transform:translateX(-50%) scale(0);font-size:15px;background:#fff;border-radius:10px;padding:2px 6px;box-shadow:var(--sh-out-sm);transition:.25s;transform-origin:bottom center;opacity:0;white-space:nowrap;pointer-events:none;z-index:2}
+.person.act .bubble{transform:translateX(-50%) scale(1);opacity:1}
+.person .shadow{position:absolute;bottom:-2px;left:50%;transform:translateX(-50%);width:28px;height:6px;border-radius:50%;background:rgba(90,75,50,.18);filter:blur(2px)}
+.person.walking .body{animation:walkbob .42s ease-in-out infinite}
+.person.working .body{animation:typ 2.6s ease-in-out infinite}
+@keyframes walkbob{0%,100%{transform:translateY(0) rotate(0)}25%{transform:translateY(-3px) rotate(-3deg)}75%{transform:translateY(-3px) rotate(3deg)}}
+@keyframes typ{0%,100%{transform:translateY(0)}50%{transform:translateY(-1.5px)}}
+
+/* ─── THOUGHT BUBBLE (suy nghĩ) — nhỏ, in nghiêng, đổi layout theo tâm trạng ─── */
+.thought{position:absolute;bottom:100%;left:50%;transform:translate(-50%,4px) scale(.8);margin-bottom:30px;
+  background:#fff;border-radius:11px;padding:3px 10px;font-size:8px;font-weight:600;font-style:italic;color:#5a6478;
+  line-height:1.2;box-shadow:0 6px 16px rgba(90,105,140,.2);opacity:0;transition:.3s cubic-bezier(.3,1.5,.5,1);
+  pointer-events:none;z-index:22;text-align:center;white-space:nowrap}
+.thought.show{opacity:1;transform:translate(-50%,0) scale(1)}
+.thought::before{content:"";position:absolute;bottom:-4px;left:50%;width:10px;height:10px;background:inherit;transform:translateX(-50%) rotate(45deg)}
+.thought::after{content:"";position:absolute;bottom:-11px;left:40%;width:6px;height:6px;background:inherit;border-radius:50%}
+.thought.work{color:#5a6478;background:#fff}
+.thought.idle{color:#b57e2e;background:#fff7ea;border-radius:20px}                                   /* vẩn vơ — bo tròn ấm */
+.thought.game{color:#7c5cd0;background:#f4efff;border-radius:16px}                                   /* sao nhãng */
+.thought.angry{color:#d8443a;background:#ffece9;font-style:normal;font-weight:800;border-radius:6px;   /* nóng giận — vuông, đậm, run */
+  animation:shake .32s ease-in-out infinite}
+@keyframes shake{0%,100%{transform:translate(-50%,0) rotate(-1.5deg)}50%{transform:translate(-50%,0) rotate(1.5deg)}}
+
+/* ─────────── COCKPIT ─────────── */
+.cockpit{
+  position:fixed;top:0;right:0;height:100vh;width:420px;max-width:92vw;
+  background:linear-gradient(135deg,var(--bg),var(--bg2));
+  box-shadow:-12px 0 40px rgba(90,105,140,.22);
+  transform:translateX(105%);transition:transform .38s cubic-bezier(.5,.1,.2,1);
+  z-index:40;display:flex;flex-direction:column;padding:22px;overflow-y:auto;
+}
+.cockpit.open{transform:translateX(0)}
+.ck-close{position:absolute;top:18px;right:18px;width:36px;height:36px;border-radius:12px;box-shadow:var(--sh-out-sm);border:none;background:var(--surf);cursor:pointer;font-size:16px;color:var(--muted)}
+.ck-close:active{box-shadow:var(--sh-in-sm)}
+.ck-head{display:flex;align-items:center;gap:15px;margin-bottom:6px}
+.ck-head .ava{width:66px;height:66px;border-radius:20px;box-shadow:var(--sh-out);overflow:hidden;flex:none}
+.ck-head .ava svg{width:100%;height:100%}
+.ck-head h3{font-size:20px;font-weight:800;color:var(--head)}
+.ck-head .role{font-size:12.5px;font-weight:600;color:var(--muted)}
+.ck-sig{font-size:12.5px;line-height:1.55;color:var(--text);margin:10px 2px 16px;padding:11px 14px;border-radius:var(--r3);box-shadow:var(--sh-in-sm)}
+.tabs{display:flex;gap:8px;margin-bottom:16px}
+.tab{flex:1;padding:9px;border-radius:var(--r3);box-shadow:var(--sh-out-sm);font-size:12px;font-weight:700;color:var(--muted);text-align:center;cursor:pointer;transition:.15s}
+.tab.active{box-shadow:var(--sh-in-sm);color:var(--head)}
+.panel{display:none;flex-direction:column;gap:13px}
+.panel.active{display:flex}
+
+.card{border-radius:var(--r2);box-shadow:var(--sh-out-sm);padding:15px}
+.card h4{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--dim);margin-bottom:11px}
+.task{display:flex;align-items:flex-start;gap:10px;font-size:13px;padding:7px 0;color:var(--text)}
+.task .dot{width:9px;height:9px;border-radius:50%;margin-top:5px;flex:none}
+.task small{display:block;color:var(--muted);font-size:11px;font-weight:500}
+.skill{display:inline-block;font-size:11px;font-weight:600;padding:5px 11px;border-radius:10px;box-shadow:var(--sh-out-sm);margin:0 6px 6px 0;color:var(--text)}
+
+.kpi{margin-bottom:13px}
+.kpi:last-child{margin-bottom:0}
+.kpi .kt{display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:6px}
+.kpi .kt b{color:var(--head);font-weight:700}
+.kpi .kt span{color:var(--muted);font-weight:600}
+.bar{height:11px;border-radius:8px;box-shadow:var(--sh-in-sm);overflow:hidden}
+.bar i{display:block;height:100%;border-radius:8px;transition:width .6s}
+
+.pf{display:flex;justify-content:space-between;font-size:13px;padding:9px 0;border-bottom:1px solid rgba(140,152,176,.14)}
+.pf:last-child{border:none}
+.pf span{color:var(--muted);font-weight:500}
+.pf b{color:var(--head);font-weight:700}
+.pill{font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:8px}
+.pill.mock{background:rgba(255,180,60,.16);color:#c78a12}
+.pill.ok{background:rgba(61,219,143,.16);color:#1f9e63}
+.pill.warn{background:rgba(255,120,120,.16);color:#d85a5a}
+
+/* nine box mini */
+.nb{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;aspect-ratio:1;margin-top:4px}
+.nb div{border-radius:9px;box-shadow:var(--sh-in-sm);display:grid;place-items:center;font-size:10px;color:var(--dim);font-weight:600}
+.nb div.hit{box-shadow:var(--sh-out-sm);color:#fff;font-weight:800}
+
+/* ─────────── OVERLAY (họp tuần) ─────────── */
+.scrim{position:fixed;inset:0;background:rgba(60,72,98,.28);backdrop-filter:blur(3px);z-index:60;display:none;align-items:center;justify-content:center;padding:24px}
+.scrim.open{display:flex}
+.modal{width:560px;max-width:100%;max-height:88vh;overflow-y:auto;border-radius:var(--r);background:linear-gradient(135deg,var(--bg),var(--bg2));box-shadow:var(--sh-out);padding:26px}
+.modal h3{font-size:19px;font-weight:800;color:var(--head);margin-bottom:4px}
+.modal .msub{font-size:12.5px;color:var(--muted);margin-bottom:18px}
+.issue{display:flex;align-items:flex-start;gap:12px;padding:13px;border-radius:var(--r2);box-shadow:var(--sh-out-sm);margin-bottom:11px}
+.issue .who{font-size:11px;font-weight:700;padding:4px 9px;border-radius:9px;color:#fff;flex:none}
+.issue .txt{font-size:13px;color:var(--text)}
+.issue .txt b{color:var(--head)}
+.modal .foot{display:flex;gap:11px;margin-top:8px}
+.hint{font-size:11px;color:var(--dim);text-align:center;margin-top:14px}
+
+@media(max-width:900px){.app{grid-template-columns:1fr}.sidebar{display:none}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="logo">HR</div>
+      <div><h1>HR Office</h1><span>Phòng Nhân sự · sống</span></div>
+    </div>
+    <div class="nav-group">
+      <div class="nav-title">Tổng quan</div>
+      <div class="nav-item active" data-view="floor"><span class="ic">🏢</span> Phòng nhân sự</div>
+      <div class="nav-item" data-view="kpi"><span class="ic">📊</span> KPI phòng</div>
+    </div>
+    <div class="nav-group">
+      <div class="nav-title tog" id="empToggle">Nhân sự (8) <span class="car">▾</span></div>
+      <div id="empList"></div>
+    </div>
+    <div class="nav-group">
+      <div class="nav-title">Phát triển</div>
+      <div class="nav-item" data-view="ninebox"><span class="ic">🧩</span> Lưới 9-box</div>
+      <div class="nav-item" data-view="idp"><span class="ic">📅</span> Lịch IDP</div>
+      <div class="nav-item" data-view="policy"><span class="ic">📜</span> Chính sách</div>
+    </div>
+    <div class="nav-group">
+      <div class="nav-title">Họp</div>
+      <div class="nav-item" id="navMeet"><span class="ic">🗓️</span> Họp tuần</div>
+    </div>
+  </aside>
+
+  <main class="stage">
+    <div class="topbar">
+      <div class="tt">
+        <h2>Chào buổi sáng, Phòng Nhân sự 👋</h2>
+        <div class="sub" id="dateline"></div>
+      </div>
+      <div class="chips">
+        <div class="chip"><b>9</b><span>Đang online</span></div>
+        <div class="chip"><b id="cActive">0</b><span>Đang hoạt động</span></div>
+        <div class="chip"><b id="cTasks">0</b><span>Task hôm nay</span></div>
+      </div>
+      <button class="btn primary" id="btnMeet">🗓️ Họp tuần</button>
+    </div>
+    <section class="view active" data-view="floor">
+      <div class="floor" id="floor"></div>
+    </section>
+
+    <section class="view" data-view="kpi" id="viewKpi"></section>
+    <section class="view" data-view="ninebox" id="viewNinebox"></section>
+    <section class="view" data-view="idp" id="viewIdp"></section>
+    <section class="view" data-view="policy" id="viewPolicy"></section>
+  </main>
+</div>
+
+<!-- COCKPIT -->
+<aside class="cockpit" id="cockpit">
+  <button class="ck-close" id="ckClose">✕</button>
+  <div id="ckBody"></div>
+</aside>
+
+<!-- HỌP TUẦN -->
+<div class="scrim" id="scrim">
+  <div class="modal">
+    <h3>🗓️ Họp tuần — Phòng Nhân sự</h3>
+    <div class="msub" id="meetDate"></div>
+    <div id="issues"></div>
+    <div class="foot">
+      <button class="btn primary" id="btnCouncil" style="display:none">⚖️ Đưa lên CHRO Council</button>
+      <button class="btn" id="btnCloseMeet">Đóng</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ═══════════ DATA (mock v1 — feed data thật sau) ═══════════ */
+const HAIR = {Linh:'#4b3b52',Thu:'#3a2f4d',Uyên:'#5b3a2a',Ngọc:'#4a3a24',Hùng:'#2b2b33',Phương:'#3a2f2a',Lan:'#54324a',Dung:'#2c313f'};
+const EMPLOYEES = [
+ {id:'linh',name:'Linh',role:'Talent Acquisition',accent:'#FF6392',sig:'Thị trường không chờ...',home:{x:22,y:34},
+  bubble:'💼',
+  tasks:[['Sàng 12 CV vị trí Senior Dev','deadline 16:00'],['Phỏng vấn vòng 2 — 3 ứng viên',''],['Chốt offer cho ứng viên Backend','chờ Thu duyệt gói lương']],
+  kpi:{week:['Ứng viên phỏng vấn',9,10],month:['Vị trí lấp đầy',6,8],quarter:['Time-to-fill (ngày)',28,25],year:['Offer acceptance %',86,85]},
+  skills:['Sourcing đa kênh','Phỏng vấn năng lực','Employer branding','Đàm phán offer','Talent pipeline'],
+  profile:{tenure:'3 năm 2 tháng',salary:'32.000.000đ',raise:['12 tháng trước','ok'],review:['Xuất sắc (A)','ok'],nb:{p:2,po:2},
+    training:['Structured Interview','Employer Branding 101'],
+    idp:[{quarter:'Q3/2026',topic:'Behavioral Interviewing nâng cao',status:'inprogress'},{quarter:'Q4/2026',topic:'Talent Analytics',status:'plan'},{quarter:'Q1/2027',topic:'Employer Branding — mentor nội bộ',status:'plan'}]},
+  results:{insight:'Tuần này tuyển đủ chỉ tiêu 2 vị trí; time-to-fill đang chậm hơn mục tiêu ~3 ngày.',
+    stats:[['Tuần này',2,'vị trí'],['Tháng này',6,'vị trí'],['Quý này',14,'vị trí']],
+    table:{head:['Tuần','Vị trí tuyển được','Mục tiêu'],rows:[['Tuần 1/7',2,2],['Tuần 2/7',1,2],['Tuần 3/7',2,2],['Tuần 4/7 (đang chạy)',1,2]]}}},
+
+ {id:'thu',name:'Thu',role:'Comp & Benefits',accent:'#8B7CF6',sig:'Cho tôi xem con số trước.',home:{x:40,y:30},
+  bubble:'📊',
+  tasks:[['Chốt bảng lương kỳ 1','trước 4 ngày'],['Rà soát equity gap 200 NV',''],['Duyệt gói lương offer của Linh','đang treo']],
+  kpi:{week:['Hồ sơ lương xử lý',24,24],month:['Ngân sách vs trần %',97,100],quarter:['Equity gap flags',3,0],year:['Payroll đúng hạn %',99,99]},
+  skills:['Salary benchmarking','Job grading','Total rewards design','Payroll compliance','C&B analytics'],
+  profile:{tenure:'4 năm 6 tháng',salary:'38.000.000đ',raise:['18 tháng trước','warn'],review:['Đạt tốt (B+)','ok'],nb:{p:2,po:1},
+    training:['Total Rewards Strategy','Job Evaluation (Hay)'],
+    idp:[{quarter:'Q3/2026',topic:'Pay Equity Analytics',status:'plan'},{quarter:'Q4/2026',topic:'Sales Incentive Design',status:'plan'}]},
+  results:{insight:'Bảng lương kỳ 1 đã chốt đúng hạn cho toàn bộ 8 nhân sự phòng; ngân sách đang chạm 97% trần cho phép.',
+    stats:[['Hồ sơ lương/kỳ',24,'hồ sơ'],['Payroll đúng hạn',99,'%'],['Equity gap đang mở',3,'flag']],
+    payroll:true}},
+
+ {id:'uyen',name:'Uyên',role:'Legal & Compliance',accent:'#FF8A3D',sig:'Về mặt pháp lý, tôi cần flag...',home:{x:58,y:34},
+  bubble:'⚖️',
+  tasks:[['Review 4 HĐLĐ sắp ký',''],['Rà soát điều khoản non-compete','ưu tiên cao'],['Cập nhật nội quy theo luật mới 2026','']],
+  kpi:{week:['Hợp đồng review',11,12],month:['Compliance flags xử lý',5,5],quarter:['Tranh chấp mở',1,0],year:['Audit pass %',100,100]},
+  skills:['Luật Lao động VN','Soạn thảo HĐLĐ','Compliance audit','Xử lý kỷ luật','Data privacy'],
+  profile:{tenure:'5 năm 1 tháng',salary:'40.000.000đ',raise:['10 tháng trước','ok'],review:['Xuất sắc (A)','ok'],nb:{p:2,po:1},
+    training:['Luật LĐ sửa đổi 2025','Data Privacy (NĐ13)'],
+    idp:[{quarter:'Q3/2026',topic:'Labor Dispute Resolution',status:'plan'},{quarter:'Q4/2026',topic:'M&A HR Legal',status:'plan'}]},
+  results:{insight:'11/12 hợp đồng review đúng hạn tháng này; 1 flag non-compete đã xử lý xong, không phát sinh tranh chấp.',
+    stats:[['HĐLĐ review/tháng',11,'hồ sơ'],['Compliance flags xử lý',5,'/5'],['Audit pass',100,'%']],
+    table:{head:['Tuần','HĐLĐ review','Flag phát hiện'],rows:[['Tuần 1',3,0],['Tuần 2',2,1],['Tuần 3',4,0],['Tuần 4',2,0]]}}},
+
+ {id:'ngoc',name:'Ngọc',role:'Culture & Engagement',accent:'#FFC53D',sig:'Cảm nhận từ sàn là...',home:{x:30,y:56},
+  bubble:'✨',
+  tasks:[['Chuẩn bị Townhall tháng 7',''],['Phân tích pulse survey tuần','morale giảm nhẹ'],['Lên kế hoạch team building Q3','']],
+  kpi:{week:['Pulse response %',78,75],month:['eNPS',42,45],quarter:['Sự kiện văn hóa',4,4],year:['Engagement score',81,80]},
+  skills:['Employee engagement','Internal comms','Event design','Survey analytics','Culture building'],
+  profile:{tenure:'2 năm 8 tháng',salary:'27.000.000đ',raise:['14 tháng trước','ok'],review:['Đạt tốt (B+)','ok'],nb:{p:1,po:2},
+    training:['Employee Experience Design','Facilitation Skills'],
+    idp:[{quarter:'Q3/2026',topic:'Culture Analytics',status:'plan'},{quarter:'Q4/2026',topic:'Change Communication',status:'plan'}]},
+  results:{insight:'eNPS tăng nhẹ 3 tháng liên tiếp nhờ sự kiện team building, nhưng pulse tuần này giảm ở khối Vận hành.',
+    stats:[['eNPS tháng này',42,'điểm'],['Pulse response',78,'%'],['Sự kiện đã tổ chức',4,'sự kiện']],
+    table:{head:['Tháng','eNPS','Pulse response %'],rows:[['Tháng 4',39,74],['Tháng 5',40,76],['Tháng 6',41,77],['Tháng 7',42,78]]}}},
+
+ {id:'hung',name:'Hùng',role:'Org Design',accent:'#4C9AFF',sig:'Về cấu trúc dài hạn...',home:{x:48,y:58},
+  bubble:'🧭',
+  tasks:[['Vẽ lại org chart phòng Kinh doanh',''],['Phân tích span of control',''],['Đề xuất headcount 2027','chờ data Phương']],
+  kpi:{week:['Cấu trúc review',3,3],month:['Bottleneck xử lý',2,3],quarter:['Vị trí thiết kế lại',5,5],year:['Span of control chuẩn %',88,90]},
+  skills:['Org design','Workforce planning','Role architecture','Span & layer analysis','Change design'],
+  profile:{tenure:'6 năm 3 tháng',salary:'42.000.000đ',raise:['22 tháng trước','warn'],review:['Đạt (B)','warn'],nb:{p:1,po:1},
+    training:['Organization Design (Galbraith)','Strategic Workforce Planning'],
+    idp:[{quarter:'Q3/2026',topic:'Operating Model Design',status:'plan'},{quarter:'Q4/2026',topic:'Leadership Pipeline',status:'plan'}]},
+  results:{insight:'Đã thiết kế lại 5 vị trí trong quý; span of control phòng Kinh doanh giảm từ 12 xuống 8 báo cáo/quản lý.',
+    stats:[['Cấu trúc review',3,'phòng ban'],['Vị trí thiết kế lại',5,'vị trí'],['Span chuẩn',88,'%']],
+    table:{head:['Phòng ban','Trước','Sau'],rows:[['Kinh doanh (span)',12,8],['Vận hành (layer)',5,4],['Kỹ thuật (span)',9,7]]}}},
+
+ {id:'phuong',name:'Phương',role:'People Analytics',accent:'#2DD4BF',sig:'Data hiện tại cho thấy...',home:{x:66,y:56},
+  bubble:'📈',
+  tasks:[['Build dashboard flight-risk',''],['Chuẩn bị số liệu cho Hùng','đến hạn thứ 6'],['Phân tích turnover Q2','']],
+  kpi:{week:['Báo cáo giao',5,5],month:['Dashboard active',7,6],quarter:['Model dự báo',2,2],year:['Data accuracy %',96,95]},
+  skills:['HR dashboard','Predictive analytics','SQL & Python','Turnover modeling','Data storytelling'],
+  profile:{tenure:'2 năm 0 tháng',salary:'29.000.000đ',raise:['Chưa tăng lần nào','warn'],review:['Xuất sắc (A)','ok'],nb:{p:2,po:2},
+    training:['People Analytics Bootcamp','Data Viz (Tableau)'],
+    idp:[{quarter:'Q3/2026',topic:'ML for HR',status:'inprogress'},{quarter:'Q4/2026',topic:'Analytics Leadership',status:'plan'},{quarter:'Q1/2027',topic:'Analytics Leadership — dẫn dắt nhóm nhỏ',status:'plan'}]},
+  results:{insight:'Dashboard flight-risk đã bàn giao, độ chính xác dự báo 96% trên tập test quý này.',
+    stats:[['Báo cáo giao/tháng',5,'báo cáo'],['Dashboard đang chạy',7,'dashboard'],['Độ chính xác model',96,'%']],
+    table:{head:['Dashboard','Người dùng chính','Trạng thái'],rows:[['Flight-risk','8 quản lý','Live'],['Turnover Q2','Ban HR','Live'],['Headcount planning','Hùng (Org Design)','Đang xây']]}}},
+
+ {id:'lan',name:'Lan',role:'Employee Relations',accent:'#FF7A7A',sig:'Từ góc nhìn của nhân viên...',home:{x:24,y:74},
+  bubble:'🤝',
+  tasks:[['3 buổi 1-1 với nhân viên rủi ro nghỉ',''],['Xử lý phản ánh phòng Vận hành',''],['Tổng hợp nguyện vọng team Kỹ thuật','']],
+  kpi:{week:['1-1 hoàn thành',8,8],month:['Ca ER xử lý',12,12],quarter:['Retention nhóm rủi ro %',82,80],year:['Grievance resolved %',94,90]},
+  skills:['1-1 coaching','Conflict mediation','Grievance handling','Active listening','Retention conversation'],
+  profile:{tenure:'3 năm 9 tháng',salary:'28.000.000đ',raise:['11 tháng trước','ok'],review:['Đạt tốt (B+)','ok'],nb:{p:1,po:1},
+    training:['Conflict Resolution','Coaching Skills (ICF)'],
+    idp:[{quarter:'Q3/2026',topic:'Investigation Skills',status:'plan'},{quarter:'Q4/2026',topic:'Wellbeing Program',status:'plan'}]},
+  results:{insight:'8/8 buổi 1-1 hoàn thành đúng hạn tuần này; 1 ca rủi ro nghỉ việc đã giữ chân thành công.',
+    stats:[['1-1 hoàn thành/tuần',8,'/8'],['Ca ER xử lý/tháng',12,'ca'],['Retention nhóm rủi ro',82,'%']],
+    table:{head:['Loại ca','Đã xử lý','Đang mở'],rows:[['Xung đột nội bộ',4,1],['Nguy cơ nghỉ việc',6,2],['Phản ánh chính sách',2,0]]}}},
+
+ {id:'dung',name:'Dung',role:'Labor Relations',accent:'#7C89B8',sig:'Theo thỏa ước lao động...',home:{x:46,y:76},
+  bubble:'📋',
+  tasks:[['Rà soát thỏa ước LĐ tập thể',''],['Chuẩn bị đối thoại định kỳ với công đoàn',''],['Cập nhật quy chế lương thưởng','']],
+  kpi:{week:['Văn bản rà soát',6,6],month:['Đối thoại tổ chức',2,2],quarter:['Tranh chấp tập thể',0,0],year:['Tuân thủ thỏa ước %',100,100]},
+  skills:['Thỏa ước LĐTT','Đối thoại công đoàn','Quy chế nội bộ','Labor law compliance','Đàm phán tập thể'],
+  profile:{tenure:'7 năm 5 tháng',salary:'39.000.000đ',raise:['16 tháng trước','ok'],review:['Đạt tốt (B+)','ok'],nb:{p:1,po:0},
+    training:['Collective Bargaining','Industrial Relations'],
+    idp:[{quarter:'Q3/2026',topic:'Union Negotiation',status:'plan'},{quarter:'Q4/2026',topic:'Labor Policy Design',status:'plan'}]},
+  results:{insight:'Đối thoại định kỳ với công đoàn diễn ra đúng lịch; chưa phát sinh tranh chấp tập thể trong quý.',
+    stats:[['Văn bản rà soát/tuần',6,'văn bản'],['Đối thoại tổ chức/tháng',2,'buổi'],['Tuân thủ thỏa ước',100,'%']],
+    table:{head:['Hoạt động','Tần suất','Kết quả'],rows:[['Đối thoại công đoàn','2 lần/tháng','Đã tổ chức đủ'],['Rà soát thỏa ước','Hàng tuần','Không phát sinh vi phạm'],['Cập nhật quy chế lương','1 lần/quý','Hoàn thành']]}}},
+];
+
+/* mô tả công việc trong sim (thay câu cửa miệng) */
+const DESC={
+ linh:'Phụ trách toàn bộ tuyển dụng — tìm nguồn, phỏng vấn, chốt offer. Giữ pipeline luôn đầy và rút ngắn time-to-fill.',
+ thu:'Thiết kế & vận hành lương thưởng, phúc lợi. Cân ngân sách với công bằng nội bộ, giữ payroll đúng hạn.',
+ uyen:'Bảo vệ công ty về pháp lý lao động — hợp đồng, nội quy, tuân thủ. Rà soát rủi ro trước khi ký.',
+ ngoc:'Chăm sức khỏe văn hóa & gắn kết — khảo sát, truyền thông nội bộ, sự kiện. Đọc morale của cả phòng.',
+ hung:'Thiết kế tổ chức & hoạch định nhân lực — sơ đồ, tầng bậc, headcount dài hạn.',
+ phuong:'Biến dữ liệu nhân sự thành quyết định — dashboard, dự báo nghỉ việc, phân tích turnover.',
+ lan:'Cầu nối nhân viên - công ty — 1-1, xử lý phản ánh, giữ chân nhân sự rủi ro.',
+ dung:'Quan hệ lao động — thỏa ước tập thể, đối thoại công đoàn, quy chế nội bộ.',
+};
+
+/* issues cho họp tuần (mock) */
+const ISSUES = [
+ ['linh','Đối thủ đang lôi kéo 3 kỹ sư — cần offer nhanh nhưng vượt trần lương.'],
+ ['thu','Nếu offer gói của Linh sẽ tạo <b>equity gap</b> cho 200 người hiện tại.'],
+ ['ngoc','Pulse tuần cho thấy <b>morale phòng Vận hành giảm</b> — cần communication plan.'],
+ ['hung','Headcount 2027 chưa chốt vì đang chờ số liệu flight-risk của Phương.'],
+];
+
+/* KPI dept-level (mock — chưa có nguồn hệ thống thật) [MOCK] */
+const DEPT_KPI=[
+ ['Headcount toàn công ty đang quản',342,342,'👥','ok'],
+ ['Vị trí đang mở',14,10,'📋','warn'],
+ ['Engagement score (eNPS)',42,45,'✨','warn'],
+ ['Turnover YTD %',8.4,10,'📉','ok'],
+ ['Payroll đúng hạn %',99,100,'💰','ok'],
+];
+
+/* Chính sách nhân sự nội bộ (mock — đại diện, chưa có bộ chính sách thật của công ty) [MOCK] */
+const POLICY_CATEGORIES=[
+ ['🧲','Tuyển dụng & Onboarding',['Quy trình tuyển dụng 5 bước','Quy chế thử việc & đánh giá 2 tháng','Chính sách giới thiệu nhân viên (referral bonus)']],
+ ['💰','Lương thưởng & Phúc lợi (C&B)',['Quy chế lương 3P (vị trí – năng lực – kết quả)','Chính sách thưởng KPI theo quý','Bảo hiểm sức khỏe bổ sung (Bảo Việt/PVI)','Quy định phụ cấp & công tác phí']],
+ ['⚖️','Nội quy & Pháp chế',['Nội quy lao động công ty','Quy chế xử lý kỷ luật lao động','Chính sách bảo mật thông tin & dữ liệu cá nhân NLĐ','Quy định giờ làm việc, tăng ca (OT)']],
+ ['✨','Văn hoá & Well-being',['Chính sách nghỉ phép năm & nghỉ không lương','Chính sách làm việc linh hoạt (hybrid 2 ngày/tuần)','Chương trình chăm sóc sức khoẻ tinh thần (EAP)']],
+ ['📘','Đào tạo & Phát triển',['Khung năng lực theo cấp bậc','Chính sách hỗ trợ học phí chứng chỉ chuyên môn','Lộ trình IDP cá nhân hoá theo 9-box']],
+ ['🤝','Quan hệ lao động',['Thoả ước lao động tập thể (TULĐTT)','Quy chế đối thoại định kỳ tại nơi làm việc','Quy trình tiếp nhận & xử lý khiếu nại']],
+];
+
+/* Thay đổi BHXH/BHYT khác (không có trong infographic VOV) — nguồn: luatvietnam.vn (tra cứu 2026-07-24) */
+const LAW_UPDATES={
+ headline:'Các thay đổi BHXH/BHYT khác từ 1/7/2026',
+ items:[
+  {big:'5,06 triệu đ',note:'Trợ cấp thai sản 1 lần/con (từ 4,68tr, +380.000đ)',tag:'#FF6392'},
+  {big:'25,3 triệu đ',note:'Trợ cấp mai táng (từ 23,4tr)',tag:'#7C89B8'},
+  {big:'12,65 triệu đ',note:'Trợ cấp 1 lần tai nạn lao động/bệnh nghề nghiệp — suy giảm 5% (từ 11,7tr)',tag:'#FF8A3D'},
+  {big:'HĐLĐ điện tử',note:'Có giá trị pháp lý đầy đủ như bản giấy — bắt buộc chữ ký số + đăng ký nền tảng quốc gia',tag:'#8B7CF6'},
+ ],
+ context:[
+  'Thuế TNCN: 7 bậc → 5 bậc; ngưỡng chịu thuế bậc 1 nâng lên 10 triệu đ/tháng (chi tiết biểu thuế: xem cách tính lương ở cockpit Thu)',
+  'Lương tối thiểu vùng tăng ~7,2%; Vùng I lên 5,31 triệu đ/tháng — kéo theo nền đóng BHXH bắt buộc',
+  'Bảo hiểm thất nghiệp mở rộng: áp dụng cho HĐLĐ từ 1 tháng trở lên (trước đây từ 3 tháng)',
+ ],
+ sources:[
+  ['Chính sách BHXH sẽ thay đổi thế nào từ 01/7/2026 — LuatVietnam','https://luatvietnam.vn/bao-hiem/chinh-sach-bhxh-se-thay-doi-the-nao-tu-01-7-2026-563-109458-article.html'],
+  ['4 quy định BHXH mới ảnh hưởng 2026 — LuatVietnam','https://luatvietnam.vn/bao-hiem/chinh-sach-ve-bao-hiem-xa-hoi-2026-4-quy-dinh-moi-anh-huong-hang-trieu-nguoi-563-105481-article.html'],
+  ['Luật Lao động 2026 — những thay đổi HR cần biết — HrOnline','https://hronline.vn/luat-lao-dong-2026-nhung-thay-doi-hr-can-biet-ngay'],
+ ],
+};
+
+/* Icon minh họa do ChatGPT vẽ (Andy cung cấp 2026-07-25), crop từ 1 ảnh gốc thành 5 file PNG nền trong suốt */
+const VOV_ICONS={
+ money:'assets/icons/vov/money.png',
+ shield:'assets/icons/vov/shield.png',
+ warn:'assets/icons/vov/warn.png',
+ pregnant:'assets/icons/vov/pregnant.png',
+ family:'assets/icons/vov/family.png',
+};
+
+/* Infographic VOV.VN — "Những chính sách mới nổi bật có hiệu lực từ tháng 7/2026" (đọc trực tiếp từ ảnh infographic gốc, 2026-07-25)
+   Cấu trúc thật của infographic: icon minh họa → 1 con số/stat nổi bật → caption ngắn → trích dẫn pháp lý dạng badge nhỏ
+   (không phải danh sách gạch đầu dòng dài, không phải emoji) — style neumorphism (card nổi, icon tròn, màu theo từng mục). */
+const VOV_INFOGRAPHIC={
+ banner:'Những chính sách mới nổi bật — có hiệu lực từ tháng 7/2026',
+ sections:[
+  {color:'#22b573',icon:'money',stat:'2.530.000đ/tháng',cap:'Lương cơ sở mới — CBCCVC & lực lượng vũ trang',legal:'NĐ 161/2026/NĐ-CP · 15/5/2026'},
+  {color:'#4C9AFF',icon:'shield',stat:'+8%',cap:'Trợ cấp BHXH hằng tháng, tính trên mức hưởng tháng 6/2026',legal:'NĐ 162/2026/NĐ-CP',
+   sub:[{v:'300.000đ/người/tháng',l:'nếu mức hưởng ≤ 3,5 triệu đ/tháng'},{v:'nâng lên 3,8 triệu đ/tháng',l:'nếu mức hưởng từ 3,5tr đến dưới 3,8tr/tháng'}]},
+  {color:'#E2584F',icon:'warn',stat:'50 triệu đồng',cap:'Mức phạt tối đa hành vi chia sẻ thông tin sai sự thật',legal:'NĐ 174/2026/NĐ-CP',full:true,
+   list:['Xuyên tạc lịch sử, phủ nhận thành tựu cách mạng','Phá hoại khối đại đoàn kết toàn dân tộc','Xúc phạm tôn giáo · phân biệt đối xử về giới, chủng tộc…']},
+  {color:'#F06A9E',icon:'pregnant',stat:'7 tháng',cap:'Nghỉ thai sản khi sinh con thứ hai (trước sinh tối đa 2 tháng)',legal:'Luật Dân số',
+   sub:[{v:'10 ngày',l:'lao động nam nghỉ khi vợ sinh con'}]},
+  {color:'#1f9e63',icon:'family',stat:'15,5 triệu đồng',cap:'Giảm trừ gia cảnh cho bản thân người nộp thuế/tháng',legal:'Luật Thuế TNCN',
+   sub:[{v:'6,2 triệu đồng/tháng',l:'giảm trừ mỗi người phụ thuộc'}]},
+ ],
+ sources:[
+  ['Những chính sách về xã hội nổi bật có hiệu lực từ 1/7/2026 — VOV.VN','https://vov.vn/xa-hoi/nhung-chinh-sach-ve-xa-hoi-noi-bat-co-hieu-luc-tu-172026-post1311065.vov'],
+ ],
+};
+
+/* Andy (CHRO) — người thứ 9, ngồi giữa trên */
+const ANDY={id:'andy',name:'Andy',role:'CHRO · Trưởng phòng',accent:'#8FB4E0'};
+const ALL=[...EMPLOYEES,ANDY];
+
+/* ngoại hình từng người: tóc/kiểu/kính/da/áo khoác */
+const LOOK={
+ linh:{skin:'#ffd9b8',hair:'#3a2b3f',style:'pony',glasses:0,jacket:null},
+ thu:{skin:'#ffe0c2',hair:'#2e2740',style:'bob',glasses:1,jacket:'#6b5ec9'},
+ uyen:{skin:'#ffd9b8',hair:'#4a3320',style:'bun',glasses:1,jacket:'#e0762a'},
+ ngoc:{skin:'#ffe0c2',hair:'#4a3a24',style:'wavy',glasses:0,jacket:null},
+ hung:{skin:'#f0c49a',hair:'#26262e',style:'short',glasses:0,jacket:'#3f7fd4'},
+ phuong:{skin:'#ffd9b8',hair:'#2e2622',style:'short',glasses:1,jacket:null},
+ lan:{skin:'#ffe0c2',hair:'#52324a',style:'bob',glasses:0,jacket:null},
+ dung:{skin:'#f0c49a',hair:'#23262f',style:'short',glasses:1,jacket:'#5f6b96'},
+ andy:{skin:'#f0c49a',hair:'#1f1f26',style:'short',glasses:0,jacket:'#2b3a55'},
+};
+
+/* ═══════════ AVATAR (SVG — có tóc, kính, áo khoác) ═══════════ */
+function avatar(e){
+  const L=LOOK[e.id]||{},skin=L.skin||'#ffd9b8',hair=L.hair||'#3a2f4d',shirt=e.accent,jk=L.jacket,st=L.style||'short',gl=L.glasses;
+  const cap=`<path d="M12 16 a12 12 0 0 1 24 0 v-2 a12 10 0 0 0 -24 0 z" fill="${hair}"/>`;
+  let H=cap;
+  if(st==='short')H=cap+`<path d="M12 15 q12 -13 24 0 q-3 -10 -12 -10 q-9 0 -12 10z" fill="${hair}"/>`;
+  else if(st==='bob')H=cap+`<path d="M11 15 q13 -15 26 0 l0 11 q-2 2 -5 2 l0 -10 q-8 -5 -16 0 l0 10 q-3 0 -5 -2z" fill="${hair}"/>`;
+  else if(st==='pony')H=`<ellipse cx="37" cy="22" rx="4.5" ry="9" fill="${hair}"/>`+cap;
+  else if(st==='bun')H=`<circle cx="24" cy="5" r="5" fill="${hair}"/>`+cap;
+  else if(st==='wavy')H=cap+`<path d="M11 15 q13 -15 26 0 q-2 4 -4 2 q-2 3 -4 1 q-2 3 -5 1 q-2 3 -4 1 q-2 2 -5 -2z" fill="${hair}"/>`;
+  const glass=gl?`<g stroke="#4a5568" stroke-width="1.3" fill="rgba(180,210,240,.35)"><rect x="14" y="18" width="7.5" height="6" rx="2.5"/><rect x="26.5" y="18" width="7.5" height="6" rx="2.5"/><line x1="21.5" y1="21" x2="26.5" y2="21"/></g>`:'';
+  const jkt=jk?`<path d="M9 31 q-3 12 -2 24 l7 0 l0 -22z" fill="${jk}"/><path d="M39 31 q3 12 2 24 l-7 0 l0 -22z" fill="${jk}"/>`:'';
+  return `<svg viewBox="0 0 48 60">
+   <ellipse cx="24" cy="57" rx="13" ry="2.6" fill="rgba(90,75,50,.12)"/>
+   <rect x="10" y="31" width="28" height="25" rx="11" fill="${shirt}"/>
+   <rect x="10" y="31" width="28" height="9" rx="9" fill="rgba(255,255,255,.18)"/>
+   ${jkt}
+   <path d="M20 31 l4 5 l4 -5 z" fill="#fff"/>
+   <rect x="23" y="35" width="2" height="12" rx="1" fill="rgba(0,0,0,.07)"/>
+   <circle cx="24" cy="20" r="12" fill="${skin}"/>
+   ${H}
+   <circle cx="19.5" cy="20.5" r="1.6" fill="#3a3340"/><circle cx="28.5" cy="20.5" r="1.6" fill="#3a3340"/>
+   ${glass}
+   <path d="M21 25 q3 2.5 6 0" stroke="#c98b6b" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+   <circle cx="16.5" cy="23.5" r="2.1" fill="#ff9db0" opacity=".45"/><circle cx="31.5" cy="23.5" r="2.1" fill="#ff9db0" opacity=".45"/>
+  </svg>`;
+}
+
+/* ═══════════ KHO SUY NGHĨ (thought bubbles) ═══════════ */
+const THINK={
+ linh:['Phải gọi anh An hẹn phỏng vấn IT mai','CV bạn Backend này ổn đấy 👀','Đăng tin tuyển Designer chưa nhỉ?','Offer bạn Marketing gửi chiều nay','Thị trường tuyển khó thật...'],
+ thu:['Chốt bảng lương trước thứ 6','Equity gap phòng Kỹ thuật hơi lớn','Số này chưa khớp, tính lại...','File lương đừng để ai thấy 🤫','Ngân sách năm nay hơi căng'],
+ uyen:['Điều khoản này phải rà lại','HĐLĐ bạn mới ký chưa ta?','Luật mới 2026 đổi gì nhỉ?','Non-compete cần chặt hơn','Rủi ro chỗ này phải flag'],
+ ngoc:['Team dạo này hơi trầm...','Townhall tháng này làm gì vui ta?','Pulse tụt 3 điểm rồi 😟','Nên tổ chức team building biển','Cần lắng nghe mọi người hơn'],
+ hung:['Sơ đồ phòng KD vẽ lại đi','Span of control chỗ này rộng quá','Headcount 2027 tính sao đây','Thêm 1 layer quản lý được ko?','Cấu trúc phải support chiến lược'],
+ phuong:['Dashboard flight-risk gần xong 📊','Turnover Q2 tăng bất thường','Cần thêm data mới kết luận','Biểu đồ này dùng màu gì đẹp ta','Số liệu là chân lý 🤓'],
+ lan:['Chiều nay 1-1 với bạn Minh','Bạn ấy hình như muốn nghỉ...','Phải lắng nghe team Vận hành','Ghi nhận nguyện vọng team KT','Giữ người là ưu tiên số 1'],
+ dung:['Thỏa ước sắp tới hạn rà soát','Đối thoại công đoàn tuần sau','Quy chế thưởng cần cập nhật','Đúng quy trình là an toàn','Không thích bất ngờ đâu nha'],
+ andy:['Quý này team làm tốt đấy 👏','Nên đẩy dự án nào trước nhỉ?','Cần họp council vụ tuyển dụng','Ai sắp tới hạn tăng lương ta?','Scale được không mới quan trọng'],
+};
+const IDLE=['Tối nay ăn gì ta? 🍜','Thèm trà sữa quá 🧋','Cuối tuần đi đâu chơi nhỉ?','Sale 9.9 tới rồi 🛒','Phim mới ra hay không ta? 🎬','Nhớ đặt cơm trưa 🍱','Làm ly cà phê không? ☕','Trời hôm nay đẹp ghê 🌤️'];
+const DISTRACT=['Lướt tí điện thoại 📱','Ván game nữa thôi 🎮','Story này vui ghê 😆','5 phút nữa làm tiếp...','Ối tin nhắn crush 😳','Xem reels chút xíu 🤳'];
+const MEETT=['Ý này hay đấy 🤔','Không đồng ý lắm...','Phải phản biện chỗ này','Ghi chú lại điểm này ✍️','Nghe hợp lý đấy'];
+const COLLABT=['Cùng xem cái này nào','Chỗ này làm sao nhỉ?','À hiểu rồi!','Bạn giúp mình chút nha'];
+const ANGRY=['Sao lại lỗi nữa trời 😤','Deadline gấp quá đi!','Ai sửa hỏng file này?!','Lại phải làm lại lần 3 😑','Wifi lag muốn xỉu 😠','Họp gì mà dài thế...'];
+
+/* ═══════════ RENDER SIDEBAR + FLOOR ═══════════ */
+const $=s=>document.querySelector(s), floor=$('#floor');
+const empList=$('#empList'); const persons={};
+
+/* ═══════════ LAYOUT: 9 chỗ ngồi (Andy giữa trên) ═══════════ */
+// f: hướng mặt (1 phải · -1 trái) → 2 người 1 cặp nhìn nhau qua bàn
+const SEAT={
+  andy:{x:50,y:15,f:1},                             // CHRO — giữa trên
+  linh:{x:20,y:34,f:1},  uyen:{x:34,y:34,f:-1},     // dãy TRÁI — cặp trên
+  ngoc:{x:20,y:60,f:1},  lan:{x:34,y:60,f:-1},      // dãy TRÁI — cặp dưới
+  phuong:{x:56,y:34,f:1},thu:{x:70,y:34,f:-1},      // dãy PHẢI — cặp trên (Thu ĐỐI DIỆN Phương)
+  hung:{x:56,y:60,f:1},  dung:{x:70,y:60,f:-1},     // dãy PHẢI — cặp dưới
+};
+const RSHORT={linh:'Tuyển dụng',thu:'C&B',uyen:'Pháp chế',ngoc:'Văn hóa',hung:'Org Design',phuong:'Analytics',lan:'Công đoàn',dung:'Quan hệ LĐ',andy:'CHRO'};
+const DOOR={x:2,y:52}, CORR=47;                      // lối đi ngang giữa 2 dãy
+const MEET=[{x:80,y:16},{x:88,y:15},{x:80,y:26},{x:88,y:26},{x:82,y:36},{x:90,y:35}]; // phòng họp top-right
+const PANTRY=[{x:8,y:88},{x:13,y:90},{x:10,y:83}];
+
+ALL.forEach(e=>{
+  const s=SEAT[e.id];
+  if(e.id!=='andy'){                                // sidebar chỉ 8 nhân viên
+    const row=document.createElement('div');row.className='emp';row.dataset.id=e.id;
+    row.innerHTML=`<div class="ava">${avatar(e)}</div><div class="meta"><div class="nm">${e.name}</div><div class="rl">${e.role}</div></div><div class="st on"></div>`;
+    row.onclick=()=>openCockpit(e.id);
+    empList.appendChild(row);
+  }
+  // person — bắt đầu ngoài cửa, chưa vào làm
+  const p=document.createElement('div');p.className='person';p.dataset.id=e.id;
+  p.style.left=DOOR.x+'%';p.style.top=DOOR.y+'%';p.style.opacity='0';p.style.setProperty('--f',s.f);
+  p.innerHTML=`<div class="tag"><span class="nm">${e.id==='andy'?'👑 Andy':e.name}</span><span class="rl">${RSHORT[e.id]}</span></div><div class="bubble"></div><div class="body">${avatar(e)}</div><div class="shadow"></div>`;
+  p.onclick=()=>openCockpit(e.id);
+  floor.appendChild(p);
+  persons[e.id]={el:p,e,seat:s,state:'out'};
+});
+
+/* ═══════════ NỘI THẤT (bàn gỗ + màn hình) ═══════════ */
+const DESKS=[
+ {x:50,y:22,w:150,h:36,mon:'c',obj:[['💻',30],['☕',68]]},   // bàn Andy (to)
+ {x:27,y:34,w:104,h:34,mon:'lr',obj:[['📱',11],['📋',89]]},  // Linh | Uyên
+ {x:27,y:60,w:104,h:34,mon:'lr',obj:[['🪴',10],['☕',90]]},   // Ngọc | Lan
+ {x:63,y:34,w:104,h:34,mon:'lr',obj:[['📊',11],['💻',89]]},   // Phương | Thu
+ {x:63,y:60,w:104,h:34,mon:'lr',obj:[['📐',11],['📄',89]]},   // Hùng | Dung
+];
+floor.insertAdjacentHTML('afterbegin',
+ DESKS.map(d=>{let m=d.mon==='lr'?`<div class="scr l"></div><div class="scr r"></div>`
+    :`<div class="scr" style="left:50%;transform:translate(-50%,-50%)"></div>`;
+   let o=(d.obj||[]).map(x=>`<div class="obj" style="left:${x[1]}%">${x[0]}</div>`).join('');
+   return `<div class="desk" style="left:${d.x}%;top:${d.y}%;width:${d.w}px;height:${d.h}px">${m}${o}</div>`;}).join(''));
+
+/* ═══════════ TƯỜNG · ỐNG LẠNH · ĐÈN · CỬA · PHÒNG HỌP · PANTRY ═══════════ */
+floor.insertAdjacentHTML('afterbegin',`
+ <div class="wall"></div>
+ <div class="duct"></div>
+ <div class="pendant" style="left:20%"></div><div class="pendant" style="left:40%"></div><div class="pendant" style="left:60%"></div>
+ <div class="board" style="left:26%;width:15%"></div>
+ <div class="clockw" style="left:47%"></div>
+ <!-- cửa tự động bên trái — 2 cánh trượt dọc, mở theo phối cảnh -->
+ <div class="door" id="door" style="top:40%;height:28%;width:7%">
+   <div class="dframe"></div><div class="dtrack"></div>
+   <div class="dpanel t"></div><div class="dpanel b"></div>
+   <div class="dsensor"></div><div class="dmat"></div></div>
+ <!-- PHÒNG HỌP (top-right) — không viền box, có máy chiếu + màn chiếu -->
+ <div class="zone plain" style="right:1.5%;top:13.5%;width:25%;height:34%"><span class="zl">🗣️ PHÒNG HỌP</span>
+   <div class="screen">📊</div>
+   <div class="projector"></div>
+   <div class="mtable" style="left:24%;top:46%;width:52%;height:32%"></div>
+   <div class="mchair" style="left:20%;top:40%"></div><div class="mchair" style="left:46%;top:35%"></div><div class="mchair" style="left:72%;top:40%"></div>
+   <div class="mchair" style="left:20%;top:80%"></div><div class="mchair" style="left:46%;top:84%"></div><div class="mchair" style="left:72%;top:80%"></div></div>
+ <!-- PANTRY (bottom-left) -->
+ <div class="zone solid" style="left:1.5%;bottom:2%;width:16%;height:22%"><span class="zl">☕ PANTRY</span>
+   <div class="counter" style="left:12%;top:44%;width:36%;height:42%">🫖</div>
+   <div class="counter" style="left:56%;top:44%;width:32%;height:42%">🧋</div></div>
+ <!-- cây nước + máy photocopy (phải pantry) -->
+ <div class="cooler" style="left:19.5%;bottom:5%"><div class="jug"></div><div class="base"></div></div>
+ <div class="copier" style="left:24%;bottom:3%"></div>
+ <!-- KHU THƯ GIÃN (bottom-right): sofa dài + bàn tròn + đệm lười -->
+ <div class="zone plain" style="right:1.5%;bottom:2%;width:23%;height:30%"><span class="zl">🛋️ THƯ GIÃN</span>
+   <div class="sofa" style="left:8%;top:26%;width:58%;height:15px"></div>
+   <div class="sofa" style="left:2%;top:30%;width:15px;height:44%"></div>
+   <div class="rtable" style="left:34%;top:56%;width:28px;height:28px"></div>
+   <div class="beanbag" style="left:66%;top:40%;background:linear-gradient(#ffb27a,#ef8b4d)"></div>
+   <div class="beanbag" style="left:70%;top:66%;background:linear-gradient(#7fd4c4,#48b6a4)"></div>
+   <div class="beanbag" style="left:40%;top:80%;background:linear-gradient(#ff9db8,#ef7090)"></div></div>
+ <!-- cây xanh văn phòng (bỏ xương rồng) -->
+ <div class="plant" style="left:2%;top:15%"><div class="leaf">🪴</div><div class="pot"></div></div>
+ <div class="plant" style="left:45%;top:42%"><div class="leaf">🎍</div><div class="pot"></div></div>
+ <div class="plant" style="left:45%;bottom:6%"><div class="leaf">☘️</div><div class="pot"></div></div>
+ <div class="plant" style="left:2%;bottom:30%"><div class="leaf">🌱</div><div class="pot"></div></div>
+ <div class="plant" style="left:52%;top:70%"><div class="leaf">🌿</div><div class="pot"></div></div>
+`);
+
+/* stats */
+const dateStr=new Date().toLocaleDateString('vi-VN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+$('#dateline').textContent=dateStr;
+$('#meetDate').textContent=dateStr+' · 8 thành viên';
+$('#cTasks').textContent=EMPLOYEES.reduce((s,e)=>s+e.tasks.length,0);
+// clock chip
+$('.chips').insertAdjacentHTML('afterbegin','<div class="chip"><b id="clk">08:00</b><span id="phase">Vào làm</span></div>');
+
+/* ═══════════ WALK ENGINE (đi bộ theo lối đi) ═══════════ */
+const SPEED=62; // ms mỗi 1% quãng đường → tốc độ người đi
+function bub(id,emo){persons[id].el.querySelector('.bubble').textContent=emo||'';persons[id].el.classList.toggle('act',!!emo);}
+function walkTo(id,tx,ty,cb){
+  const P=persons[id],el=P.el;
+  const seq=(P.w=(P.w||0)+1);                            // token — walk mới hủy walk cũ
+  el.classList.remove('working');el.classList.add('walking');P.state='walking';refreshActive();
+  const cx=parseFloat(el.style.left),cy=parseFloat(el.style.top);
+  const wps=[];
+  if(Math.abs(cy-CORR)>6) wps.push({x:cx,y:CORR});      // ra lối đi
+  if(Math.abs(tx-cx)>4)   wps.push({x:tx,y:CORR});       // đi dọc lối
+  wps.push({x:tx,y:ty});                                  // tới đích
+  let i=0;
+  (function leg(){
+    if(P.w!==seq)return;                                 // đã bị walk mới thay thế → dừng chuỗi cũ
+    if(i>=wps.length){el.classList.remove('walking');P.state=P.dest||'idle';if(cb)cb();return;}
+    const w=wps[i++],sx=parseFloat(el.style.left),sy=parseFloat(el.style.top);
+    const d=Math.hypot(w.x-sx,w.y-sy),dur=Math.max(220,d*SPEED);
+    el.style.setProperty('--f',w.x<sx-0.4?-1:1);
+    el.style.transitionDuration=dur+'ms';
+    void el.offsetWidth;                                 // reflow → transition chạy kể cả khi đổi tab
+    el.style.left=w.x+'%';el.style.top=w.y+'%';
+    setTimeout(leg,dur+30);
+  })();
+}
+function sit(id){const P=persons[id];P.dest='working';walkTo(id,P.seat.x,P.seat.y,()=>{
+  P.el.style.setProperty('--f',1);P.el.classList.add('working');bub(id,'');P.state='working';refreshActive();});}
+let _doorT;
+function doorOpen(){const d=document.getElementById('door');if(!d)return;d.classList.add('open');clearTimeout(_doorT);_doorT=setTimeout(()=>d.classList.remove('open'),1900);}
+function arrive(id){doorOpen();const P=persons[id];P.el.style.opacity='1';sit(id);}
+function leave(id){const P=persons[id];P.dest='out';walkTo(id,DOOR.x,DOOR.y,()=>{doorOpen();P.el.style.opacity='0';P.state='out';bub(id,'');refreshActive();});}
+const LOUNGE=[{x:83,y:80},{x:88,y:75},{x:86,y:87}];
+function goLounge(id,spot){const P=persons[id];P.dest='lounge';walkTo(id,spot.x,spot.y,()=>{bub(id,'😌');P.state='lounge';refreshActive();});}
+function goMeet(id,spot){const P=persons[id];P.dest='meeting';walkTo(id,spot.x,spot.y,()=>{bub(id,'🗣️');P.state='meeting';refreshActive();});}
+function goPantry(id,spot,emo){const P=persons[id];P.dest='pantry';walkTo(id,spot.x,spot.y,()=>{bub(id,emo);P.state='pantry';refreshActive();});}
+function goWater(id){goPantry(id,PANTRY[0],'💧');}
+function collab(id,withId){const o=persons[withId].seat;const P=persons[id];P.dest='collab';
+  walkTo(id,o.x+7,o.y+3,()=>{bub(id,'💬');P.state='collab';refreshActive();});}
+function refreshActive(){$('#cActive').textContent=Object.values(persons).filter(P=>['meeting','pantry','collab','walking','lounge'].includes(P.state)).length;}
+
+/* ═══════════ SUY NGHĨ (thought bubbles random) ═══════════ */
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+function showThought(id){
+  const P=persons[id];if(!P||P.el.style.opacity==='0')return;
+  if(['out','walking'].includes(P.state))return;
+  let t=P.el.querySelector('.thought');
+  if(!t){t=document.createElement('div');t.className='thought';P.el.appendChild(t);}
+  let text,cls='';
+  if(P.state==='meeting')text=pick(MEETT);
+  else if(P.state==='collab')text=pick(COLLABT);
+  else{const r=Math.random();
+    if(r<0.5){text=pick(THINK[id]||THINK.andy);cls='work';}
+    else if(r<0.72){text=pick(IDLE);cls='idle';}
+    else if(r<0.86){text=pick(DISTRACT);cls='game';}
+    else{text=pick(ANGRY);cls='angry';}}
+  t.className='thought '+cls;t.textContent=text;
+  requestAnimationFrame(()=>t.classList.add('show'));
+  clearTimeout(P._tht);P._tht=setTimeout(()=>t.classList.remove('show'),3900);
+}
+function thoughtTick(){
+  const c=Object.keys(persons).filter(id=>['working','meeting','collab','lounge'].includes(persons[id].state)&&persons[id].el.style.opacity!=='0');
+  if(c.length){showThought(pick(c));if(Math.random()<0.4)showThought(pick(c));}
+  setTimeout(thoughtTick,2600+Math.random()*2200);
+}
+setTimeout(thoughtTick,3000);
+
+/* ═══════════ ĐỒNG HỒ 1 NGÀY (08:00–17:00 nén ~5 phút) ═══════════ */
+const DAY_MS=300000, V0=480, V1=1020;           // 480..1020 phút ảo
+let dayStart=performance.now(), lastV=V0, seq=0;
+function vmin(){return V0+((performance.now()-dayStart)%DAY_MS)/DAY_MS*(V1-V0);}
+function phaseLabel(v){if(v<505)return'Vào làm';if(v<720)return'Đang làm việc';if(v<775)return'Nghỉ trưa';
+  if(v<900)return'Làm việc chiều';if(v<935)return'Giải lao ☕';if(v<1008)return'Làm việc';return'Tan làm';}
+// lịch trong ngày: [phút ảo, hành động]
+function stagger(ids,fn,gap){ids.forEach((id,k)=>setTimeout(()=>fn(id),k*gap));}
+const IDS=Object.keys(persons);
+const AGENDA=[
+ [480,()=>stagger(IDS,arrive,500)],                                   // vào làm, lần lượt
+ [600,()=>{['andy','linh','thu','hung'].forEach((id,k)=>setTimeout(()=>goMeet(id,MEET[k]),k*400));}], // họp sáng 10:00
+ [635,()=>['andy','linh','thu','hung'].forEach(sit)],                 // họp xong về bàn
+ [665,()=>{goWater('phuong');collab('ngoc','lan');}],                 // giải lao nhẹ
+ [685,()=>{sit('phuong');sit('ngoc');}],
+ [720,()=>stagger(IDS,leave,350)],                                    // 12:00 ăn trưa → ra ngoài
+ [778,()=>stagger(IDS,arrive,450)],                                   // ~13:00 vào lại
+ [840,()=>{['ngoc','lan','uyen'].forEach((id,k)=>setTimeout(()=>goMeet(id,MEET[k]),k*400));}], // họp chiều 14:00
+ [875,()=>['ngoc','lan','uyen'].forEach(sit)],
+ [900,()=>{goPantry('thu',PANTRY[1],'🧋');goPantry('phuong',PANTRY[2],'☕');goLounge('dung',LOUNGE[0]);goLounge('lan',LOUNGE[1]);}], // 15:00 giải lao: pantry + thư giãn
+ [935,()=>['thu','phuong','dung','lan'].forEach(sit)],
+ [965,()=>{collab('hung','phuong');goWater('linh');goLounge('uyen',LOUNGE[2]);}],
+ [988,()=>{sit('hung');sit('linh');sit('uyen');}],
+ [1010,()=>stagger(IDS,leave,320)],                                   // 17:00 tan làm
+];
+let fired=new Set();
+function clock(){
+  const v=vmin();
+  $('#clk').textContent=String(Math.floor(v/60)).padStart(2,'0')+':'+String(Math.floor(v%60)).padStart(2,'0');
+  $('#phase').textContent=phaseLabel(v);
+  if(v<lastV){fired=new Set();seq++;}                                  // sang ngày mới → reset lịch
+  lastV=v;
+  AGENDA.forEach(([t,fn],i)=>{if(v>=t&&!fired.has(i)){fired.add(i);fn();}});
+  requestAnimationFrame(()=>{});
+  setTimeout(clock,400);
+}
+clock();
+
+/* ═══════════ COCKPIT ═══════════ */
+const ck=$('#cockpit'), ckBody=$('#ckBody');
+function bar(k,accent){const[l,v,t]=k;const pct=Math.min(100,Math.round(v/t*100));return `
+ <div class="kpi"><div class="kt"><b>${l}</b><span>${v} / ${t}</span></div>
+ <div class="bar"><i style="width:${pct}%;background:${accent}"></i></div></div>`;}
+function nineBox(nb,accent){let h='';for(let po=2;po>=0;po--)for(let p=0;p<3;p++){const hit=(p===nb.p&&po===nb.po);h+=`<div class="${hit?'hit':''}" style="${hit?'background:'+accent:''}">${hit?'★':''}</div>`;}return h;}
+function openCockpit(id){
+  if(id==='andy'){
+    ckBody.innerHTML=`
+     <div class="ck-head"><div class="ava">${avatar(ANDY)}</div>
+       <div><h3>👑 Andy Trần</h3><div class="role" style="color:#5a86c0">CHRO · Trưởng phòng Nhân sự</div></div></div>
+     <div class="ck-sig">Đây là <b>bạn</b> — người chủ trì phòng. Ngồi giữa trên, dẫn dắt họp tuần và đưa vấn đề gai góc lên CHRO Council Room để cả 8 chuyên gia phản biện.</div>
+     <div class="card"><h4>Vai trò trong phòng</h4>
+       <div class="task"><span class="dot" style="background:#5a86c0"></span><div>Chủ trì họp tuần, ra quyết định cuối</div></div>
+       <div class="task"><span class="dot" style="background:#5a86c0"></span><div>Cân đối Retention · Compliance · Culture · Budget</div></div>
+       <div class="task"><span class="dot" style="background:#5a86c0"></span><div>Escalate lên CHRO Council khi cần phản biện sâu</div></div></div>
+     <button class="btn primary" style="margin-top:14px" onclick="document.getElementById('btnMeet').click()">🗓️ Mở họp tuần</button>`;
+    document.querySelectorAll('.emp').forEach(r=>r.classList.remove('active'));
+    ck.classList.add('open');return;
+  }
+  const e=EMPLOYEES.find(x=>x.id===id);const pf=e.profile;
+  document.querySelectorAll('.emp').forEach(r=>r.classList.toggle('active',r.dataset.id===id));
+  ckBody.innerHTML=`
+   <div class="ck-head"><div class="ava">${avatar(e)}</div>
+     <div><h3>${e.name}</h3><div class="role" style="color:${e.accent}">${e.role}</div></div></div>
+   <div class="ck-sig">${DESC[e.id]}</div>
+   <div class="tabs">
+     <div class="tab active" data-t="0">Hôm nay</div>
+     <div class="tab" data-t="1">KPI</div>
+     <div class="tab" data-t="2">Kết quả</div>
+     <div class="tab" data-t="3">Hồ sơ</div>
+   </div>
+   <div class="panel active">
+     <div class="card"><h4>Task hôm nay</h4>
+       ${e.tasks.map(t=>`<div class="task"><span class="dot" style="background:${e.accent}"></span><div>${t[0]}${t[1]?`<small>${t[1]}</small>`:''}</div></div>`).join('')}</div>
+     <div class="card"><h4>Skill để thực hiện <span class="pill mock">SKILL_INDEX · mock</span></h4>
+       ${e.skills.map(s=>`<span class="skill">${s}</span>`).join('')}</div>
+   </div>
+   <div class="panel">
+     <div class="card"><h4>Tuần</h4>${bar(e.kpi.week,e.accent)}</div>
+     <div class="card"><h4>Tháng</h4>${bar(e.kpi.month,e.accent)}</div>
+     <div class="card"><h4>Quý</h4>${bar(e.kpi.quarter,e.accent)}</div>
+     <div class="card"><h4>Năm</h4>${bar(e.kpi.year,e.accent)}</div>
+   </div>
+   <div class="panel">${renderResults(e)}</div>
+   <div class="panel">
+     <div class="card"><h4>Hồ sơ & lương <span class="pill mock">mock</span></h4>
+       <div class="pf"><span>Thâm niên</span><b>${pf.tenure}</b></div>
+       <div class="pf"><span>Lương hiện tại</span><b>${pf.salary}</b></div>
+       <div class="pf"><span>Lần tăng gần nhất</span><b>${pf.raise[0]} <span class="pill ${pf.raise[1]}">${pf.raise[1]==='warn'?'đến hạn xét':'ổn'}</span></b></div>
+       <div class="pf"><span>Đánh giá năm rồi</span><b>${pf.review[0]}</b></div>
+     </div>
+     <div class="card"><h4>Vị trí 9-box</h4>
+       <div class="nb">${nineBox(pf.nb,e.accent)}</div>
+       <div class="pf" style="border:none;padding-top:11px"><span>Hiệu suất × Tiềm năng</span><b>${['Thấp','Vừa','Cao'][pf.nb.p]} × ${['Thấp','Vừa','Cao'][pf.nb.po]}</b></div>
+     </div>
+     <div class="card"><h4>Đã đào tạo</h4>${pf.training.map(s=>`<span class="skill">✓ ${s}</span>`).join('')}</div>
+     <div class="card"><h4>Lịch IDP sắp tới</h4>
+       ${pf.idp.map(t=>`<div class="task"><span class="dot" style="background:${e.accent}"></span><div>${t.quarter} — ${t.topic} <span class="pill ${t.status}">${({plan:'kế hoạch',inprogress:'đang học',done:'hoàn thành'})[t.status]}</span></div></div>`).join('')}</div>
+   </div>`;
+  ckBody.querySelectorAll('.tab').forEach(tab=>tab.onclick=()=>{
+    ckBody.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    ckBody.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    tab.classList.add('active');ckBody.querySelectorAll('.panel')[+tab.dataset.t].classList.add('active');
+  });
+  ck.classList.add('open');
+}
+$('#ckClose').onclick=()=>{ck.classList.remove('open');document.querySelectorAll('.emp').forEach(r=>r.classList.remove('active'));};
+
+/* ═══════════ HỌP TUẦN → COUNCIL ═══════════ */
+const scrim=$('#scrim');
+$('#issues').innerHTML=ISSUES.map(([id,txt])=>{const e=EMPLOYEES.find(x=>x.id===id);
+  return `<div class="issue"><span class="who" style="background:${e.accent}">${e.name}</span><div class="txt">${txt}</div></div>`;}).join('');
+function openMeet(){scrim.classList.add('open');}
+$('#btnMeet').onclick=openMeet; $('#navMeet').onclick=openMeet;
+$('#btnCloseMeet').onclick=()=>scrim.classList.remove('open');
+scrim.onclick=ev=>{if(ev.target===scrim)scrim.classList.remove('open');};
+$('#btnCouncil').onclick=()=>{window.open('../../../../AgentOS/CHRO-Council-Room/index.html','_blank');};
+
+/* ═══════════ KẾT QUẢ CÔNG VIỆC (tab "Kết quả" trong cockpit) ═══════════ */
+function fmtVND(n){return n.toLocaleString('vi-VN')+'đ';}
+/* Thuế TNCN — biểu lũy tiến 5 bậc rút gọn 2026 (nguồn: thuvienphapluat.vn — Công thức tính thuế TNCN 2026 rút gọn) */
+const PIT_BRACKETS_2026=[[10000000,.05,0],[30000000,.10,500000],[60000000,.20,3500000],[100000000,.30,9500000],[Infinity,.35,14500000]];
+const PIT_GIAM_TRU_BAN_THAN=15500000; // giảm trừ gia cảnh bản thân/tháng 2026 [MOCK: giả định 0 người phụ thuộc]
+function calcPIT(taxable){
+  if(taxable<=0)return 0;
+  const [,rate,deduct]=PIT_BRACKETS_2026.find(b=>taxable<=b[0]);
+  return Math.max(0,Math.round((taxable*rate-deduct)/1000)*1000);
+}
+function payrollRows(){
+  return EMPLOYEES.map(p=>{
+    const base=parseInt(p.profile.salary.replace(/\D/g,''),10);
+    const allowance=Math.round(base*0.05/1000)*1000;
+    const bonusPct=Math.min(1,p.kpi.year[1]/p.kpi.year[2]);
+    const bonus=Math.round(base*0.1*bonusPct/1000)*1000;
+    const bhxh=Math.round(base*0.105/1000)*1000;
+    const gross=base+allowance+bonus;
+    const taxable=Math.max(0,gross-bhxh-PIT_GIAM_TRU_BAN_THAN);
+    const pit=calcPIT(taxable);
+    return {name:p.name,role:p.role,base,allowance,bonus,bhxh,pit,net:gross-bhxh-pit};
+  });
+}
+function renderResults(e){
+  const r=e.results;
+  let out=`<div class="card"><h4>Kết quả công việc <span class="pill mock">mock</span></h4><div class="insight">📌 ${r.insight}</div></div>`;
+  if(r.stats)out+=`<div class="card"><div class="grid4">${r.stats.map(s=>`<div class="statc"><b>${s[1]}</b><span>${s[0]} · ${s[2]}</span></div>`).join('')}</div></div>`;
+  if(r.payroll){
+    const rows=payrollRows();
+    out+=`<div class="card"><h4>Bảng lương phòng Nhân sự — kỳ hiện tại <span class="pill mock">mock</span></h4>
+     <div style="overflow-x:auto"><table class="nbtable" style="min-width:640px"><tr><th>Nhân viên</th><th>Lương CB</th><th>Phụ cấp</th><th>Thưởng KPI</th><th>BHXH 10.5%</th><th>Thuế TNCN</th><th>Thực lãnh</th></tr>
+     ${rows.map(x=>`<tr><td><b>${x.name}</b><br><span style="color:var(--muted);font-size:10.5px">${x.role}</span></td><td>${fmtVND(x.base)}</td><td>${fmtVND(x.allowance)}</td><td>${fmtVND(x.bonus)}</td><td>-${fmtVND(x.bhxh)}</td><td>-${fmtVND(x.pit)}</td><td><b>${fmtVND(x.net)}</b></td></tr>`).join('')}
+     </table></div>
+     <div class="srcnote">Thuế TNCN tính theo biểu lũy tiến 5 bậc 2026, giảm trừ gia cảnh bản thân 15,5tr/tháng (giả định 0 người phụ thuộc) — <a href="https://thuvienphapluat.vn/phap-luat-doanh-nghiep/bai-viet/cach-tinh-thue-tncn-2026-theo-phuong-phap-rut-gon-17748.html" target="_blank" rel="noopener">nguồn công thức</a></div></div>`;
+  }
+  if(r.table)out+=`<div class="card"><h4>Chi tiết theo giai đoạn</h4>
+     <table class="nbtable"><tr>${r.table.head.map(h=>`<th>${h}</th>`).join('')}</tr>
+     ${r.table.rows.map(row=>`<tr>${row.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</table></div>`;
+  return out;
+}
+
+/* ═══════════ VIEW: KPI PHÒNG ═══════════ */
+function renderKpiView(){
+  const yearPct=EMPLOYEES.map(e=>({e,pct:Math.round(e.kpi.year[1]/e.kpi.year[2]*100)})).sort((a,b)=>b.pct-a.pct);
+  const top=yearPct[0],bottom=yearPct[yearPct.length-1];
+  $('#viewKpi').innerHTML=`
+   <div class="vhead"><div><h2>📊 KPI phòng Nhân sự</h2><div class="sub">Bức tranh sức khỏe cả phòng — năm 2026 <span class="pill mock">mock dept-level</span></div></div></div>
+   <div class="grid4">${DEPT_KPI.map(([l,v,t,ic,tr])=>`<div class="statc"><span>${ic} ${l}</span><b>${v}${String(l).includes('%')?'%':''}</b><span class="tr ${tr}">mục tiêu ${t}${String(l).includes('%')?'%':''}</span></div>`).join('')}</div>
+   <div class="srcnote">Khung tham chiếu: S17_KPIFramework.md (BSC 4 nhóm: Tài chính · Khách hàng · Hệ thống/Quy trình · Nguồn Nhân lực) — BCM_KPI_Framework_v2.html chưa có dữ liệu populated cho HR&Admin nên các chỉ số trên là mock theo chuẩn ngành, chờ Andy confirm số thật.</div>
+   <div class="card">
+     <h4>Đóng góp theo chức năng — KPI năm chủ đạo của từng người</h4>
+     <div class="contrib">${EMPLOYEES.map(e=>`<div class="ccard" data-id="${e.id}"><div class="who"><div class="ava">${avatar(e)}</div><div><div class="nm">${e.name}</div><div class="rl">${e.role}</div></div></div>${bar(e.kpi.year,e.accent)}</div>`).join('')}</div>
+   </div>
+   <div class="card">
+     <h4>${top.e.name} dẫn đầu đạt ${top.pct}% mục tiêu năm — ${bottom.e.name} thấp nhất (${bottom.pct}%)</h4>
+     <div class="hbars">${yearPct.map(({e,pct})=>`<div class="hbrow"><div class="lb">${e.name}</div><div class="tk"><i style="width:${Math.min(100,pct)}%;background:${e.accent}"></i></div><div class="vl">${pct}%</div></div>`).join('')}</div>
+     <div class="insight">📌 ${top.e.name} (${top.e.role}) vượt mục tiêu nhờ ${top.e.kpi.year[0].toLowerCase()} đạt ${top.e.kpi.year[1]}/${top.e.kpi.year[2]}; ${bottom.e.name} cần hỗ trợ thêm ở ${bottom.e.kpi.year[0].toLowerCase()}.</div>
+   </div>`;
+  $('#viewKpi').querySelectorAll('.ccard').forEach(c=>c.onclick=()=>openCockpit(c.dataset.id));
+}
+
+/* ═══════════ VIEW: LƯỚI 9-BOX ═══════════ */
+const NB_LABEL=[['Rủi ro','Ổn định','Chuyên gia vững'],['Cần cải thiện','Nhân sự cốt lõi','Tiềm năng cao'],['Dấu hỏi (?)','Đang phát triển','Ngôi sao ⭐']];
+const NB_BG=[['#ffe3e3','#eef1f8','#eef1f8'],['#eef1f8','#eef1f8','#e2f7ee'],['#eef1f8','#e2f7ee','#d3f3e3']];
+function nbAction(p,po){
+  if(p===2&&po===2)return'Giữ chân ưu tiên + phát triển lãnh đạo';
+  if(p===0&&po===0)return'Đánh giá lại sát sao / kèm cặp';
+  if(p===2)return'Giữ chân';
+  if(po===2)return'Phát triển, giao thử thách mới';
+  return'Kèm cặp, theo dõi thêm';
+}
+function renderNineboxView(){
+  let grid='';
+  for(let po=2;po>=0;po--){
+    for(let p=0;p<3;p++){
+      const inCell=EMPLOYEES.filter(e=>e.profile.nb.p===p&&e.profile.nb.po===po);
+      grid+=`<div class="cell" style="background:${NB_BG[po][p]}"><div class="lbl">${NB_LABEL[po][p]}</div>
+        <div class="avs">${inCell.map(e=>`<div class="ava" title="${e.name} — ${e.role}" data-id="${e.id}">${avatar(e)}</div>`).join('')}</div></div>`;
+    }
+  }
+  $('#viewNinebox').innerHTML=`
+   <div class="vhead"><div><h2>🧩 Lưới 9-box nhân tài</h2><div class="sub">Hiệu suất × Tiềm năng — 8/8 nhân sự đã được xếp ô</div></div></div>
+   <div style="display:grid;grid-template-columns:2fr 1fr;gap:16px;flex:1;min-height:0">
+     <div class="card" style="display:flex;flex-direction:column">
+       <div class="nb9"><div class="axy">Tiềm năng ↑</div>${grid}</div>
+       <div class="axx">Hiệu suất →</div>
+     </div>
+     <div class="card" style="overflow-y:auto">
+       <h4>Hành động gợi ý</h4>
+       <table class="nbtable"><tr><th>Người</th><th>Ô hiện tại</th><th>Gợi ý</th></tr>
+       ${EMPLOYEES.map(e=>`<tr><td><b>${e.name}</b></td><td>${NB_LABEL[e.profile.nb.po][e.profile.nb.p]}</td><td>${nbAction(e.profile.nb.p,e.profile.nb.po)}</td></tr>`).join('')}
+       </table>
+     </div>
+   </div>`;
+  $('#viewNinebox').querySelectorAll('.ava[data-id]').forEach(a=>a.onclick=()=>openCockpit(a.dataset.id));
+}
+
+/* ═══════════ VIEW: LỊCH IDP ═══════════ */
+function qKey(q){const[qq,yy]=q.split('/');return(+yy)*4+(+qq[1]);}
+function renderIdpView(){
+  const quarters=[...new Set(EMPLOYEES.flatMap(e=>e.profile.idp.map(x=>x.quarter)))].sort((a,b)=>qKey(a)-qKey(b));
+  let plan=0,inprog=0,done=0;
+  EMPLOYEES.forEach(e=>e.profile.idp.forEach(x=>{if(x.status==='plan')plan++;else if(x.status==='inprogress')inprog++;else done++;}));
+  const cols=quarters.map(q=>{
+    const cards=EMPLOYEES.flatMap(e=>e.profile.idp.filter(x=>x.quarter===q).map(x=>({e,x})))
+      .map(({e,x})=>`<div class="idpcard"><div class="w"><div class="ava">${avatar(e)}</div><b style="font-size:11.5px;color:${e.accent}">${e.name}</b></div><div class="tp">${x.topic}</div><span class="pill ${x.status}">${({plan:'kế hoạch',inprogress:'đang học',done:'hoàn thành'})[x.status]}</span></div>`).join('');
+    return `<div class="idpcol"><h5>${q}</h5>${cards}</div>`;
+  }).join('');
+  $('#viewIdp').innerHTML=`
+   <div class="vhead"><div><h2>📅 Lịch IDP — Kế hoạch phát triển</h2><div class="sub">${plan} kế hoạch · ${inprog} đang học · ${done} hoàn thành — trên 8 nhân sự</div></div></div>
+   <div class="card"><div class="idpwrap">${cols}</div>
+     <div class="insight" style="margin-top:12px">📌 Linh & Phương (ô "Ngôi sao ⭐") có thêm 1 mốc IDP Q1/2027 — đầu tư phát triển đậm hơn cho nhóm tiềm năng cao, đúng khuyến nghị 9-box.</div>
+   </div>
+   <div class="card"><h4>Đã đào tạo (hoàn thành)</h4>
+     ${EMPLOYEES.map(e=>`<div class="task"><span class="dot" style="background:${e.accent}"></span><div><b>${e.name}</b> — ${e.profile.training.map(s=>`<span class="skill">✓ ${s}</span>`).join('')}</div></div>`).join('')}
+   </div>`;
+}
+
+/* ═══════════ VIEW: CHÍNH SÁCH ═══════════ */
+function renderPolicyView(){
+  $('#viewPolicy').innerHTML=`
+   <div class="vhead"><div><h2>📜 Chính sách nhân sự</h2><div class="sub">Chính sách nội bộ (mock) + cập nhật luật lao động/BHXH/BHYT ngoài đời thực</div></div></div>
+   <div class="card"><h4>📚 Bộ chính sách đang áp dụng <span class="pill mock">mock — đại diện</span></h4>
+     <div class="infog" style="grid-template-columns:repeat(auto-fit,minmax(230px,1fr))">
+      ${POLICY_CATEGORIES.map(([ic,title,items])=>`<div class="pol-cat"><h4>${ic} ${title}</h4><ul>${items.map(i=>`<li>${i}</li>`).join('')}</ul></div>`).join('')}
+     </div>
+   </div>
+   <div class="card">
+     <h4>🧭 ${LAW_UPDATES.headline}</h4>
+     <div class="infog">${LAW_UPDATES.items.map(x=>`<div class="infocard"><span class="tag" style="background:${x.tag}">Từ 1/7/2026</span><div class="big">${x.big}</div><div class="note">${x.note}</div></div>`).join('')}</div>
+     <div class="insight" style="margin-top:12px">📌 Bối cảnh cùng năm 2026 (hiệu lực từ 1/1/2026): ${LAW_UPDATES.context.join(' · ')}</div>
+     <div class="srcnote">Nguồn tham khảo: ${LAW_UPDATES.sources.map(([t,u])=>`<a href="${u}" target="_blank" rel="noopener">${t}</a>`).join(' · ')}</div>
+   </div>
+   <div class="card">
+     <h4>📰 ${VOV_INFOGRAPHIC.banner} <span class="pill">Tháng 7/2026</span></h4>
+     <div class="vov-grid">
+      ${VOV_INFOGRAPHIC.sections.map(s=>{
+        const subHtml=s.sub?`<div class="vov-sub">${s.sub.map(x=>`<div class="vov-sub-row"><b>${x.v}</b><span>${x.l}</span></div>`).join('')}</div>`:'';
+        if(s.full){
+          return `<div class="vov-sec full" style="border-left:4px solid ${s.color}">
+            <div class="vov-body3">
+              <div>
+                <div class="vov-top"><span class="vov-ic" style="background:${s.color}22"><img src="${VOV_ICONS[s.icon]}" alt=""></span><div class="vov-stat">${s.stat}</div></div>
+                <div class="vov-cap" style="margin-top:6px">${s.cap}</div>
+                <span class="vov-legal" style="background:${s.color};margin-top:8px">${s.legal}</span>
+              </div>
+              <ul class="vov-list3">${s.list.map(i=>`<li>🚫 ${i}</li>`).join('')}</ul>
+            </div>
+          </div>`;
+        }
+        return `<div class="vov-sec" style="border-left:4px solid ${s.color}">
+          <div class="vov-top"><span class="vov-ic" style="background:${s.color}22"><img src="${VOV_ICONS[s.icon]}" alt=""></span><div class="vov-stat">${s.stat}</div></div>
+          <div class="vov-cap">${s.cap}</div>
+          ${subHtml}
+          <span class="vov-legal" style="background:${s.color}">${s.legal}</span>
+        </div>`;
+      }).join('')}
+     </div>
+     <div class="srcnote">Nguồn: ${VOV_INFOGRAPHIC.sources.map(([t,u])=>`<a href="${u}" target="_blank" rel="noopener">${t}</a>`).join(' · ')}</div>
+   </div>`;
+}
+
+/* ═══════════ VIEW ROUTER ═══════════ */
+function showView(name){
+  document.querySelectorAll('.nav-item[data-view]').forEach(n=>n.classList.toggle('active',n.dataset.view===name));
+  document.querySelectorAll('.view[data-view]').forEach(v=>v.classList.toggle('active',v.dataset.view===name));
+}
+document.querySelectorAll('.nav-item[data-view]').forEach(n=>n.onclick=()=>showView(n.dataset.view));
+/* collapse danh sách nhân viên */
+$('#empToggle').onclick=()=>$('#empToggle').parentElement.classList.toggle('collapsed');
+
+renderKpiView();
+renderNineboxView();
+renderIdpView();
+renderPolicyView();
+</script>
+</body>
+</html>
