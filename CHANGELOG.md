@@ -1,5 +1,13 @@
 # CHANGELOG — Lười HR Website
 
+## 2026-08-17 — Fix: Đồng bộ bản sửa hiển thị điện thoại cho 2 trang demo
+
+- `[DESIGN]` **static/hr-office-sim/index.html: Sync bản sửa mobile mới nhất từ Sandbox** — bản đang live là bản sửa mobile đời cũ, còn lỗi. Bản mới: menu ngăn kéo `☰` (`id="btnMenu"` + lớp phủ `.navdim`) cho màn ≤900px, phòng làm việc giữ tỷ lệ và vuốt ngang được (`.floor{aspect-ratio:1.55;height:min(calc(100vh - 196px),620px)}`), tự cuộn vào giữa khi mở.
+- `[DESIGN]` **static/kpi-demo/index.html: Sync bản sửa mobile mới nhất từ Sandbox** — ép lưới về 1 cột trên điện thoại, cho ô lưới co được, sửa dòng hành động IDP. Nguồn duy nhất được phép lên web là `Sandbox/kpi-system-demo/public/index.html` (bản đã cắt tính năng bán); `index_v4/v5/v6.html`, `build_public.js`, `docs/` là bản nội bộ, không copy. Đã verify file lên web không chứa `Hướng dẫn`, `VIEWS.guide`, `'guide'`, `g-dienform`, `g-thuviec`.
+- **Backlog:** `static/hr-office-sim/index.html` đang dùng đường dẫn icon tương đối (`assets/icons/vov/*.png`) — fix "relative → absolute" ở commit 53ffeae đã bị ghi đè khi re-copy từ Sandbox (commit 56586c8) và lần sync này giữ nguyên tình trạng đó vì không được sửa nội dung file. Icon vẫn hiển thị đúng khi vào từ menu (URL có dấu `/` cuối); chỉ 404 nếu vào `/hr-office-sim` không có dấu `/`. Cần sửa tại nguồn `Sandbox/hr-office-sim/index.html` để không tái diễn.
+
+---
+
 ## 2026-08-17 — Business: Đưa 2 demo tương tác lên site + menu
 
 - `[BUSINESS]` **static/hr-office-sim/, static/kpi-demo/: Cập nhật/thêm 2 demo app** — Andy muốn khách xem được sản phẩm ngay trên Lười HR thay vì gửi file rời. Re-copy `hr-office-sim/index.html` từ `Sandbox/hr-office-sim/` (bản cũ 2026-07-25 đã lỗi thời, thiếu fix mobile 2026-08-17) + assets/icons/vov/. Thêm mới `kpi-demo/index.html` từ `Sandbox/kpi-system-demo/public/index.html` (bản công khai đã cắt tính năng bán, verify không có chuỗi "Hướng dẫn").

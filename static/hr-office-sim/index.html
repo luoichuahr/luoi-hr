@@ -379,37 +379,43 @@ body{
   .sidebar{position:fixed;top:0;left:0;bottom:0;width:min(84vw,300px);z-index:70;
     background:linear-gradient(135deg,var(--bg),var(--bg2));
     box-shadow:10px 0 34px rgba(80,95,120,.26);
-    transform:translateX(-104%);transition:transform .3s cubic-bezier(.5,.1,.2,1)}
+    transform:translateX(-104%);transition:transform .3s cubic-bezier(.5,.1,.2,1);
+    -webkit-overflow-scrolling:touch}
   .sidebar.open{transform:none}
   .menubtn{display:inline-flex}
-  .stage{padding:14px 13px 20px 13px;gap:12px;overflow:visible}
-  .topbar{flex-wrap:wrap;row-gap:10px;gap:10px}
-  .topbar .tt{order:1;flex:1 1 auto}
-  .topbar h2{font-size:16px;line-height:1.3}
-  .topbar .sub{font-size:11.5px}
-  #btnMeet{order:2;padding:10px 13px;font-size:12px}
-  .chips{order:3;flex:1 0 100%;gap:8px}
-  .chip{flex:1;min-width:0;padding:8px 11px}
-  .chip b{font-size:15px}
+  .stage{padding:12px 12px 16px 12px;gap:10px;overflow:visible}
+  /* hàng 1: ☰ + tiêu đề + nút họp · hàng 2: dải số liệu vuốt ngang */
+  .topbar{flex-wrap:wrap;row-gap:9px;gap:10px;align-items:center}
+  .menubtn{order:0}
+  .topbar .tt{order:1;flex:1 1 170px;min-width:0}
+  .topbar h2{font-size:15.5px;line-height:1.3}
+  .topbar .sub{font-size:11px}
+  #btnMeet{order:2;flex:none;padding:9px 13px;font-size:12px}
+  .chips{order:3;flex:1 1 100%;gap:8px;flex-wrap:nowrap;overflow-x:auto;padding-bottom:2px}
+  .chip{flex:0 0 auto;min-width:0;padding:7px 12px;white-space:nowrap}
+  .chip b{font-size:14px}
   .chip span{font-size:9.5px}
+  /* phòng giữ nguyên tỷ lệ như trên máy tính, vuốt ngang để xem hết — không bóp cho vừa màn */
   .view{overflow:visible;padding-right:0}
-  .floor{flex:none;aspect-ratio:4/3;min-height:330px}
-  .person{width:42px}
-  .person .body{width:37px;height:45px}
-  .person .tag{top:-28px}
-  .person .shadow{width:22px}
+  .view[data-view="floor"]{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .view[data-view="floor"]::after{content:"⟷ vuốt ngang để xem cả phòng";
+    position:sticky;left:0;flex:none;width:calc(100vw - 24px);
+    font-size:10.5px;font-weight:600;color:var(--dim);text-align:center;padding-top:8px}
+  .floor{flex:none;align-self:flex-start;
+    height:min(calc(100vh - 196px),620px);min-height:340px;aspect-ratio:1.55}
+  .person{width:46px}
+  .person .body{width:41px;height:50px}
+  .person .tag{top:-30px;padding:2px 7px}
+  .person .tag .nm{font-size:9.5px}
+  .person .tag .rl{font-size:7px}
+  .person .shadow{width:25px}
   .cockpit{width:100%;max-width:100%;padding:20px 16px}
   .modal{padding:20px}
   .scrim{padding:14px}
 }
 @media(max-width:560px){
-  .floor{aspect-ratio:1/1;min-height:390px}
   .grid4{grid-template-columns:repeat(2,1fr)}
   .topbar h2{font-size:15px}
-  .person{width:36px}
-  .person .body{width:32px;height:39px}
-  .person .tag .nm{font-size:9px}
-  .person .tag .rl{font-size:7px}
 }
 </style>
 </head>
@@ -1197,6 +1203,11 @@ const sideBar=document.querySelector('.sidebar'),navDim=$('#navDim');
 const closeNav=()=>{sideBar.classList.remove('open');navDim.classList.remove('on')};
 $('#btnMenu').onclick=()=>{const o=sideBar.classList.toggle('open');navDim.classList.toggle('on',o)};
 navDim.onclick=closeNav;
+/* trên điện thoại: phòng rộng hơn màn, mở ra là canh giữa sẵn cho dễ nhìn */
+if(window.matchMedia('(max-width:900px)').matches){
+  const fv=document.querySelector('.view[data-view="floor"]');
+  if(fv) fv.scrollLeft=(fv.scrollWidth-fv.clientWidth)/2;
+}
 $('#navMeet').addEventListener('click',closeNav);
 document.querySelectorAll('.sidebar .emp').forEach(r=>r.addEventListener('click',closeNav));
 

@@ -274,7 +274,10 @@ textarea.inp{resize:vertical;min-height:66px;line-height:1.55}
   .main{padding:12px 12px 34px;overflow:visible}
   .hdr{padding-left:52px;min-height:44px;gap:10px;margin-bottom:13px}
   .hdr h1{font-size:18px}
-  .g2,.g3,.g4{grid-template-columns:1fr}
+  /* nhiều màn đặt tỉ lệ cột thẳng trong thẻ (style=…) nên phải ép mới về được 1 cột */
+  .g2,.g3,.g4{grid-template-columns:1fr!important}
+  .g2>*,.g3>*,.g4>*,.tiles>*{min-width:0}
+  .main .row{flex-wrap:wrap}
   .card{padding:16px 15px;border-radius:var(--r2)}
   .card.sm{padding:13px 14px}
   /* bảng dài: cuộn ngang trong khung riêng, trang không bị đẩy lệch */
@@ -284,10 +287,16 @@ textarea.inp{resize:vertical;min-height:66px;line-height:1.55}
   .tiles{grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:11px}
   .tile .v{font-size:20px}
   .big{font-size:25px}
+  /* dòng hành động IDP: chữ một dòng, thanh tiến độ và phần trăm xuống dòng dưới */
+  .idp .a{flex-wrap:wrap;row-gap:7px}
+  .idp .a .n{flex:1 1 100%;min-width:0}
+  .idp .a .p{flex:1 1 auto;width:auto}
   .step{flex-wrap:wrap;gap:8px}
   .step .ln{display:none}
   .login{height:auto;min-height:100vh;padding:16px}
   .login .box{padding:24px 20px}
+  .login .chip{white-space:nowrap;flex:none;font-size:11px;padding:6px 10px}
+  .login h1{font-size:21px}
   .seg .sg{padding:10px 14px}
 }
 @media(max-width:560px){
