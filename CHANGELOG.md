@@ -1,5 +1,13 @@
 # CHANGELOG — Lười HR Website
 
+## 2026-08-17 — Business: Đưa 2 demo tương tác lên site + menu
+
+- `[BUSINESS]` **static/hr-office-sim/, static/kpi-demo/: Cập nhật/thêm 2 demo app** — Andy muốn khách xem được sản phẩm ngay trên Lười HR thay vì gửi file rời. Re-copy `hr-office-sim/index.html` từ `Sandbox/hr-office-sim/` (bản cũ 2026-07-25 đã lỗi thời, thiếu fix mobile 2026-08-17) + assets/icons/vov/. Thêm mới `kpi-demo/index.html` từ `Sandbox/kpi-system-demo/public/index.html` (bản công khai đã cắt tính năng bán, verify không có chuỗi "Hướng dẫn").
+- `[BUSINESS]` **docusaurus.config.js: Thêm 2 mục navbar** — "🏢 Văn phòng nhân sự số hóa" → `/hr-office-sim/`, "📊 Hệ thống đánh giá KPI" → `/kpi-demo/`. 2 trang này là HTML tĩnh trong `static/`, KHÔNG phải route Docusaurus → dùng `href` full URL tuyệt đối (`https://luoi-hr.vercel.app/...`) thay vì path tương đối, vì Docusaurus `<Link>` coi path nội bộ bắt đầu bằng `/` là route và bắt buộc phải khớp route đã đăng ký (kể cả file tồn tại thật trong `static/`) → build fail "Broken link". Dùng full URL để Docusaurus xử lý như external link (thẻ `<a>` thường, bỏ qua broken-link check) + thêm `target: '_self'` để override default `target="_blank"` Docusaurus tự gắn cho external link, giữ mở cùng tab.
+- **Lưu ý vượt rule:** `docusaurus.config.js` hiện 108 dòng (CLAUDE.md giới hạn MAX 100). Không tự refactor theo yêu cầu — 2 navbar item mới (href + target) là phần tăng dòng, cần Andy xác nhận có tách navbar items ra file riêng hay chấp nhận vượt.
+
+---
+
 ## 2026-07-25 — Content: HR Office Sim Page
 
 - `[CONTENT]` **static/hr-office-sim/index.html: Tạo trang /hr-office-sim** — Mô phỏng phòng nhân sự sống (neumorphism), copy nguyên từ `HR Agent/tempo/hr-office-sim/`. Single HTML file + assets/icons, Vercel serve tĩnh (giống pattern certificate page). Nút "Đưa lên CHRO Council" tạm ẩn (`display:none`) — link trỏ ra ngoài repo, chưa có bản deploy web cho CHRO Council Room, sẽ bật lại sau khi build xong.

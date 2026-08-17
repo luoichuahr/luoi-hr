@@ -68,6 +68,18 @@ const config = {
           position: 'left',
           label: '✨ Tool tạo CV',
         },
+        {
+          href: 'https://luoi-hr.vercel.app/hr-office-sim/',
+          position: 'left',
+          label: '🏢 Văn phòng nhân sự số hóa',
+          target: '_self',
+        },
+        {
+          href: 'https://luoi-hr.vercel.app/kpi-demo/',
+          position: 'left',
+          label: '📊 Hệ thống đánh giá KPI',
+          target: '_self',
+        },
       ],
     },
     footer: {
