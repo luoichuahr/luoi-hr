@@ -1,5 +1,13 @@
 # CHANGELOG — Lười HR Website
 
+## 2026-08-17 — Fix: Nút quay về trang chính cho 2 demo + sửa tận gốc đường dẫn icon
+
+- `[DESIGN]` **static/hr-office-sim/index.html, static/kpi-demo/index.html: Thêm nút quay về trang chính** — khách vào 2 trang demo (HTML tĩnh trong `static/`, không có navbar Docusaurus) bị kẹt, không có lối về site. Nay dòng đầu sidebar của cả 2 app là `<a class="nav-item backlink" href="https://luoi-hr.vercel.app/">`; trên điện thoại nút này nằm đầu ngăn kéo `☰`. Riêng kpi-demo có thêm 1 nút `<a class="btn ghost tiny">` ở màn đăng nhập vì màn đó chưa có sidebar. Dùng địa chỉ tuyệt đối, không path tương đối.
+- `[ARCH]` **static/hr-office-sim/index.html: Sửa tận gốc đường dẫn icon VOV** — dứt điểm backlog của lần sync trước. Fix nay nằm trong file nguồn `Sandbox/hr-office-sim/index.html` chứ không vá tay trong `static/`, nên lần re-copy sau không mất nữa: `const ICON_DIR=location.protocol==='file:'?'assets/icons/vov/':'/hr-office-sim/assets/icons/vov/';`. Mở bằng `file://` lúc phát triển vẫn chạy (đường dẫn tương đối), lên web dùng đường dẫn tuyệt đối nên không phụ thuộc dấu `/` cuối URL.
+- **Nguồn hợp lệ giữ nguyên như lần trước:** chỉ copy `Sandbox/kpi-system-demo/public/index.html`; `index_v4/v5/v6.html`, `build_public.js`, `docs/` là bản đầy đủ nội bộ, không lên web. Đã verify file lên web không chứa `Hướng dẫn`, `VIEWS.guide`, `'guide'`, `g-dienform`, `g-thuviec`.
+
+---
+
 ## 2026-08-17 — Fix: Đồng bộ bản sửa hiển thị điện thoại cho 2 trang demo
 
 - `[DESIGN]` **static/hr-office-sim/index.html: Sync bản sửa mobile mới nhất từ Sandbox** — bản đang live là bản sửa mobile đời cũ, còn lỗi. Bản mới: menu ngăn kéo `☰` (`id="btnMenu"` + lớp phủ `.navdim`) cho màn ≤900px, phòng làm việc giữ tỷ lệ và vuốt ngang được (`.floor{aspect-ratio:1.55;height:min(calc(100vh - 196px),620px)}`), tự cuộn vào giữa khi mở.
