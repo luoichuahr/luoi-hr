@@ -131,6 +131,20 @@ button{font-family:inherit}
 #stage{position:fixed;left:-99999px;top:0;background:#fff}
 @media(max-width:700px){.hdr{padding:0 14px;gap:9px}.hdr .sub{display:none}.wrap{padding:24px 14px 50px}
   .tb,.mtabs,.stabs,.dhead,.legend{padding-left:14px;padding-right:14px}.tree-wrap{margin:14px}}
+/* ── MENU NỔI GÓC PHẢI DƯỚI (chỉ có ở bản chạy trên luoi-hr) ──
+   z-index 940: thấp hơn .ov (950) để hộp thoại Góp ý che được, cao hơn .toast (900). */
+.lmenu{position:fixed;bottom:20px;right:20px;z-index:940;display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+.lmenu-pop{display:none;flex-direction:column;gap:2px;min-width:180px;max-width:calc(100vw - 40px);
+  background:#fff;border:1px solid var(--bd);border-radius:12px;box-shadow:var(--shm);padding:6px}
+.lmenu.on .lmenu-pop{display:flex}
+.lmenu-pop a{padding:9px 12px;font-size:12px;font-weight:700;color:var(--tx2);text-decoration:none;
+  border-radius:8px;white-space:nowrap;transition:all .15s}
+.lmenu-pop a:hover{background:#eef3fb;color:var(--navy)}
+.lmenu-btn{display:flex;align-items:center;gap:7px;padding:8px 14px;font-size:12px;font-weight:700;
+  border-radius:22px;border:1px solid var(--bd2);background:#fff;color:var(--tx2);cursor:pointer;
+  box-shadow:var(--sh);transition:all .15s}
+.lmenu-btn:hover{background:#eef3fb;color:var(--tx);border-color:var(--navy)}
+.lmenu.on .lmenu-btn{background:var(--navy);border-color:var(--navy);color:#fff}
 /* ── BUY ME A COFFEE (bản thuần HTML/CSS, khớp nút React trên luoi-hr) ── */
 .bmc{position:fixed;bottom:20px;left:20px;z-index:999;display:flex;align-items:center;gap:6px;
   padding:8px 12px;background:#FFDD00;border-radius:32px;box-shadow:0 3px 12px rgba(0,0,0,.15);
@@ -913,6 +927,22 @@ document.addEventListener('keydown',e=>{
 $('#btnHtml').onclick=exportHTML;
 $('#btnPdf').onclick=()=>exportPDF().catch(err=>{console.error(err);toast('Lỗi khi xuất PDF: '+err.message);});
 $('#btnPptx').onclick=()=>{try{exportPPTX();}catch(err){console.error(err);toast('Lỗi khi xuất PPTX: '+err.message);}};
+</script>
+<div class="lmenu" id="lmenu">
+  <div class="lmenu-pop" id="lmenuPop" role="menu">
+    <a href="https://luoi-hr.vercel.app/" role="menuitem">← Về trang Lười HR</a>
+  </div>
+  <button class="lmenu-btn" id="lmenuBtn" type="button" aria-haspopup="true" aria-expanded="false"
+    aria-controls="lmenuPop" aria-label="Mở menu">☰ Menu</button>
+</div>
+<script>
+(function(){
+  var wrap=document.getElementById('lmenu'),btn=document.getElementById('lmenuBtn');
+  function set(on){wrap.classList.toggle('on',on);btn.setAttribute('aria-expanded',on?'true':'false');}
+  btn.addEventListener('click',function(e){e.stopPropagation();set(!wrap.classList.contains('on'));});
+  document.addEventListener('click',function(e){if(!wrap.contains(e.target))set(false);});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')set(false);});
+})();
 </script>
 <a class="bmc" href="https://luoi-hr.vercel.app/ung-ho" aria-label="Ủng hộ Lười Chúa">
   <svg viewBox="0 0 44 54" width="20" height="25" aria-hidden="true">
