@@ -69,6 +69,12 @@ const config = {
           label: '✨ Tool tạo CV',
         },
         {
+          href: 'https://luoi-hr.vercel.app/org-chart/',
+          position: 'left',
+          label: '🧬 Tool tạo Org Chart',
+          target: '_self',
+        },
+        {
           href: 'https://luoi-hr.vercel.app/hr-office-sim/',
           position: 'left',
           label: '🏢 Văn phòng nhân sự số hóa',

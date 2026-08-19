@@ -1,5 +1,14 @@
 # CHANGELOG — Lười HR Website
 
+## 2026-08-19 — Business: Đưa tool Org Chart Builder lên site + menu
+
+- `[BUSINESS]` **static/org-chart/: Thêm tool tạo sơ đồ tổ chức** — copy `Sandbox/org-chart-builder/index.html` (bản đúng; `index_v2 (wrong).html` KHÔNG dùng). Tool nạp thư viện bằng đường dẫn tương đối (`vendor/fonts.js`, `vendor/xlsx.full.min.js`, `vendor/html2canvas.min.js`, `vendor/jspdf.umd.min.js`, `vendor/pptxgen.bundle.js`) và nút tải file mẫu trỏ `Mau_So_Do_To_Chuc_v2.xlsx` → phải copy kèm cả `vendor/` (2.1 MB) và file xlsx, không chỉ mình `index.html`. Đường dẫn tương đối chạy đúng ở subpath `/org-chart/` nên không phải sửa mã nguồn.
+- `[DESIGN]` **static/org-chart/index.html: Thêm nút "Buy me a coffee" bản thuần HTML/CSS** — trang tĩnh không chạy React nên không dùng được `src/components/BuyMeCoffee`. Viết lại lớp `.bmc` khớp `styles.module.css` (fixed bottom/left 20px, z-index 999, nền `#FFDD00`, bo 32px, hover `translateY(-2px)`, chữ Pacifico `.7rem`, ẩn chữ ở `max-width:480px`), copy nguyên SVG cốc cà phê, link tuyệt đối `https://luoi-hr.vercel.app/ung-ho`. Bỏ localStorage/gtag/badge ✓ cho gọn. Góc trái dưới của tool đang trống (chỉ có `.toast` fixed ở giữa, hiện thoáng qua) → không đè UI.
+- `[BUSINESS]` **docusaurus.config.js: Thêm mục navbar "🧬 Tool tạo Org Chart"** — chèn giữa "✨ Tool tạo CV" và "🏢 Văn phòng nhân sự số hóa". Cùng cách làm 2 demo cũ: `href` full URL tuyệt đối + `target: '_self'` để tránh broken-link check và giữ mở cùng tab.
+- **Lưu ý vượt rule:** `docusaurus.config.js` nay 114 dòng (giới hạn MAX 100). Andy đã chốt trước đó là để nguyên, không tách `navbar.items` ra file riêng.
+
+---
+
 ## 2026-08-17 — Fix: Nút quay về trang chính cho 2 demo + sửa tận gốc đường dẫn icon
 
 - `[DESIGN]` **static/hr-office-sim/index.html, static/kpi-demo/index.html: Thêm nút quay về trang chính** — khách vào 2 trang demo (HTML tĩnh trong `static/`, không có navbar Docusaurus) bị kẹt, không có lối về site. Nay dòng đầu sidebar của cả 2 app là `<a class="nav-item backlink" href="https://luoi-hr.vercel.app/">`; trên điện thoại nút này nằm đầu ngăn kéo `☰`. Riêng kpi-demo có thêm 1 nút `<a class="btn ghost tiny">` ở màn đăng nhập vì màn đó chưa có sidebar. Dùng địa chỉ tuyệt đối, không path tương đối.
