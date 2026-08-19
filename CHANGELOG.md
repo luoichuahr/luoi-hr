@@ -1,5 +1,13 @@
 # CHANGELOG — Lười HR Website
 
+## 2026-08-19 — Fix: Căn giữa sơ đồ trong tool Org Chart Builder
+
+- `[DESIGN]` **static/org-chart/index.html: Sơ đồ bị lệch sát mép trái, nay căn giữa khung** — Andy báo cả tab `▦ Sơ đồ đầy đủ` lẫn các tab phòng ban đều dồn về trái, chừa khoảng trống lớn bên phải. Hai nguyên nhân, sửa cả hai: (1) `.tc` (khối chứa các node, rộng đúng bằng bề ngang cây) không có canh lề nên luôn dính trái trong `.tree-wrap` → thêm `margin:0 auto`, xử lý các tab phòng ban vốn hẹp hơn khung; (2) khi cây rộng hơn khung thì `margin:auto` vô tác dụng, phải cuộn → sau `bindCanvas()` trong `render()` đặt `scrollLeft` về giữa phần tràn. Chỉ chạy khi `viewKey()` đổi (cờ `S._cv`) để kéo thả card không làm khung nhảy ngang.
+- `[ARCH]` **Sửa tận gốc ở `Sandbox/org-chart-builder/index.html` rồi mới sync** — không vá tay riêng bản trên site, nên lần re-copy sau không mất fix. Đã sync bằng cách port đúng 2 thay đổi vào file `static/` thay vì copy đè cả file, giữ nguyên 2 khối site-only (`.bmc*` + `.lmenu*`, nút Buy me a coffee + menu ☰). Đã đối chiếu: file trên site nay chứa trọn vẹn nội dung bản gốc mới, phần dôi ra đúng bằng 2 khối đó. `vendor/` và `Mau_So_Do_To_Chuc_v2.xlsx` không đổi.
+- **Backlog chưa duyệt:** trên điện thoại 390px thanh tab và khung sơ đồ vẫn tràn ngang. Chưa sửa vì nằm ngoài phạm vi Andy giao lần này.
+
+---
+
 ## 2026-08-19 — Business: Đưa tool Org Chart Builder lên site + menu
 
 - `[BUSINESS]` **static/org-chart/: Thêm tool tạo sơ đồ tổ chức** — copy `Sandbox/org-chart-builder/index.html` (bản đúng; `index_v2 (wrong).html` KHÔNG dùng). Tool nạp thư viện bằng đường dẫn tương đối (`vendor/fonts.js`, `vendor/xlsx.full.min.js`, `vendor/html2canvas.min.js`, `vendor/jspdf.umd.min.js`, `vendor/pptxgen.bundle.js`) và nút tải file mẫu trỏ `Mau_So_Do_To_Chuc_v2.xlsx` → phải copy kèm cả `vendor/` (2.1 MB) và file xlsx, không chỉ mình `index.html`. Đường dẫn tương đối chạy đúng ở subpath `/org-chart/` nên không phải sửa mã nguồn.
