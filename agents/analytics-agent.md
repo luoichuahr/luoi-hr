@@ -14,33 +14,55 @@ ai đến, họ đọc gì, họ rời đi ở đâu. Output là insight + actio
 
 ## Cách lấy dữ liệu từ GA4
 
-### Bước 0 (lần đầu) — Setup Google Analytics 4
-1. Truy cập [analytics.google.com](https://analytics.google.com)
-2. Tạo property mới → chọn Web → nhập URL `luoi-hr.vercel.app`
-3. Copy **Measurement ID** (dạng `G-XXXXXXXXXX`)
-4. Thay vào `docusaurus.config.js` dòng `trackingID: 'G-XXXXXXXXXX'`
-5. Deploy lên Vercel — từ lúc này GA4 bắt đầu thu thập data
-6. Chờ **ít nhất 7 ngày** trước khi chạy Analytics Agent lần đầu
+### AUTO WORKFLOW (khuyến nghị) — Không cần export CSV thủ công
 
-### Bước 1 — Export CSV từ GA4 (5 phút mỗi tuần)
+**Setup 1 lần duy nhất:**
+
+**Bước 1 — Lấy GA4 Property ID**
+- GA4 → Admin → Property Settings → copy **Property ID** (số như `123456789`)
+- Điền vào `agents/backend-data/config.txt` → dòng `GA4_PROPERTY_ID=`
+
+**Bước 2 — Cấp quyền cho Service Account**
+- GA4 → Admin → Property Access Management → Add users
+- Nhập email của service account (xem trong file `google-credentials.json`, trường `client_email`)
+- Chọn role: **Viewer**
+
+**Bước 3 — Cài thư viện**
+```bash
+pip install google-analytics-data
+```
+
+**Bước 4 — Chạy scheduler (1 lần)**
+```powershell
+# Mở PowerShell as Administrator
+cd "C:\Users\Work\Downloads\luoi-hr\agents\scripts"
+.\setup-schedule.ps1
+```
+
+Sau đó Analytics Agent tự chạy mỗi thứ Hai 8:00 sáng.
+Report lưu tại: `agents/analytics-output/latest.md`
+
+**Test ngay (không đợi thứ 2):**
+```powershell
+python "C:\Users\Work\Downloads\luoi-hr\agents\scripts\fetch-ga4.py"
+```
+
+---
+
+### MANUAL WORKFLOW (backup) — Export CSV thủ công
+
+Dùng khi API bị lỗi hoặc muốn kiểm tra cross-check:
 
 **Export 1: Traffic Overview**
 - GA4 → Reports → Acquisition → Traffic acquisition
 - Date range: 7 ngày vừa rồi + so sánh 7 ngày trước đó
 - Export → Download CSV → đặt tên `traffic-[YYYY-MM-DD].csv`
+- Đặt vào `agents/analytics-data/`
 
 **Export 2: Top Pages**
 - GA4 → Reports → Engagement → Pages and screens
-- Date range: 7 ngày vừa rồi
-- Metrics: Views, Average engagement time, Bounce rate
 - Export → Download CSV → đặt tên `pages-[YYYY-MM-DD].csv`
-
-**Export 3: User Journey (tháng)**
-- GA4 → Reports → Engagement → Pages and screens
-- Date range: tháng hiện tại
-- Export → Download CSV → đặt tên `monthly-[YYYY-MM].csv`
-
-Đặt tất cả vào thư mục: `agents/analytics-data/`
+- Đặt vào `agents/analytics-data/`
 
 ---
 
@@ -126,6 +148,24 @@ agents/analytics-output/analytics-[YYYY-MM-DD].md  ← lưu lịch sử
 
 ---
 
+## ⚠️ Blind spot đã biết — Static HTML tools không tự có GA4
+
+Preset `gtag` trong `docusaurus.config.js` chỉ build tracking vào trang React (docs/blog/src/pages).
+File `.html` copy thẳng vào `static/` (org-chart, kpi-demo, hr-office-sim, certificate, demos/*,
+hr-tools/*) **KHÔNG** đi qua build pipeline này → nếu quên tự chèn snippet gtag thì trang đó
+**0 view trong GA4 mãi mãi**, dù có traffic thật (navbar link, LinkedIn share...). Phát hiện
+2026-08-20 khi `static/org-chart/index.html` deploy 19/8 nhưng GA4 báo 0 view suốt.
+
+Đã vá cho 6 file hiện có (org-chart, kpi-demo, hr-office-sim, certificate, demos/hr-ibm-dashboard,
+hr-tools/hr_department, hr-tools/hr_lifecycle_simulation) ngày 2026-08-20. File tool tĩnh mới sau
+này PHẢI chèn snippet này ngay sau `<title>` — xem chi tiết CLAUDE.md mục Hard Rules #6.
+
+**Không có cách nào lấy lại số liệu GA4 đã mất trước ngày vá** — GA không hồi cứu được traffic
+xảy ra trước khi tracking tag tồn tại trên trang. Nguồn thay thế duy nhất cho giai đoạn "mù":
+LinkedIn tự lưu số liệu click link ở cấp bài post (Analytics riêng của từng post trên LinkedIn,
+độc lập với GA) — nếu Andy có bài LinkedIn dẫn link tới trang đó, số "Click" trong đó là ước
+lượng thật gần nhất cho traffic giai đoạn chưa gắn tag.
+
 ## Nguyên tắc phân tích cho Lười HR
 
 - **Không tối ưu bài chưa có traffic** — focus vào bài đang có data thực tế
@@ -141,3 +181,125 @@ agents/analytics-output/analytics-[YYYY-MM-DD].md  ← lưu lịch sử
 | Content Agent | Top performers, Hidden gems, Topics cần viết | Bài mới → data mới cho Analytics |
 | SEO Agent | Bài nào cần ưu tiên tối ưu meta | CTR cải thiện → impressions tăng |
 | Backend Agent | Bài nào dẫn leads nhiều nhất | Lead data → validation cho Analytics |
+
+---
+
+## CROSS-ANALYSIS WORKFLOW — GA × LinkedIn × Content
+
+Chạy khi Andy export LinkedIn analytics (xlsx) và muốn thấy toàn bộ bức tranh.
+Trigger: *"cross-check GA và LinkedIn"*, *"full report"*, *"insight từ tất cả kênh"*
+
+### Nguồn dữ liệu cần đọc (theo thứ tự)
+
+**1. GA data** — chạy script:
+```powershell
+python "C:\Users\Work\Downloads\luoi-hr\agents\scripts\fetch-ga4.py"
+```
+Output: `agents/analytics-output/latest.md`
+
+**2. LinkedIn xlsx** — đọc bằng Python (bắt buộc set utf-8):
+```python
+import openpyxl, os, sys
+sys.stdout.reconfigure(encoding='utf-8')
+folder = 'agents/analytics-output/linkedin'
+# Đọc tất cả .xlsx trong folder, extract: Post Date, Post Publish Time,
+# Impressions, Members reached, Social engagements, Reactions, Comments,
+# Reposts, Saves, Sends, Link engagements, Demographics (Job title, Seniority, Industry)
+```
+
+**3. LinkedIn post content** — đọc HTML trong `tempo/`:
+```
+tempo/*linkedin*.html
+```
+Tìm `<div ... contenteditable="true" ...>` — đây là text thực tế của post.
+Lấy: tiêu đề/hook (dòng đầu), CTA cuối bài, có link trong post hay link trong bio/comment.
+
+**4. Website articles** — đọc từ `docs/bi-kip/*.mdx`:
+- Lấy: `title`, `description`, badge "Đọc X phút", nội dung phần đầu (500 ký tự đầu sau frontmatter)
+
+### Mapping: Post → Website article → GA metrics
+
+Ghép theo logic:
+1. Lấy Post Date từ xlsx → xác định bài LinkedIn nào đăng ngày đó
+2. Đọc nội dung post HTML tương ứng → tìm slug website được nhắc đến trong CTA
+3. Tìm GA metrics cho slug đó: views, bounce rate, avg time
+4. So sánh: LinkedIn reach vs website quality
+
+**Quy tắc ghép tự động:**
+- `xay-dung*linkedin.html` → `docs/bi-kip/xay-dung-tro-ly-nhan-su*`
+- `claude-ai*linkedin.html` → `docs/bi-kip/claude-ai-la-gi-cho-nhan-su*`
+- `lam-hr-dashboard*linkedin.html` → `docs/bi-kip/lam-hr-dashboard*`
+- `thiet-ke*linkedin.html` → `docs/bi-kip/thiet-ke-he-dieu-hanh*`
+
+### Phân tích 5 chiều
+
+**[1] Content quality LinkedIn:**
+- Hook format: Personal story / Pain point question / Generic list → Story và Pain point >> Generic list
+- Có số liệu cụ thể không? (giờ tiết kiệm, % kết quả, n nhân viên...)
+- CTA: link trong bio / link trong comment / link trong post body
+- Câu hỏi cuối bài có không? → kích comments
+- Đánh giá: Strong / Medium / Weak
+
+**[2] Timing:**
+- Chủ nhật/Thứ Hai sáng → tệ (reach rate thấp)
+- Thứ Ba–Năm 3–5 PM → peak 2026 (Buffer data)
+- Nếu ER cao mà impressions thấp → likely giờ đăng sai
+- Nếu impressions cao mà ER thấp → content chưa đủ hook
+
+**[3] Audience fit:**
+- HR Services % trong demographics → càng cao càng đúng target
+- Entry level % → nếu > 25% là viral spread ra ngoài core audience
+- Software Engineer / IT xuất hiện → content chạm tech audience, HR audience loãng hơn
+
+**[4] Content-Website match (bounce diagnosis):**
+- Bounce < 20%: Promise của post = Delivery của bài → PERFECT MATCH
+- Bounce 20–50%: Match tương đối, có thể cải thiện intro bài
+- Bounce > 50%: MISMATCH — post hứa đơn giản, bài deliver phức tạp hơn (hoặc ngược lại)
+- Avg time < 2 phút + bounce > 40% → viết lại 200 từ đầu của bài
+
+**[5] Dark horses (GA vs LinkedIn gap):**
+- Bài có views cao nhưng không có post LinkedIn nào promote → cần post ngay
+- Bài có ER cao trên LinkedIn nhưng website không có trong GA top pages → link strategy sai (link quá xa, e.g. "link trong bio")
+
+### Template output Cross-Analysis Report
+
+```markdown
+# Cross-Analysis Report — LinkedIn × GA × Content
+**Period:** [ngày] → [ngày]  |  **Posts analyzed:** [n]
+
+## Post Performance vs Website Quality
+
+| Post | Date | Impressions | ER | Website slug | Views | Bounce | Avg Time | Verdict |
+|------|------|-------------|-----|-------------|-------|--------|----------|---------|
+| [hook đầu 5 từ] | [DD/MM HH:MM] | [X] | [X%] | [slug] | [X] | [X%] | [X phút] | ✅/⚠️/❌ |
+
+## Content Formula Ranking (bài này)
+1. [Loại hook] — [kết quả] → [Verdict]
+2. ...
+
+## Timing Diagnosis
+- [Post X]: đăng [giờ] → [nhận xét] → nên đăng [giờ tốt hơn]
+
+## Link Strategy Gap
+- Link engagements LinkedIn: [X] | Social users GA: [Y] → [nhận xét]
+- Indirect path: [mô tả path hiện tại]
+
+## Dark Horses — Bài cần post ngay
+- [slug]: [X views] chưa có LinkedIn post → ước tính reach nếu post: [dựa trên avg post của Andy]
+
+## Audience Mismatch (nếu có)
+- Post [X]: HR Services [%] → [nhận xét về audience quality]
+
+## Action Items
+→ Content Agent: [...]
+→ SEO Agent: [...]
+→ Andy: [...]
+```
+
+### Nguyên tắc cross-analysis
+
+- **Viral ≠ Tốt cho business**: Impressions cao mà bounce > 50% là lãng phí traffic
+- **Nhỏ nhưng đúng người**: 165 views, 9% bounce tốt hơn 912 views, 50% bounce cho mục tiêu leads
+- **Link trong bio = Direct traffic trong GA**: Social users thực tế cao hơn số LinkedIn "Link engagements" rất nhiều
+- **So sánh reading time badge vs avg time on page**: Badge nói "8 phút" nhưng avg time chỉ 1.9 phút → người đọc chưa đọc xong → cần hook mạnh hơn ở phần đầu bài
+- **Lưu report vào**: `agents/analytics-output/cross-analysis-[YYYY-MM-DD].md`

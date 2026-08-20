@@ -1,5 +1,13 @@
 # CHANGELOG — Lười HR Website
 
+## 2026-08-20 — Fix: Vá lỗ hổng tracking GA4 cho toàn bộ tool HTML tĩnh
+
+- `[ARCH]` **6 file `static/**/*.html` thiếu tag GA4 — vá bằng cách chèn snippet `gtag` sau `<title>`** — Andy hỏi kiểm tra view trang Org Chart (deploy 19/8) thì phát hiện GA4 báo 0 view suốt dù có link navbar. Nguyên nhân gốc: preset `gtag` của Docusaurus (`docusaurus.config.js`) chỉ build tracking vào trang React (docs/blog/src/pages) qua webpack, KHÔNG chạm tới file `.html` copy thẳng vào `static/` — các trang này đi thẳng ra output, hoàn toàn không có script GA4 nào. Ảnh hưởng **toàn bộ 6 tool tĩnh hiện có**, không riêng org-chart: `static/org-chart/index.html`, `static/kpi-demo/index.html`, `static/hr-office-sim/index.html`, `static/certificate/index.html`, `static/demos/hr-ibm-dashboard.html`, `static/hr-tools/hr_department.html`, `static/hr-tools/hr_lifecycle_simulation.html`. Đã chèn snippet gtag (`G-KELJV9GYP2`, `anonymize_ip:true`) ngay sau thẻ `<title>` mỗi file.
+- `[ARCH]` **Số liệu view trước 20/8 cho các trang này KHÔNG thể phục hồi** — GA4 không hồi cứu traffic xảy ra trước khi tag tồn tại trên trang. Từ nay các trang này bắt đầu được đo thật.
+- `[BUSINESS]` **Thêm quy tắc bắt buộc chống tái phạm** — CLAUDE.md Hard Rules #6: mọi file `.html` mới trong `static/` phải tự chèn snippet gtag trước khi commit, check bằng `grep -l "G-KELJV9GYP2"`. Đồng thời ghi vào `agents/analytics-agent.md` (mục "Blind spot đã biết") và checklist deploy 5 bước trong memory (`feedback_commit_components.md` bước 5) để agent tương lai không bỏ sót.
+
+---
+
 ## 2026-08-19 — Fix: Căn giữa sơ đồ trong tool Org Chart Builder
 
 - `[DESIGN]` **static/org-chart/index.html: Sơ đồ bị lệch sát mép trái, nay căn giữa khung** — Andy báo cả tab `▦ Sơ đồ đầy đủ` lẫn các tab phòng ban đều dồn về trái, chừa khoảng trống lớn bên phải. Hai nguyên nhân, sửa cả hai: (1) `.tc` (khối chứa các node, rộng đúng bằng bề ngang cây) không có canh lề nên luôn dính trái trong `.tree-wrap` → thêm `margin:0 auto`, xử lý các tab phòng ban vốn hẹp hơn khung; (2) khi cây rộng hơn khung thì `margin:auto` vô tác dụng, phải cuộn → sau `bindCanvas()` trong `render()` đặt `scrollLeft` về giữa phần tràn. Chỉ chạy khi `viewKey()` đổi (cờ `S._cv`) để kéo thả card không làm khung nhảy ngang.
