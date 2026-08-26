@@ -1,18 +1,32 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Công cụ tạo Sơ đồ Tổ chức</title>
+<title>Free Org Chart Builder — Excel to Org Chart, No Sign-Up</title>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-KELJV9GYP2"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-KELJV9GYP2',{anonymize_ip:true});</script>
-<link rel="canonical" href="https://luoi-hr.vercel.app/org-chart/">
-<link rel="alternate" hreflang="vi" href="https://luoi-hr.vercel.app/org-chart/">
+<meta name="description" content="Turn an Excel file into an org chart in one second. 100% client-side — no upload, no sign-up, no data stored. Drag to restructure, export HTML, PDF, PPTX.">
+<link rel="canonical" href="https://luoi-hr.vercel.app/en/org-chart/">
 <link rel="alternate" hreflang="en" href="https://luoi-hr.vercel.app/en/org-chart/">
+<link rel="alternate" hreflang="vi" href="https://luoi-hr.vercel.app/org-chart/">
 <link rel="alternate" hreflang="x-default" href="https://luoi-hr.vercel.app/org-chart/">
-<!-- Font nhúng thẳng trong file (base64), không gọi mạng: mở offline vẫn đúng chữ tiếng Việt,
-     ảnh chụp để xuất PDF không bao giờ bị thay font. Dựng lại bằng make_fonts.py -->
-<script src="vendor/fonts.js"></script>
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://luoi-hr.vercel.app/en/org-chart/">
+<meta property="og:site_name" content="Lười HR">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="vi_VN">
+<meta property="og:title" content="Free Org Chart Builder — Excel to Org Chart, No Sign-Up">
+<meta property="og:description" content="Turn an Excel file into an org chart in one second. 100% client-side — no upload, no sign-up, no data stored. Drag to restructure, export HTML, PDF, PPTX.">
+<meta property="og:image" content="https://luoi-hr.vercel.app/img/social-card-v2.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Free Org Chart Builder — Excel to Org Chart, No Sign-Up">
+<meta name="twitter:description" content="Turn an Excel file into an org chart in one second. 100% client-side — no upload, no sign-up, no data stored.">
+<meta name="twitter:image" content="https://luoi-hr.vercel.app/img/social-card-v2.png">
+<!-- Fonts are embedded in the file itself (base64), no network call: Vietnamese and other
+     Latin diacritics render correctly offline, and the canvas snapshot used for the PDF
+     export can never fall back to a substitute font. Rebuild with make_fonts.py -->
+<script src="../../org-chart/vendor/fonts.js"></script>
 <style id="fcss"></style>
 <script>document.getElementById('fcss').textContent=window.FONT_CSS||'';</script>
 <style>
@@ -53,6 +67,15 @@ button{font-family:inherit}
 .step .t{font-size:13px;font-weight:700;margin-bottom:4px}
 .step .d{font-size:11.5px;color:var(--tx2);line-height:1.6}
 .note{margin-top:22px;font-size:12px;color:var(--tx2);background:#fff;border:1px solid var(--bd);border-left:3px solid var(--ok);border-radius:10px;padding:13px 16px;line-height:1.65}
+/* ── SEO / marketing copy under the fold ── */
+.seo{max-width:760px;margin-top:44px;font-size:13.5px;line-height:1.75;color:var(--tx2)}
+.seo h2{font-size:18px;font-weight:800;letter-spacing:-.4px;color:var(--tx);margin:30px 0 10px}
+.seo h3{font-size:14px;font-weight:800;color:var(--tx);margin:20px 0 5px}
+.seo p{margin-bottom:11px}
+.seo ul{margin:0 0 12px 20px}
+.seo li{margin-bottom:6px}
+.seo strong{color:var(--tx)}
+.seo a{color:var(--navy);font-weight:700}
 /* ── VALIDATION ── */
 .vbox{background:#fff;border:1px solid var(--bd);border-radius:13px;box-shadow:var(--sh);margin-top:22px;overflow:hidden}
 .vhead{padding:14px 18px;font-size:13.5px;font-weight:800;display:flex;align-items:center;gap:9px;border-bottom:1px solid var(--bd)}
@@ -111,7 +134,7 @@ button{font-family:inherit}
 .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--dark);color:#fff;font-size:12.5px;font-weight:600;padding:11px 20px;border-radius:10px;box-shadow:var(--shm);z-index:900;opacity:0;pointer-events:none;transition:opacity .2s}
 .toast.on{opacity:1}
 .hide{display:none!important}
-/* ── GÓP Ý ── */
+/* ── FEEDBACK ── */
 .ov{position:fixed;inset:0;background:rgba(19,35,95,.42);display:flex;align-items:center;justify-content:center;padding:20px;z-index:950}
 .fb{background:#fff;border-radius:16px;box-shadow:var(--shm);width:100%;max-width:540px;max-height:92vh;display:flex;flex-direction:column;overflow:hidden}
 .fb-hd{display:flex;align-items:center;gap:10px;padding:15px 20px;border-bottom:1px solid var(--bd)}
@@ -121,7 +144,8 @@ button{font-family:inherit}
 .fb-bd{flex:1;min-height:0;overflow:auto;padding:6px 18px 0}
 .fb-bd iframe{width:100%;height:400px;border:0;display:block}
 .fb-ft{padding:11px 20px 14px;font-size:11.5px;color:var(--tx3);line-height:1.6}
-/* ── Trang in cho PDF: khổ A4 ngang cố định @144dpi nên ảnh chụp luôn nét và file nhẹ ── */
+/* ── Print page for the PDF export: fixed A4 landscape @144dpi, so the snapshot
+      stays sharp and the file stays small ── */
 .pg{width:1684px;height:1191px;background:#fff;padding:54px 58px 34px;display:flex;flex-direction:column}
 .pg-top{display:flex;align-items:flex-end;gap:20px;border-bottom:2px solid var(--bd);padding-bottom:18px}
 .pg-name{font-size:34px;font-weight:800;letter-spacing:-.9px;color:var(--dark);line-height:1.15}
@@ -146,8 +170,8 @@ button{font-family:inherit}
   .tb .btn.sm{padding:9px 11px;font-size:11.5px}   /* vùng chạm ≥32px */
   .tgl{padding:6px 0}.tgl input{width:18px;height:18px}
   .tree-wrap{margin:14px;padding:14px}}
-/* ── MENU NỔI GÓC PHẢI DƯỚI (chỉ có ở bản chạy trên luoi-hr) ──
-   z-index 940: thấp hơn .ov (950) để hộp thoại Góp ý che được, cao hơn .toast (900). */
+/* ── FLOATING MENU, BOTTOM RIGHT (only in the build hosted on luoi-hr) ──
+   z-index 940: below .ov (950) so the feedback dialog covers it, above .toast (900). */
 .lmenu{position:fixed;bottom:20px;right:20px;z-index:940;display:flex;flex-direction:column;align-items:flex-end;gap:8px}
 .lmenu-pop{display:none;flex-direction:column;gap:2px;min-width:180px;max-width:calc(100vw - 40px);
   background:#fff;border:1px solid var(--bd);border-radius:12px;box-shadow:var(--shm);padding:6px}
@@ -160,7 +184,7 @@ button{font-family:inherit}
   box-shadow:var(--sh);transition:all .15s}
 .lmenu-btn:hover{background:#eef3fb;color:var(--tx);border-color:var(--navy)}
 .lmenu.on .lmenu-btn{background:var(--navy);border-color:var(--navy);color:#fff}
-/* ── BUY ME A COFFEE (bản thuần HTML/CSS, khớp nút React trên luoi-hr) ── */
+/* ── BUY ME A COFFEE (plain HTML/CSS twin of the React button on luoi-hr) ── */
 .bmc{position:fixed;bottom:20px;left:20px;z-index:999;display:flex;align-items:center;gap:6px;
   padding:8px 12px;background:#FFDD00;border-radius:32px;box-shadow:0 3px 12px rgba(0,0,0,.15);
   text-decoration:none;transition:transform .15s,box-shadow .15s}
@@ -168,93 +192,162 @@ button{font-family:inherit}
 .bmc-label{font-family:'Pacifico',cursive;font-size:.7rem;color:#1a1a2e;line-height:1;white-space:nowrap}
 .bmc-heart{font-size:.75rem;line-height:1}
 @media(max-width:480px){.bmc-label{display:none}}
-/* ── Gợi ý bản tiếng Anh cho trình duyệt không phải tiếng Việt ── */
-.lgb{display:none;align-items:center;gap:10px;padding:9px 26px;font-size:12.5px;font-weight:600;
-  background:#EEF3FB;border-bottom:1px solid var(--bd);color:var(--tx2)}
-.lgb.on{display:flex}
-.lgb a{color:var(--navy);font-weight:800}
-.lgb button{margin-left:auto;width:24px;height:24px;border-radius:7px;border:1px solid var(--bd2);
-  background:#fff;color:var(--tx2);font-size:13px;line-height:1;cursor:pointer}
-.lgb button:hover{border-color:var(--navy)}
-@media(max-width:700px){.lgb{padding:9px 14px}.lgb button{width:32px;height:32px;flex:none}}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"SoftwareApplication","name":"Org Chart Builder","url":"https://luoi-hr.vercel.app/en/org-chart/",
+ "applicationCategory":"BusinessApplication","operatingSystem":"Any modern web browser",
+ "description":"Free browser-based org chart builder. Upload an Excel file and get an interactive organizational chart in one second. All processing is client-side: no upload, no sign-up, no data retention. Export to HTML, PDF and editable PowerPoint.",
+ "inLanguage":"en","isAccessibleForFree":true,
+ "featureList":["Excel to org chart in one second","100% client-side processing, zero data retention","No sign-up and no account required","Drag and drop to restructure reporting lines","Automatic validation: duplicate IDs, broken managers, reporting loops","Export to standalone HTML, multi-page PDF and editable PPTX"],
+ "offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},
+ "publisher":{"@type":"Organization","name":"Lười HR","url":"https://luoi-hr.vercel.app/"}},
+{"@type":"FAQPage","mainEntity":[
+ {"@type":"Question","name":"Is this org chart builder really free?",
+  "acceptedAnswer":{"@type":"Answer","text":"Yes. There is no paid tier, no trial timer, no watermark and no export limit. There is nothing to sign up for, so there is no account to cancel later."}},
+ {"@type":"Question","name":"Does my employee data get uploaded to a server?",
+  "acceptedAnswer":{"@type":"Answer","text":"No. The Excel file is parsed by JavaScript inside your own browser tab. There is no upload endpoint on this page and no database behind it, so there is nothing for anyone to retain, log or breach. You can disconnect from the internet after the page loads and the tool still works."}},
+ {"@type":"Question","name":"Do I need to sign up or create an account?",
+  "acceptedAnswer":{"@type":"Answer","text":"No. There is no login, no email gate and no cookie wall. Open the page, drop the file, get the chart."}},
+ {"@type":"Question","name":"What columns does the Excel file need?",
+  "acceptedAnswer":{"@type":"Answer","text":"Three are required: EID (a unique employee ID), Department and Position. Reports To (EID) is what actually builds the hierarchy — put the manager's EID there and leave it blank for the top position. Full Name, Status, Level, Group, Position EN and Division are optional."}},
+ {"@type":"Question","name":"Can I edit the org chart after it is generated?",
+  "acceptedAnswer":{"@type":"Answer","text":"Yes. Drag any card onto another to change who it reports to, or drop it on the left or right edge of a card to move it sideways among peers. Undo and redo are available with Ctrl+Z and Ctrl+Y, and Reset returns the chart to what was in the Excel file."}},
+ {"@type":"Question","name":"What formats can I export to?",
+  "acceptedAnswer":{"@type":"Answer","text":"Three: a standalone HTML file that keeps the tabs and stays interactive offline, a multi-page A4 landscape PDF with one page per division and department, and a PowerPoint deck where every box is a real editable shape rather than a flat image."}}]}
+]}
+</script>
 </head>
 <body>
-<div class="lgb" id="lgb">
-  <span>🌐 This tool is also available in English —
-    <a href="https://luoi-hr.vercel.app/en/org-chart/" hreflang="en">open the English version</a>.</span>
-  <button type="button" id="lgbX" aria-label="Đóng gợi ý">✕</button>
-</div>
-<script>
-/* Gợi ý bản EN, KHÔNG redirect. Googlebot crawl chủ yếu từ IP Mỹ với Accept-Language: en —
-   redirect cứng sẽ khiến chính trang tiếng Việt này bị index nhầm thành trang tiếng Anh. */
-(function(){
-  try{
-    if((navigator.language||'').toLowerCase().indexOf('vi')===0)return;
-    if(localStorage.getItem('oc-lang-hint')==='off')return;
-    var b=document.getElementById('lgb');
-    b.classList.add('on');
-    document.getElementById('lgbX').addEventListener('click',function(){
-      b.classList.remove('on');
-      try{localStorage.setItem('oc-lang-hint','off');}catch(e){}
-    });
-  }catch(e){}
-})();
-</script>
 <header class="hdr">
   <div class="logo">⌗</div>
-  <div><b>Sơ đồ Tổ chức</b><div class="sub">Tạo org chart từ file Excel</div></div>
+  <div><b>Org Chart Builder</b><div class="sub">Excel in, org chart out</div></div>
   <div class="sp"></div>
-  <button class="btn" id="btnFb">💬 Góp ý</button>
-  <button class="btn" id="btnTpl">⬇ Tải file mẫu</button>
-  <button class="btn" id="btnNew" hidden>↺ Đổi file khác</button>
+  <button class="btn" id="btnFb">💬 Feedback</button>
+  <button class="btn" id="btnTpl">⬇ Excel template</button>
+  <button class="btn" id="btnNew" hidden>↺ New file</button>
 </header>
 
 <div id="setup" class="wrap">
-  <div class="h1">Tạo sơ đồ tổ chức từ file Excel</div>
-  <p class="lead">Tải file mẫu về, điền danh sách nhân sự và cột "báo cáo cho", rồi đẩy file lên đây.
-    Sơ đồ hiện ra ngay — kéo thả để thử phương án cơ cấu mới, xong thì xuất ra HTML, PDF hoặc PowerPoint.</p>
+  <h1 class="h1">Free org chart builder — from Excel to org chart in one second</h1>
+  <p class="lead">Download the template, fill in your headcount and the "Reports To" column, then drop the
+    file here. The chart appears immediately — drag cards to test a new structure, then export it as HTML,
+    PDF or PowerPoint. Everything runs inside your browser: <strong>no upload, no sign-up, no data retention.</strong></p>
   <div class="drop" id="drop">
     <span class="ic">📄</span>
-    <div class="t">Kéo file Excel vào đây, hoặc bấm để chọn file</div>
-    <div class="s">Nhận .xlsx · .xlsm · .xls — đúng theo file mẫu</div>
+    <div class="t">Drop your Excel file here, or click to browse</div>
+    <div class="s">Accepts .xlsx · .xlsm · .xls — matching the template layout</div>
     <input type="file" id="file" accept=".xlsx,.xlsm,.xls" hidden>
   </div>
   <div style="text-align:center;margin-top:14px">
-    <button class="btn" id="btnDemo">Xem thử với dữ liệu mẫu</button>
+    <button class="btn" id="btnDemo">Try it with sample data</button>
   </div>
   <div id="verr"></div>
   <div class="steps">
-    <div class="step"><div class="n">1</div><div class="t">Tải file mẫu</div>
-      <div class="d">File Excel có sẵn cột chuẩn và 17 dòng ví dụ để xem cách điền.</div></div>
-    <div class="step"><div class="n">2</div><div class="t">Điền nhân sự</div>
-      <div class="d">Mỗi dòng một vị trí. Cột "Reports To (EID)" điền mã của cấp trên trực tiếp.</div></div>
-    <div class="step"><div class="n">3</div><div class="t">Đẩy file lên</div>
-      <div class="d">Công cụ kiểm tra lỗi trước: trùng mã, sai mã cấp trên, vòng lặp báo cáo.</div></div>
-    <div class="step"><div class="n">4</div><div class="t">Sửa và xuất</div>
-      <div class="d">Kéo thả sắp lại cơ cấu, rồi xuất HTML / PDF / PPTX nhiều slide.</div></div>
+    <div class="step"><div class="n">1</div><div class="t">Get the template</div>
+      <div class="d">An Excel file with the right columns and 17 example rows showing how to fill them in.</div></div>
+    <div class="step"><div class="n">2</div><div class="t">List your headcount</div>
+      <div class="d">One row per position. Put the direct manager's code in the "Reports To (EID)" column.</div></div>
+    <div class="step"><div class="n">3</div><div class="t">Drop the file in</div>
+      <div class="d">The tool validates first: duplicate IDs, managers that do not exist, reporting loops.</div></div>
+    <div class="step"><div class="n">4</div><div class="t">Restructure and export</div>
+      <div class="d">Drag cards to reshape the org, then export HTML, PDF or a multi-slide PPTX.</div></div>
   </div>
-  <div class="note"><b>Dữ liệu của bạn không đi đâu cả.</b> File Excel được đọc ngay trong trình duyệt
-    trên máy bạn — trang này không có máy chủ nhận file, không lưu, không gửi đi.</div>
+  <div class="note"><b>Your data never leaves this machine.</b> The Excel file is read by JavaScript inside
+    your own browser tab — this page has no server that receives files, nothing is stored and nothing is sent anywhere.</div>
+
+  <div class="seo">
+    <h2>Excel to org chart, without the upload</h2>
+    <p>Most org chart generators ask you to create an account and push your employee list to their servers
+      before showing you anything. For an HR or Sales team that list is a headcount plan, a set of real names
+      and, quite often, unannounced role changes. Handing it to a third party to draw some boxes is a bad trade.</p>
+    <p>This tool takes the opposite approach. The page loads once, and from that point on every step —
+      parsing the spreadsheet, laying out the tree, rendering the PDF, writing the PowerPoint file —
+      happens in your browser. Turn off your Wi-Fi after the page loads and it still works end to end.</p>
+
+    <h2>How it works</h2>
+    <h3>1. Build the sheet</h3>
+    <p>Three columns are required: <strong>EID</strong> (a unique code per position),
+      <strong>Department</strong> and <strong>Position</strong>. The hierarchy itself comes from
+      <strong>Reports To (EID)</strong> — the manager's code, left blank for whoever sits at the top.
+      Everything else is optional: Full Name, Status, Level, Group, Position EN and Division.</p>
+    <h3>2. Let it check your data first</h3>
+    <p>Before anything is drawn, the file is validated. Duplicate employee IDs, a "Reports To" pointing at a
+      code that does not exist, someone reporting to themselves, and circular reporting chains are all
+      reported with the exact Excel row number, so you fix the spreadsheet instead of guessing.</p>
+    <h3>3. Restructure by dragging</h3>
+    <p>Drop a card in the middle of another to make it report there. Drop it near the left or right edge to
+      move it sideways among peers. Moving a manager onto one of their own subordinates is blocked, because
+      that is the one move that would corrupt the tree. Ctrl+Z and Ctrl+Y undo and redo; Reset returns to
+      whatever was in the original file.</p>
+    <h3>4. Export in the format your audience expects</h3>
+    <ul>
+      <li><strong>HTML</strong> — one self-contained file. Tabs and collapsing still work, no internet needed.</li>
+      <li><strong>PDF</strong> — A4 landscape, one page per division and per department, with headcount stats.</li>
+      <li><strong>PowerPoint</strong> — every box is a real shape you can recolour, move and retype in PowerPoint.</li>
+    </ul>
+
+    <h2>Who this is for</h2>
+    <ul>
+      <li><strong>HR and People Ops</strong> — headcount planning, restructure scenarios, onboarding decks.</li>
+      <li><strong>Sales and account teams</strong> — account mapping, drawing the buying committee inside a target account.</li>
+      <li><strong>Founders and ops leads</strong> — showing the current shape of the company to a board or an investor.</li>
+      <li><strong>Consultants</strong> — client org charts you can produce without asking IT to whitelist a SaaS vendor.</li>
+    </ul>
+
+    <h2>Why it is private by design</h2>
+    <p>"Private" here is not a policy promise — it is an architectural fact you can verify. Open your
+      browser's Network tab and rebuild a chart: after the initial page load you will see no request carrying
+      your spreadsheet, because there is no endpoint to carry it to. The three limits below exist purely to
+      stop a maliciously crafted file from freezing your own tab: a 5 MB file cap, an 80 MB decompressed-size
+      cap that blocks zip bombs, and a 3,000-row ceiling.</p>
+
+    <h2>Frequently asked questions</h2>
+    <h3>Is this org chart builder really free?</h3>
+    <p>Yes. There is no paid tier, no trial timer, no watermark and no export limit. There is nothing to sign
+      up for, so there is no account to cancel later.</p>
+    <h3>Does my employee data get uploaded to a server?</h3>
+    <p>No. The Excel file is parsed by JavaScript inside your own browser tab. There is no upload endpoint on
+      this page and no database behind it, so there is nothing for anyone to retain, log or breach. You can
+      disconnect from the internet after the page loads and the tool still works.</p>
+    <h3>Do I need to sign up or create an account?</h3>
+    <p>No. There is no login, no email gate and no cookie wall. Open the page, drop the file, get the chart.</p>
+    <h3>What columns does the Excel file need?</h3>
+    <p>Three are required: EID (a unique employee ID), Department and Position. Reports To (EID) is what
+      actually builds the hierarchy — put the manager's EID there and leave it blank for the top position.
+      Full Name, Status, Level, Group, Position EN and Division are optional.</p>
+    <h3>Can I edit the org chart after it is generated?</h3>
+    <p>Yes. Drag any card onto another to change who it reports to, or drop it on the left or right edge of a
+      card to move it sideways among peers. Undo and redo are available with Ctrl+Z and Ctrl+Y, and Reset
+      returns the chart to what was in the Excel file.</p>
+    <h3>What formats can I export to?</h3>
+    <p>Three: a standalone HTML file that keeps the tabs and stays interactive offline, a multi-page A4
+      landscape PDF with one page per division and department, and a PowerPoint deck where every box is a
+      real editable shape rather than a flat image.</p>
+
+    <p style="margin-top:24px">Built by <a href="https://luoi-hr.vercel.app/">Lười HR</a>, a site about using
+      AI for HR work. This page is the English edition —
+      <a href="https://luoi-hr.vercel.app/org-chart/" hreflang="vi">bản tiếng Việt ở đây</a>.</p>
+  </div>
 </div>
 
 <div id="app" class="hide">
   <div class="tb">
     <div class="seg" id="segTpl">
-      <button class="on" data-tpl="hier">Phân cấp</button>
-      <button data-tpl="proj" disabled title="Sắp có ở phase 2">Theo dự án</button>
-      <button data-tpl="matrix" disabled title="Sắp có ở phase 3">Ma trận</button>
+      <button class="on" data-tpl="hier">Hierarchy</button>
+      <button data-tpl="proj" disabled title="Coming in phase 2">By project</button>
+      <button data-tpl="matrix" disabled title="Coming in phase 3">Matrix</button>
     </div>
     <div class="tbsep"></div>
-    <label class="tgl"><input type="checkbox" id="ckName" checked> Hiện tên nhân viên</label>
-    <label class="tgl"><input type="checkbox" id="ckEn"> Hiện chức danh EN</label>
+    <label class="tgl"><input type="checkbox" id="ckName" checked> Show names</label>
+    <label class="tgl"><input type="checkbox" id="ckEn"> Show secondary title</label>
     <div class="tbsep"></div>
-    <button class="btn sm" id="btnUndo" disabled>↶ Hoàn tác</button>
-    <button class="btn sm" id="btnRedo" disabled>↷ Làm lại</button>
-    <button class="btn sm" id="btnReset" disabled>Về bản gốc</button>
+    <button class="btn sm" id="btnUndo" disabled>↶ Undo</button>
+    <button class="btn sm" id="btnRedo" disabled>↷ Redo</button>
+    <button class="btn sm" id="btnReset" disabled>Reset</button>
     <div class="sp"></div>
     <button class="btn sm" id="btnHtml">⬇ HTML</button>
     <button class="btn sm" id="btnPdf">⬇ PDF</button>
@@ -272,19 +365,20 @@ button{font-family:inherit}
 
 <div class="ov hide" id="fbov">
   <div class="fb">
-    <div class="fb-hd"><b>Góp ý cho công cụ</b>
-      <button class="x" id="fbx" title="Đóng">✕</button></div>
-    <div class="fb-bd"><iframe id="fbfr" title="Biểu mẫu góp ý"></iframe></div>
-    <div class="fb-ft">Góp ý gửi qua biểu mẫu Tally. Sơ đồ và file Excel của bạn không được gửi đi kèm.</div>
+    <div class="fb-hd"><b>Send feedback</b>
+      <button class="x" id="fbx" title="Close">✕</button></div>
+    <div class="fb-bd"><iframe id="fbfr" title="Feedback form"></iframe></div>
+    <div class="fb-ft">Feedback goes through a Tally form. Your chart and your Excel file are not attached
+      and are not sent.</div>
   </div>
 </div>
 
-<script src="vendor/xlsx.full.min.js"></script>
-<script src="vendor/html2canvas.min.js"></script>
-<script src="vendor/jspdf.umd.min.js"></script>
-<script src="vendor/pptxgen.bundle.js"></script>
+<script src="../../org-chart/vendor/xlsx.full.min.js"></script>
+<script src="../../org-chart/vendor/html2canvas.min.js"></script>
+<script src="../../org-chart/vendor/jspdf.umd.min.js"></script>
+<script src="../../org-chart/vendor/pptxgen.bundle.js"></script>
 <script>
-/* ═══════════ 1. TIỆN ÍCH ═══════════ */
+/* ═══════════ 1. HELPERS ═══════════ */
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let _tt;
@@ -293,25 +387,30 @@ function toast(msg,ms){clearTimeout(_tt);const t=$('#toast');t.textContent=msg;t
 const norm=s=>String(s??'').trim();
 const low=s=>norm(s).toLowerCase();
 
-/* Bảng màu gán tự động cho phòng ban / nhóm hiển thị */
+/* Colours assigned automatically per department / display group */
 const PALETTE=['#34B6E9','#232A78','#F4921E','#16a34a','#7c3aed','#e11d48','#0891b2','#ca8a04','#4f46e5','#059669','#db2777','#65a30d'];
 const TINT   =['#EDF8FE','#EEF0FA','#FEF5EA','#EEFAF1','#F5F0FE','#FDF0F3','#EBF8FB','#FCF7E8','#EFF0FE','#EAF8F3','#FDF0F7','#F4F9E9'];
-const STATUS={'hiện tại':{c:'#16a34a',l:'Hiện tại'},'new hc':{c:'#F4921E',l:'Tuyển mới'},
-  'replacement':{c:'#7c3aed',l:'Thay thế'},'nghỉ việc':{c:'#dc2626',l:'Nghỉ việc'}};
+/* Vietnamese status values are kept as aliases so a sheet exported from a local HRIS still renders */
+const STATUS={'active':{c:'#16a34a',l:'Active'},'current':{c:'#16a34a',l:'Active'},'hiện tại':{c:'#16a34a',l:'Active'},
+  'new hc':{c:'#F4921E',l:'New headcount'},'new':{c:'#F4921E',l:'New headcount'},
+  'replacement':{c:'#7c3aed',l:'Replacement'},
+  'leaving':{c:'#dc2626',l:'Leaving'},'nghỉ việc':{c:'#dc2626',l:'Leaving'}};
 function statusOf(v){return STATUS[low(v)]||null;}
+/* A seat counts as vacant when the name cell is empty or holds a placeholder */
+const VACANT=/^\(?\s*(vacant|tbh|open|chưa có)/i;
 
-/* ═══════════ 2. ĐỌC EXCEL ═══════════ */
+/* ═══════════ 2. READING THE EXCEL FILE ═══════════ */
 const FIELDS=[
-  ['title_en', h=>/chức danh\s*en|position\s*en|english|title.*\(en\)/.test(h)],
-  ['eid',      h=>h==='eid'||h.startsWith('eid')||/mã nhân sự|mã nv|employee id/.test(h)],
-  ['dept',     h=>/phòng ban|bộ phận|department/.test(h)],
-  ['title',    h=>/chức danh|vị trí|position|job title/.test(h)],
-  ['name',     h=>/tên nhân viên|họ tên|full ?name|employee name/.test(h)],
-  ['status',   h=>/trạng thái|status/.test(h)],
-  ['reports',  h=>/reports? to|báo cáo cho|quản lý trực tiếp|line manager/.test(h)],
-  ['level',    h=>/^level|bậc|cấp bậc/.test(h)],
-  ['group',    h=>/nhóm hiển thị|nhóm|group/.test(h)],
-  ['khoi',     h=>/^khối|khối\b|block|division/.test(h)],
+  ['title_en', h=>/position\s*en|english|(secondary|alternate|alt|local)\s*title|title.*\(en\)/.test(h)],
+  ['eid',      h=>h==='eid'||h.startsWith('eid')||/employee id|staff id|mã nhân sự/.test(h)],
+  ['dept',     h=>/department|dept|phòng ban|bộ phận/.test(h)],
+  ['title',    h=>/position|job title|role|chức danh|vị trí/.test(h)],
+  ['name',     h=>/full ?name|employee name|tên nhân viên|họ tên/.test(h)],
+  ['status',   h=>/status|trạng thái/.test(h)],
+  ['reports',  h=>/reports? to|line manager|manager id|báo cáo cho|quản lý trực tiếp/.test(h)],
+  ['level',    h=>/^level|^grade|bậc|cấp bậc/.test(h)],
+  ['group',    h=>/group|nhóm hiển thị|nhóm/.test(h)],
+  ['khoi',     h=>/^division|^block|^business unit|^bu\b|^khối|khối\b/.test(h)],
 ];
 function mapHeader(cells){
   const map={};
@@ -322,10 +421,10 @@ function mapHeader(cells){
   });
   return map;
 }
-/* Tìm sheet + dòng tiêu đề. Dò cả file nên bản Excel cũ của công ty vẫn upload được. */
+/* Find the sheet + header row. The whole workbook is scanned so an existing company file works too. */
 function findTable(wb){
   const names=[...wb.SheetNames].sort((a,b)=>{
-    const s=n=>/sơ đồ|org ?structure|tổ chức|org ?chart/i.test(n)?0:1;
+    const s=n=>/org ?chart|org ?structure|organi[sz]ation|headcount|sơ đồ|tổ chức/i.test(n)?0:1;
     return s(a)-s(b);
   });
   for(const nm of names){
@@ -337,12 +436,14 @@ function findTable(wb){
   }
   return null;
 }
-/* EID thật không có dấu cách/dấu phẩy và không dài — dòng ngay dưới tiêu đề mà như vậy là dòng gợi ý */
+/* A real EID has no spaces or commas and is short — a row right under the header that
+   looks otherwise is the hint row shipped with the template */
 function looksLikeHint(v){const s=norm(v);return s.length>16||/[\s,;←→(]/.test(s);}
 
 function parseRows(t){
   const {grid,hrow,map}=t, out=[], warn=[];
-  /* Cắt ô quá dài: một ô nhồi cả triệu ký tự đủ làm sơ đồ phình ra và treo trình duyệt */
+  /* Trim over-long cells: one cell stuffed with a million characters is enough to
+     blow up the layout and hang the tab */
   const pick=(row,k)=>map[k]===undefined?'':norm(row[map[k]]).slice(0,LIM.CELL);
   const KEYS=['eid','dept','title','name','status','reports','level','group','title_en','khoi'];
   let blank=0, divider=0;
@@ -350,42 +451,42 @@ function parseRows(t){
     const row=grid[r]||[];
     const eid=pick(row,'eid'), title=pick(row,'title');
     if(!eid&&!title&&!pick(row,'name')){ if(out.length)blank++; continue; }
-    if(r===hrow+1&&looksLikeHint(eid))continue;              // dòng gợi ý dưới tiêu đề
-    /* Dòng ngăn cách kiểu "  BOD" — chỉ 1 ô có chữ, không có chức danh: bỏ qua, không coi là vị trí */
+    if(r===hrow+1&&looksLikeHint(eid))continue;              // hint row under the header
+    /* Separator rows like "  BOD" — a single filled cell, no position: skipped, not counted as a seat */
     if(!title&&KEYS.filter(k=>pick(row,k)).length<=1){ divider++; continue; }
     const lv=pick(row,'level');
     out.push({
-      xr:r+1, eid, dept:pick(row,'dept')||'Chưa phân phòng', title,
+      xr:r+1, eid, dept:pick(row,'dept')||'Unassigned', title,
       name:pick(row,'name'), status:pick(row,'status'),
       reports:pick(row,'reports'), level:lv===''?null:(isNaN(+lv)?lv:+lv),
       group:pick(row,'group'), title_en:pick(row,'title_en'), khoi:pick(row,'khoi')
     });
   }
-  if(blank)warn.push({code:'W2',ln:'',msg:`Có ${blank} dòng trống xen giữa bảng — đã bỏ qua.`});
-  if(divider)warn.push({code:'W3',ln:'',msg:`Có ${divider} dòng chỉ điền 1 ô, không có chức danh (dòng ngăn cách phòng ban) — đã bỏ qua, không tính là vị trí.`});
+  if(blank)warn.push({code:'W2',ln:'',msg:`${blank} empty row(s) inside the table were skipped.`});
+  if(divider)warn.push({code:'W3',ln:'',msg:`${divider} row(s) had a single filled cell and no position (department separators) — skipped, not counted as seats.`});
   return {rows:out,warn};
 }
 
-/* ═══════════ 3. KIỂM TRA DỮ LIỆU ═══════════ */
+/* ═══════════ 3. VALIDATION ═══════════ */
 function validate(rows,map){
   const errors=[],warnings=[];
-  const need=[['eid','EID'],['dept','Phòng ban'],['title','Chức danh / Vị trí']];
+  const need=[['eid','EID'],['dept','Department'],['title','Position']];
   need.forEach(([k,label])=>{ if(map[k]===undefined)
-    errors.push({code:'E1',ln:'',msg:`Thiếu cột bắt buộc "${label}" trong file.`}); });
+    errors.push({code:'E1',ln:'',msg:`Required column "${label}" is missing from the file.`}); });
   if(errors.length)return {errors,warnings};
 
   const seen={};
   rows.forEach(r=>{
-    if(!r.eid) errors.push({code:'E5',ln:'Dòng '+r.xr,msg:`Thiếu EID (chức danh: ${r.title||'—'}).`});
-    else if(seen[r.eid]!==undefined) errors.push({code:'E2',ln:'Dòng '+r.xr,msg:`EID "${r.eid}" trùng với dòng ${seen[r.eid]}.`});
+    if(!r.eid) errors.push({code:'E5',ln:'Row '+r.xr,msg:`Missing EID (position: ${r.title||'—'}).`});
+    else if(seen[r.eid]!==undefined) errors.push({code:'E2',ln:'Row '+r.xr,msg:`EID "${r.eid}" is already used on row ${seen[r.eid]}.`});
     else seen[r.eid]=r.xr;
-    if(!r.title) errors.push({code:'E5',ln:'Dòng '+r.xr,msg:`Thiếu Chức danh / Vị trí (EID: ${r.eid||'—'}).`});
+    if(!r.title) errors.push({code:'E5',ln:'Row '+r.xr,msg:`Missing Position (EID: ${r.eid||'—'}).`});
   });
   rows.forEach(r=>{
     if(r.reports&&seen[r.reports]===undefined)
-      errors.push({code:'E3',ln:'Dòng '+r.xr,msg:`"Reports To" = "${r.reports}" nhưng không có EID nào như vậy trong file.`});
+      errors.push({code:'E3',ln:'Row '+r.xr,msg:`"Reports To" = "${r.reports}" but no row in the file has that EID.`});
     if(r.reports&&r.reports===r.eid)
-      errors.push({code:'E4',ln:'Dòng '+r.xr,msg:`"${r.eid}" báo cáo cho chính mình.`});
+      errors.push({code:'E4',ln:'Row '+r.xr,msg:`"${r.eid}" reports to itself.`});
   });
   if(errors.length)return {errors,warnings};
 
@@ -401,13 +502,13 @@ function validate(rows,map){
   const reported={};
   rows.forEach(r=>{ const c=walk(r.eid,[]);
     if(c){const k=[...c].sort().join('>'); if(!reported[k]){reported[k]=1;
-      errors.push({code:'E4',ln:'Dòng '+by[c[0]].xr,msg:`Vòng lặp báo cáo: ${c.join(' → ')} → ${c[0]}. Sửa lại cột Reports To.`});}}
+      errors.push({code:'E4',ln:'Row '+by[c[0]].xr,msg:`Reporting loop: ${c.join(' → ')} → ${c[0]}. Fix the Reports To column.`});}}
   });
   const roots=rows.filter(r=>!r.reports);
   if(roots.length===0&&rows.length)
-    errors.push({code:'E4',ln:'',msg:'Không có vị trí cao nhất nào (mọi dòng đều có Reports To).'});
+    errors.push({code:'E4',ln:'',msg:'No top position found — every row has a Reports To value.'});
   if(roots.length>1)
-    warnings.push({code:'W1',ln:'',msg:`Có ${roots.length} vị trí cao nhất (${roots.map(r=>r.eid).join(', ')}) — sơ đồ sẽ vẽ thành ${roots.length} cây rời nhau.`});
+    warnings.push({code:'W1',ln:'',msg:`${roots.length} top positions (${roots.map(r=>r.eid).join(', ')}) — the chart will be drawn as ${roots.length} separate trees.`});
   return {errors,warnings};
 }
 function showReport(errors,warnings){
@@ -416,11 +517,11 @@ function showReport(errors,warnings){
   const row=(x,cls)=>`<div class="vrow"><span class="vtag ${cls}">${x.code}</span>
     <span class="ln">${esc(x.ln)}</span><span>${esc(x.msg)}</span></div>`;
   box.innerHTML=`<div class="vbox">
-    <div class="vhead">${errors.length?'⛔ File chưa dùng được — sửa '+errors.length+' lỗi rồi tải lại':'⚠️ Đã vẽ, nhưng có điểm cần xem lại'}</div>
+    <div class="vhead">${errors.length?'⛔ File not usable yet — fix '+errors.length+' error(s) and upload again':'⚠️ Chart drawn, but a few things are worth checking'}</div>
     ${errors.map(e=>row(e,'e')).join('')}${warnings.map(w=>row(w,'w')).join('')}</div>`;
 }
 
-/* ═══════════ 4. TRẠNG THÁI ═══════════ */
+/* ═══════════ 4. STATE ═══════════ */
 const S={ nodes:[], depts:[], khois:[], dColor:{}, gColor:{},
   view:{khoi:'__all__',dept:'__all__'}, showName:true, showEn:false,
   coll:{}, hist:[], hpos:-1, orig:null, fileName:'' };
@@ -444,25 +545,25 @@ function loadRows(rows,fileName){
     reports:r.reports,level:r.level,group:r.group,title_en:r.title_en,khoi:r.khoi}));
   S.orig=JSON.stringify(S.nodes.map(n=>({eid:n.eid,reports:n.reports})));
   S.fileName=fileName||''; S.hist=[]; S.hpos=-1; S.coll={};
-  S.view={khoi:S.khois.length?'__all__':'__all__',dept:'__all__'};
+  S.view={khoi:'__all__',dept:'__all__'};
   buildMeta();
   $('#setup').classList.add('hide'); $('#app').classList.remove('hide'); $('#btnNew').hidden=false;
   buildTabs(); render();
 }
-/* ─── Chặn file phá hoại ───────────────────────────────────────────────────────
-   File không rời máy user nên không có server nào để sập, nhưng file Excel dựng
-   ác ý vẫn đủ làm treo tab và mất công việc đang làm dở. Bốn ngưỡng dưới đây chặn
-   trước khi thư viện đọc Excel đụng vào dữ liệu. */
+/* ─── Guards against hostile files ────────────────────────────────────────────
+   The file never leaves the machine so there is no server to take down, but a
+   maliciously built spreadsheet can still hang the tab and lose whatever the user
+   was working on. These four ceilings stop it before the Excel parser touches it. */
 const LIM={ FILE:5*1024*1024, UNZIP:80*1024*1024, ROWS:3000, CELL:300, WARN:600 };
 
-/* Đọc bảng thư mục cuối file zip (xlsx thực chất là zip) để biết file sẽ bung ra bao
-   nhiêu byte — chặn "zip bomb": nén vài KB nhưng bung ra hàng trăm MB. File .xls đời cũ
-   không phải zip nên không có mục nào, trả 0 và bỏ qua bước này. */
+/* Read the zip central directory (an xlsx is a zip) to learn how many bytes the file
+   will expand to — this blocks "zip bombs": a few KB compressed, hundreds of MB expanded.
+   Legacy .xls files are not zips, so nothing matches, 0 is returned and the check is skipped. */
 function unzippedSize(buf){
   const b=new Uint8Array(buf); let tot=0;
   for(let i=0;i<b.length-30;i++){
     if(b[i]===0x50&&b[i+1]===0x4b&&b[i+2]===0x01&&b[i+3]===0x02)     // central directory header
-      tot+=b[i+24]|(b[i+25]<<8)|(b[i+26]<<16)|(b[i+27]*0x1000000);   // ô "kích thước sau khi bung"
+      tot+=b[i+24]|(b[i+25]<<8)|(b[i+26]<<16)|(b[i+27]*0x1000000);   // "uncompressed size" field
   }
   return tot;
 }
@@ -470,36 +571,36 @@ async function readFile(f){
   const stop=m=>showReport([{code:'E6',ln:'',msg:m}],[]);
   const mb=v=>(v/1048576).toFixed(1);
   if(!/\.(xlsx|xlsm|xls)$/i.test(f.name))
-    return stop('Chỉ nhận file Excel (.xlsx, .xlsm, .xls). Hãy tải file mẫu về điền rồi tải lên lại.');
+    return stop('Excel files only (.xlsx, .xlsm, .xls). Download the template, fill it in and upload it again.');
   if(f.size>LIM.FILE)
-    return stop(`File nặng ${mb(f.size)} MB, vượt mức cho phép ${mb(LIM.FILE)} MB. File sơ đồ tổ chức thật thường dưới 1 MB.`);
+    return stop(`The file is ${mb(f.size)} MB, over the ${mb(LIM.FILE)} MB limit. A real org chart file is usually under 1 MB.`);
   try{
     const buf=await f.arrayBuffer();
     const un=unzippedSize(buf);
     if(un>LIM.UNZIP)
-      return stop(`File nén chỉ ${Math.round(f.size/1024)} KB nhưng bung ra tới ${mb(un)} MB, vượt mức ${mb(LIM.UNZIP)} MB. Đây là dấu hiệu file được dựng để làm treo trình duyệt — đã dừng trước khi đọc.`);
+      return stop(`The file is only ${Math.round(f.size/1024)} KB compressed but expands to ${mb(un)} MB, over the ${mb(LIM.UNZIP)} MB limit. That is the signature of a file built to hang your browser — stopped before reading it.`);
     const wb=XLSX.read(buf,{type:'array',sheetRows:LIM.ROWS+50});
     const t=findTable(wb);
-    if(!t){ showReport([{code:'E1',ln:'',msg:'Không tìm thấy bảng dữ liệu. File phải có sheet với dòng tiêu đề chứa cột EID và Chức danh — hãy dùng file mẫu.'}],[]); return; }
+    if(!t){ showReport([{code:'E1',ln:'',msg:'No data table found. The file needs a sheet whose header row contains an EID column and a Position column — use the template.'}],[]); return; }
     if(t.grid.length-t.hrow>LIM.ROWS)
-      return stop(`Sheet "${t.sheet}" có hơn ${LIM.ROWS} dòng dưới dòng tiêu đề, vượt mức công cụ xử lý được. Hãy xoá bớt dòng thừa bên dưới bảng rồi lưu lại.`);
+      return stop(`Sheet "${t.sheet}" has more than ${LIM.ROWS} rows below the header, over what this tool handles. Delete the unused rows under the table and save again.`);
     const {rows,warn}=parseRows(t);
-    if(!rows.length){ showReport([{code:'E5',ln:'',msg:'Sheet "'+t.sheet+'" không có dòng dữ liệu nào bên dưới tiêu đề.'}],[]); return; }
+    if(!rows.length){ showReport([{code:'E5',ln:'',msg:'Sheet "'+t.sheet+'" has no data rows below the header.'}],[]); return; }
     const v=validate(rows,t.map);
     const warnings=[...warn,...v.warnings];
     if(rows.length>LIM.WARN)warnings.push({code:'W4',ln:'',
-      msg:`${rows.length} vị trí — sơ đồ rất lớn, thao tác kéo thả và lúc xuất file sẽ chậm. Nên tách theo khối hoặc phòng ban.`});
+      msg:`${rows.length} positions — this is a very large chart, so dragging and exporting will be slow. Consider splitting it by division or department.`});
     showReport(v.errors,warnings);
-    if(v.errors.length){ toast('File có '+v.errors.length+' lỗi — chưa vẽ được'); return; }
+    if(v.errors.length){ toast('File has '+v.errors.length+' error(s) — nothing drawn yet'); return; }
     loadRows(rows,f.name);
-    if(warnings.length)toast('Đã vẽ sơ đồ — có '+warnings.length+' cảnh báo, xem lại ở màn tải file');
-    else toast('Đã đọc '+rows.length+' vị trí từ '+t.sheet);
+    if(warnings.length)toast('Chart drawn — '+warnings.length+' warning(s), see the upload screen');
+    else toast('Read '+rows.length+' positions from '+t.sheet);
   }catch(err){ console.error(err);
-    showReport([{code:'E1',ln:'',msg:'Không đọc được file: '+err.message}],[]); }
+    showReport([{code:'E1',ln:'',msg:'Could not read the file: '+err.message}],[]); }
 }
-/* ═══════════ 5. BỘ VẼ CÂY (absolute position + đường nối SVG) ═══════════ */
+/* ═══════════ 5. TREE RENDERER (absolute positions + SVG connectors) ═══════════ */
 const NW=172, GAP_X=22, GAP_Y=58, GRP_H=30, BTN_GAP=40;
-const HCH={};                                     // cache chiều cao card
+const HCH={};                                     // card height cache
 
 function nodeMap(){const m={};S.nodes.forEach(n=>m[n.eid]=n);return m;}
 
@@ -509,9 +610,9 @@ function cardHTML(n){
   const st=statusOf(n.status);
   return (st?`<span class="nd-dot" style="background:${st.c}" title="${esc(st.l)}"></span>`:'')
     +`<div class="nd-role">${esc(n.title)}</div>`
-    +(S.showName?`<div class="nd-name">${esc(n.name||'(chưa có người)')}</div>`:'')
+    +(S.showName?`<div class="nd-name">${esc(n.name||'(vacant)')}</div>`:'')
     +(S.showEn&&n.title_en?`<div class="nd-en">${esc(n.title_en)}</div>`:'')
-    +(n.level!==null&&n.level!==''&&n.level!==undefined?`<span class="nd-tag">Bậc ${esc(n.level)}</span>`:'');
+    +(n.level!==null&&n.level!==''&&n.level!==undefined?`<span class="nd-tag">Level ${esc(n.level)}</span>`:'');
 }
 function ndH(n){
   const k=n.eid+'|'+(S.showName?1:0)+(S.showEn?1:0)+'|'+n.title+'|'+(n.name||'');
@@ -524,7 +625,7 @@ function colorOf(n){
   return S.dColor[n.dept]||{c:PALETTE[0],t:TINT[0]};
 }
 
-/* Dựng rừng hiển thị cho tập eid đang xem — nối tắt qua node bị ẩn, gom "Nhóm hiển thị" thành hộp */
+/* Build the visible forest for the current eid set — bridge over hidden nodes, fold "Group" into boxes */
 function buildForest(eids){
   const all=nodeMap(), set=new Set(eids), NM={}, co={}, roots=[];
   S.nodes.forEach(n=>{ if(!set.has(n.eid))return; NM[n.eid]=n;
@@ -532,13 +633,13 @@ function buildForest(eids){
     while(p&&!set.has(p))p=(all[p]||{}).reports;
     if(p&&set.has(p))(co[p]=co[p]||[]).push(n.eid); else roots.push(n.eid);
   });
-  Object.keys(co).forEach(p=>{                        // gom nhóm hiển thị
+  Object.keys(co).forEach(p=>{                        // fold display groups
     const kids=co[p], gs={};
     kids.forEach(e=>{const g=NM[e].group;if(g)(gs[g]=gs[g]||[]).push(e);});
     Object.keys(gs).forEach(g=>{
       if(gs[g].length<2)return;
       const bid='#G:'+p+':'+g, mem=gs[g];
-      NM[bid]={eid:bid,isBox:true,title:g,group:g,sub:mem.length+' vị trí',dept:NM[mem[0]].dept};
+      NM[bid]={eid:bid,isBox:true,title:g,group:g,sub:mem.length+' positions',dept:NM[mem[0]].dept};
       const at=kids.indexOf(mem[0]);
       co[p]=kids.filter(e=>!mem.includes(e)); co[p].splice(at,0,bid);
       co[bid]=mem;
@@ -561,7 +662,7 @@ function lay(e,cx,y,P,F){
   if(kids.length){
     const total=kids.reduce((s,k)=>s+sW(k,F),0)+GAP_X*(kids.length-1);
     let x=cx-total/2;
-    const cy=y+h+GAP_Y+(n.isBox?0:0);
+    const cy=y+h+GAP_Y;
     kids.forEach(k=>{const w=sW(k,F); bottom=Math.max(bottom,lay(k,x+w/2,cy,P,F)); x+=w+GAP_X;});
   }
   return bottom;
@@ -599,7 +700,7 @@ function renderTree(el,F,opts){
     const kids=F.co[e]||[];
     if(kids.length&&!opts.static){
       const coll=isColl(e);
-      html+=`<button class="eb" data-tg="${esc(e)}" title="${coll?'Mở':'Thu'} ${kids.length} cấp dưới"
+      html+=`<button class="eb" data-tg="${esc(e)}" title="${coll?'Expand':'Collapse'} ${kids.length} report(s)"
         style="left:${p.x+NW/2}px;top:${p.y+p.h+6}px">${coll?'<b style="font-size:8px">'+kids.length+'</b>':'<i class="ar">▲</i>'}</button>`;
     }
   });
@@ -607,7 +708,7 @@ function renderTree(el,F,opts){
   return {P,W,H:bottom+BTN_GAP,segs};
 }
 
-/* ═══════════ 6. VIEW HIỆN TẠI ═══════════ */
+/* ═══════════ 6. CURRENT VIEW ═══════════ */
 const viewKey=()=>S.view.khoi+'/'+S.view.dept;
 function eidsOfView(){
   let list=S.nodes;
@@ -626,34 +727,37 @@ function render(){
   const R=renderTree($('#canvas'),F);
   S.P=R.P;
   bindCanvas();
-  /* Sơ đồ rộng hơn khung thì cuộn về giữa — chỉ làm khi đổi tab, để kéo thả không bị nhảy */
+  /* When the chart is wider than the frame, centre the scroll — only on tab change,
+     so dragging a card does not make the frame jump sideways */
   const tw=$('#canvas').parentNode;
   if(S._cv!==viewKey()){ S._cv=viewKey(); tw.scrollLeft=Math.max(0,(tw.scrollWidth-tw.clientWidth)/2); }
   const dept=S.view.dept, khoi=S.view.khoi;
-  /* Tab phòng ban có kèm cấp trên ngoài phòng — chỉ đếm người của chính phòng đó */
+  /* A department tab also shows managers outside the department — count only its own seats */
   const mine=Object.values(F.NM).filter(n=>!n.isBox&&(dept==='__all__'||n.dept===dept));
-  const total=mine.length, filled=mine.filter(n=>n.name&&!/chưa có/i.test(n.name)).length;
-  $('#dhead').innerHTML=`<div><div class="dh-name">${esc(dept==='__all__'?(khoi==='__all__'?'Toàn công ty':khoi):dept)}</div>
-    <div class="dh-sub">${dept==='__all__'?'Kéo thả card để sắp lại cơ cấu · bấm nút mũi tên lên để thu gọn nhánh':'Có kèm cấp trên ngoài phòng ban để thấy đường báo cáo'}</div></div>
-    <span class="pill">${total} vị trí</span><span class="pill">${filled} đã có người</span>
-    ${total-filled?`<span class="pill" style="background:#FEF3C7;color:#92400e">${total-filled} còn trống</span>`:''}`;
-  const sts=[...new Set(S.nodes.map(n=>low(n.status)).filter(s=>STATUS[s]))];
-  $('#legend').innerHTML=sts.map(s=>`<span><i style="background:${STATUS[s].c}"></i>${STATUS[s].l}</span>`).join('')
-    +(S.fileName?`<span style="color:#8A8FA3">Nguồn: ${esc(S.fileName)}</span>`:'');
-  const bu=$('#btnUndo');                          // file HTML xuất ra không có 3 nút này
+  const total=mine.length, filled=mine.filter(n=>n.name&&!VACANT.test(n.name)).length;
+  $('#dhead').innerHTML=`<div><div class="dh-name">${esc(dept==='__all__'?(khoi==='__all__'?'Company-wide':khoi):dept)}</div>
+    <div class="dh-sub">${dept==='__all__'?'Drag a card to restructure · click the arrow button to collapse a branch':'Managers outside the department are included so the reporting line stays visible'}</div></div>
+    <span class="pill">${total} positions</span><span class="pill">${filled} filled</span>
+    ${total-filled?`<span class="pill" style="background:#FEF3C7;color:#92400e">${total-filled} vacant</span>`:''}`;
+  const seen={}, items=[];
+  S.nodes.forEach(n=>{ const st=statusOf(n.status);
+    if(st&&!seen[st.l]){seen[st.l]=1;items.push(st);} });
+  $('#legend').innerHTML=items.map(st=>`<span><i style="background:${st.c}"></i>${esc(st.l)}</span>`).join('')
+    +(S.fileName?`<span style="color:#8A8FA3">Source: ${esc(S.fileName)}</span>`:'');
+  const bu=$('#btnUndo');                          // the exported HTML file has no such buttons
   if(bu){ bu.disabled=S.hpos<0; $('#btnRedo').disabled=S.hpos>=S.hist.length-1;
     $('#btnReset').disabled=JSON.stringify(S.nodes.map(n=>({eid:n.eid,reports:n.reports})))===S.orig; }
 }
 function buildTabs(){
   const mt=$('#mtabs'),st=$('#stabs');
   const ks=['__all__',...S.khois];
-  mt.innerHTML=S.khois.length?ks.map(k=>`<button class="mtab${S.view.khoi===k?' on':''}" data-k="${esc(k)}">${k==='__all__'?'Toàn công ty':esc(k)}</button>`).join(''):'';
+  mt.innerHTML=S.khois.length?ks.map(k=>`<button class="mtab${S.view.khoi===k?' on':''}" data-k="${esc(k)}">${k==='__all__'?'Company-wide':esc(k)}</button>`).join(''):'';
   mt.style.display=S.khois.length?'':'none';
   const ds=S.view.khoi==='__all__'?S.depts:(S.khoiDepts[S.view.khoi]||[]);
-  st.innerHTML=['__all__',...ds].map(d=>`<button class="stab${S.view.dept===d?' on':''}" data-d="${esc(d)}">${d==='__all__'?'▦ Sơ đồ đầy đủ':esc(d)}</button>`).join('');
+  st.innerHTML=['__all__',...ds].map(d=>`<button class="stab${S.view.dept===d?' on':''}" data-d="${esc(d)}">${d==='__all__'?'▦ Full chart':esc(d)}</button>`).join('');
 }
 
-/* ═══════════ 7. KÉO THẢ ═══════════ */
+/* ═══════════ 7. DRAG AND DROP ═══════════ */
 let DRAG=null;
 function descendants(eid){
   const co={};S.nodes.forEach(n=>{if(n.reports)(co[n.reports]=co[n.reports]||[]).push(n.eid);});
@@ -669,16 +773,16 @@ function snapshot(){
 function applyMove(src,dst,mode){
   const idx=e=>S.nodes.findIndex(n=>n.eid===e);
   const bad=descendants(src);
-  if(src===dst||bad.has(dst)){toast('Không thể chuyển một người xuống dưới cấp dưới của chính họ');return;}
+  if(src===dst||bad.has(dst)){toast('Cannot move someone underneath their own subordinate');return;}
   const sn=S.nodes[idx(src)], dn=S.nodes[idx(dst)];
-  if(mode==='child'&&sn.reports===dst){toast(`"${sn.title}" vốn đã báo cáo cho "${dn.title}"`);return;}
+  if(mode==='child'&&sn.reports===dst){toast(`"${sn.title}" already reports to "${dn.title}"`);return;}
   snapshot();
   S.nodes.splice(idx(src),1);
   if(mode==='child'){ sn.reports=dst; S.nodes.splice(idx(dst)+1,0,sn); }
   else{ sn.reports=dn.reports; S.nodes.splice(idx(dst)+(mode==='after'?1:0),0,sn); }
   buildMeta(); render();
-  toast(mode==='child'?`"${sn.title}" → báo cáo cho "${dn.title}"`
-    :`"${sn.title}" → ngang hàng ${mode==='after'?'sau':'trước'} "${dn.title}"`);
+  toast(mode==='child'?`"${sn.title}" → now reports to "${dn.title}"`
+    :`"${sn.title}" → moved ${mode==='after'?'after':'before'} "${dn.title}"`);
 }
 function dzMode(ev,el){
   const r=el.getBoundingClientRect(), f=(ev.clientX-r.left)/r.width;
@@ -703,17 +807,17 @@ function bindCanvas(){
       const m=dzMode(e,el),s=DRAG; DRAG=null; applyMove(s,el.dataset.eid,m);});
   });
 }
-/* ═══════════ 8. DANH SÁCH VIEW ĐỂ XUẤT ═══════════ */
+/* ═══════════ 8. VIEW LIST FOR EXPORTS ═══════════ */
 function exportViews(){
   const out=[];
   if(S.khois.length){
-    out.push({khoi:'__all__',dept:'__all__',label:'Toàn công ty'});
+    out.push({khoi:'__all__',dept:'__all__',label:'Company-wide'});
     S.khois.forEach(k=>{
-      out.push({khoi:k,dept:'__all__',label:'Khối '+k});
+      out.push({khoi:k,dept:'__all__',label:k});
       (S.khoiDepts[k]||[]).forEach(d=>out.push({khoi:k,dept:d,label:d}));
     });
   }else{
-    out.push({khoi:'__all__',dept:'__all__',label:'Toàn công ty'});
+    out.push({khoi:'__all__',dept:'__all__',label:'Company-wide'});
     S.depts.forEach(d=>out.push({khoi:'__all__',dept:d,label:d}));
   }
   return out;
@@ -730,12 +834,14 @@ function offscreen(view,pad){
   return {outer,F,R};
 }
 
-/* ═══════════ 9. XUẤT HTML ═══════════ */
-/* Gói cả hàm mũi tên nên phải tự gán tên — f.toString() của arrow không kèm tên biến */
+/* ═══════════ 9. HTML EXPORT ═══════════ */
+/* Arrow functions are bundled too, so the name has to be written out — an arrow's
+   toString() does not include the variable it was assigned to */
 const EXPORT_FNS={esc,low,norm,statusOf,cardHTML,ndH,colorOf,nodeMap,buildForest,sW,lay,lineSegs,
   renderTree,eidsOfView,buildTabs,render,bindCanvas,descendants,snapshot,applyMove,dzMode,toast,buildMeta};
 function exportHTML(){
-  /* Gộp cả <style> font base64 lẫn CSS chính → file xuất ra tự chạy, không cần mạng */
+  /* Bundle the base64 <style> font block together with the main CSS → the exported
+     file runs on its own, with no network */
   const css=[...document.querySelectorAll('style')].map(s=>s.textContent).join('\n');
   const state={nodes:S.nodes,depts:S.depts,khois:S.khois,khoiDepts:S.khoiDepts,dColor:S.dColor,
     gColor:S.gColor,view:S.view,showName:S.showName,showEn:S.showEn,coll:S.coll,
@@ -743,6 +849,7 @@ function exportHTML(){
   const js=`
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const PALETTE=${JSON.stringify(PALETTE)},TINT=${JSON.stringify(TINT)},STATUS=${JSON.stringify(STATUS)};
+const VACANT=${VACANT.toString()};
 const NW=${NW},GAP_X=${GAP_X},GAP_Y=${GAP_Y},GRP_H=${GRP_H},BTN_GAP=${BTN_GAP},HCH={};
 let DRAG=null,_tt;
 const S=${JSON.stringify(state)};
@@ -756,57 +863,59 @@ $('#stabs').onclick=e=>{const b=e.target.closest('.stab');if(!b)return;
 $('#ckName').onchange=e=>{S.showName=e.target.checked;render();};
 $('#ckEn').onchange=e=>{S.showEn=e.target.checked;render();};
 buildTabs();render();`;
-  const html=`<!DOCTYPE html><html lang="vi"><head><meta charset="UTF-8">
+  const html=`<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Sơ đồ tổ chức</title>
+<title>Org chart</title>
 <style>${css}</style></head><body>
-<header class="hdr"><div class="logo">⌗</div><div><b>Sơ đồ Tổ chức</b>
-<div class="sub">Xuất ngày ${new Date().toLocaleDateString('vi-VN')}</div></div><div class="sp"></div>
-<label class="tgl"><input type="checkbox" id="ckName" ${S.showName?'checked':''}> Hiện tên</label>
-<label class="tgl"><input type="checkbox" id="ckEn" ${S.showEn?'checked':''}> Chức danh EN</label></header>
+<header class="hdr"><div class="logo">⌗</div><div><b>Org Chart</b>
+<div class="sub">Exported ${today()}</div></div><div class="sp"></div>
+<label class="tgl"><input type="checkbox" id="ckName" ${S.showName?'checked':''}> Show names</label>
+<label class="tgl"><input type="checkbox" id="ckEn" ${S.showEn?'checked':''}> Secondary title</label></header>
 <nav class="mtabs" id="mtabs"></nav><div class="stabs" id="stabs"></div>
 <div class="dhead" id="dhead"></div><div class="legend" id="legend"></div>
 <div class="tree-wrap"><div id="canvas" class="tc"></div></div>
 <div id="stage"></div><div class="toast" id="toast"></div>
 <script>${js}<\/script></body></html>`;
   saveBlob(new Blob([html],{type:'text/html;charset=utf-8'}),fileBase()+'.html');
-  toast('Đã xuất file HTML — mở bằng trình duyệt, vẫn bấm tab và kéo thả được');
+  toast('HTML exported — open it in any browser, tabs and dragging still work');
 }
-function fileBase(){return 'So_do_to_chuc_'+new Date().toISOString().slice(0,10);}
+const today=()=>new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+function fileBase(){return 'Org_Chart_'+new Date().toISOString().slice(0,10);}
 function saveBlob(blob,name){
   const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name;
   document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(a.href),4000);
 }
 
-/* ═══════════ 10. XUẤT PDF — mỗi view một trang A4 ngang đã dàn sẵn ═══════════ */
-const PG_W=1684, PG_H=1191;                       // A4 ngang @144dpi
+/* ═══════════ 10. PDF EXPORT — one pre-laid-out A4 landscape page per view ═══════════ */
+const PG_W=1684, PG_H=1191;                       // A4 landscape @144dpi
 function buildPage(v,i,n){
   const keep=S.view; S.view={khoi:v.khoi,dept:v.dept};
   const F=buildForest(eidsOfView());
   const mine=Object.values(F.NM).filter(x=>!x.isBox&&(v.dept==='__all__'||x.dept===v.dept));
-  const filled=mine.filter(x=>x.name&&!/chưa có/i.test(x.name)).length;
+  const filled=mine.filter(x=>x.name&&!VACANT.test(x.name)).length;
   const open=mine.length-filled;
   const col=v.dept==='__all__'?{c:'var(--navy)'}:(S.dColor[v.dept]||{c:'var(--navy)'});
-  const sub=v.dept==='__all__'?'Sơ đồ tổ chức toàn bộ'
-    :'Sơ đồ phòng ban · có kèm cấp trên ngoài phòng để thấy đường báo cáo';
+  const sub=v.dept==='__all__'?'Full organisational chart'
+    :'Department chart · managers outside the department are included so the reporting line stays visible';
   const pg=document.createElement('div'); pg.className='pg';
   pg.innerHTML=`<div class="pg-top">
       <div><div class="pg-name" style="color:${col.c}">${esc(v.label)}</div>
         <div class="pg-sub">${esc(sub)}</div></div>
       <div class="pg-stats">
-        <div class="pg-stat"><b style="color:${col.c}">${mine.length}</b><span>Vị trí</span></div>
-        <div class="pg-stat"><b style="color:var(--ok)">${filled}</b><span>Đã có người</span></div>
-        ${open?`<div class="pg-stat"><b style="color:var(--warn)">${open}</b><span>Còn trống</span></div>`:''}
+        <div class="pg-stat"><b style="color:${col.c}">${mine.length}</b><span>Positions</span></div>
+        <div class="pg-stat"><b style="color:var(--ok)">${filled}</b><span>Filled</span></div>
+        ${open?`<div class="pg-stat"><b style="color:var(--warn)">${open}</b><span>Vacant</span></div>`:''}
       </div></div>
     <div class="pg-panel"><div class="pg-fit"><div class="tc"></div></div></div>
-    <div class="pg-foot"><span>Sơ đồ tổ chức</span><i class="dot"></i>
-      <span>${new Date().toLocaleDateString('vi-VN')}</span>
-      <span style="margin-left:auto">Trang ${i+1}/${n}</span></div>`;
+    <div class="pg-foot"><span>Org chart</span><i class="dot"></i>
+      <span>${today()}</span>
+      <span style="margin-left:auto">Page ${i+1}/${n}</span></div>`;
   $('#stage').appendChild(pg);
   const tc=pg.querySelector('.tc');
   const R=renderTree(tc,F,{static:true});
   const panel=pg.querySelector('.pg-panel'), PAD=36;
-  /* Cho phóng tới 1.6 lần: sơ đồ nhỏ vẫn lấp đầy trang, chữ vẫn nét vì phóng trước khi chụp ảnh */
+  /* Allow up to 1.6× zoom: a small chart still fills the page, and text stays sharp
+     because the zoom happens before the snapshot */
   const k=Math.min(1.6,(panel.clientWidth-PAD*2)/R.W,(panel.clientHeight-PAD*2)/R.H);
   const fit=pg.querySelector('.pg-fit');
   fit.style.width=(R.W*k)+'px'; fit.style.height=(R.H*k)+'px';
@@ -815,47 +924,48 @@ function buildPage(v,i,n){
   return pg;
 }
 async function exportPDF(){
-  const views=exportViews(); toast('Đang dựng PDF ('+views.length+' trang)…',20000);
+  const views=exportViews(); toast('Building the PDF ('+views.length+' pages)…',20000);
   const {jsPDF}=window.jspdf;
   const pdf=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});
-  pdf.setProperties({title:'Sơ đồ tổ chức'});
+  pdf.setProperties({title:'Org chart'});
   for(let i=0;i<views.length;i++){
     const pg=buildPage(views[i],i,views.length);
     const cv=await html2canvas(pg,{scale:1.5,backgroundColor:'#ffffff',logging:false,
       width:PG_W,height:PG_H,windowWidth:PG_W,windowHeight:PG_H});
     pg.remove();
     if(i)pdf.addPage();
-    /* Trang đã dàn đúng khổ nên dán full-bleed, không co kéo lại lần nữa */
+    /* The page is already laid out at the exact format, so it is placed full-bleed without rescaling */
     pdf.addImage(cv.toDataURL('image/png'),'PNG',0,0,297,210,undefined,'FAST');
   }
   pdf.save(fileBase()+'.pdf');
-  toast('Đã xuất PDF — '+views.length+' trang A4 ngang');
+  toast('PDF exported — '+views.length+' A4 landscape pages');
 }
 
-/* ═══════════ 11. XUẤT POWERPOINT (shape thật, sửa được) ═══════════ */
-/* PPTX không nhúng được font qua thư viện → dùng Arial: máy nào cũng có sẵn và đủ dấu tiếng Việt */
+/* ═══════════ 11. POWERPOINT EXPORT (real, editable shapes) ═══════════ */
+/* The library cannot embed fonts into a PPTX → Arial, which every machine has and which
+   covers Latin diacritics */
 const PF='Arial';
 const hex=c=>String(c).replace('#','').toUpperCase();
 function exportPPTX(){
-  const views=exportViews(); toast('Đang dựng PowerPoint ('+views.length+' slide)…',20000);
+  const views=exportViews(); toast('Building the deck ('+views.length+' slides)…',20000);
   const pptx=new PptxGenJS();
   pptx.defineLayout({name:'W16x9',width:13.33,height:7.5});
   pptx.layout='W16x9';
-  pptx.title='Sơ đồ tổ chức';
+  pptx.title='Org chart';
   const SW=13.33,SH=7.5,MX=.5,TOP=1.5,BOT=.62;
   views.forEach((v,i)=>{
     const {outer,F,R}=offscreen(v,0); outer.remove();
     const sl=pptx.addSlide(); sl.background={color:'FFFFFF'};
     const mine=Object.values(F.NM).filter(x=>!x.isBox&&(v.dept==='__all__'||x.dept===v.dept));
-    const filled=mine.filter(x=>x.name&&!/chưa có/i.test(x.name)).length;
+    const filled=mine.filter(x=>x.name&&!VACANT.test(x.name)).length;
     const col=hex(v.dept==='__all__'?'#232A78':(S.dColor[v.dept]||{c:'#232A78'}).c);
     sl.addText(v.label,{x:MX,y:.3,w:8.4,h:.52,fontSize:26,bold:true,color:col,fontFace:PF,valign:'middle'});
-    sl.addText(v.dept==='__all__'?'Sơ đồ tổ chức toàn bộ'
-      :'Sơ đồ phòng ban · có kèm cấp trên ngoài phòng để thấy đường báo cáo',
+    sl.addText(v.dept==='__all__'?'Full organisational chart'
+      :'Department chart · managers outside the department included',
       {x:MX,y:.82,w:8.4,h:.28,fontSize:11,color:'8A8FA3',fontFace:PF});
-    /* Ô thống kê góc phải, canh phải dần vào */
-    const stats=[[mine.length,'Vị trí',col],[filled,'Đã có người','16A34A']];
-    if(mine.length-filled)stats.push([mine.length-filled,'Còn trống','D97706']);
+    /* Stat boxes in the top-right corner, right-aligned inwards */
+    const stats=[[mine.length,'Positions',col],[filled,'Filled','16A34A']];
+    if(mine.length-filled)stats.push([mine.length-filled,'Vacant','D97706']);
     stats.forEach((s,j)=>{
       const w=1.42,x=SW-MX-(stats.length-j)*(w+.12)+.12;
       sl.addText([{text:String(s[0]),options:{fontSize:19,bold:true,color:s[2],breakLine:true}},
@@ -864,8 +974,8 @@ function exportPPTX(){
          fontFace:PF,margin:1,fill:{color:'FFFFFF'},line:{color:'E3E8F4',width:1},lineSpacingMultiple:.85});
     });
     sl.addShape(pptx.ShapeType.line,{x:MX,y:1.28,w:SW-MX*2,h:0,line:{color:'E3E8F4',width:1}});
-    /* Cây vẽ bằng shape thật, tự thu phóng cho vừa slide */
-    /* Chặn trên 0.011 in/px: sơ đồ ít người thì card không phình to lố, chữ vẫn cân với hộp */
+    /* The tree is drawn with real shapes and scaled to fit the slide */
+    /* Capped at 0.011 in/px so a small chart does not blow the cards up out of proportion */
     const sc=Math.min(.011,(SW-MX*2)/R.W,(SH-TOP-BOT)/R.H);
     const ox=MX+((SW-MX*2)-R.W*sc)/2, oy=TOP+((SH-TOP-BOT)-R.H*sc)/2;
     const X=x=>ox+x*sc, Y=y=>oy+y*sc;
@@ -877,10 +987,10 @@ function exportPPTX(){
       const body=[{text:nd.title,options:{bold:true,fontSize:fs(11.5),color:'1A1A2E',breakLine:true}}];
       if(nd.isBox&&nd.sub)body.push({text:nd.sub,options:{fontSize:fs(10.5),color:'555555'}});
       if(!nd.isBox){
-        if(S.showName)body.push({text:nd.name||'(chưa có người)',options:{fontSize:fs(10.5),color:'555555',breakLine:true}});
+        if(S.showName)body.push({text:nd.name||'(vacant)',options:{fontSize:fs(10.5),color:'555555',breakLine:true}});
         if(S.showEn&&nd.title_en)body.push({text:nd.title_en,options:{fontSize:fs(8.5),color:'8A8FA3',breakLine:true}});
         if(nd.level!==null&&nd.level!==''&&nd.level!==undefined)
-          body.push({text:'Bậc '+nd.level,options:{fontSize:fs(8),bold:true,color:hex(c.c)}});
+          body.push({text:'Level '+nd.level,options:{fontSize:fs(8),bold:true,color:hex(c.c)}});
       }
       sl.addText(body,{shape:pptx.ShapeType.roundRect,rectRadius:.05,
         x:X(p.x),y:Y(p.y),w:p.w*sc,h:p.h*sc,align:'center',valign:'middle',
@@ -889,34 +999,34 @@ function exportPPTX(){
         line:{color:hex(c.c),width:nd.isBox?1.5:1},
         shadow:{type:'outer',blur:5,offset:1,angle:90,color:'A9B4D6',opacity:.3}});
     });
-    sl.addText(`Trang ${i+1}/${views.length}`,{x:SW-2.4,y:SH-.5,w:1.9,h:.3,fontSize:9,
+    sl.addText(`Page ${i+1}/${views.length}`,{x:SW-2.4,y:SH-.5,w:1.9,h:.3,fontSize:9,
       color:'8A8FA3',align:'right',fontFace:PF});
-    sl.addText('Sơ đồ tổ chức · '+new Date().toLocaleDateString('vi-VN'),
+    sl.addText('Org chart · '+today(),
       {x:MX,y:SH-.5,w:5,h:.3,fontSize:9,color:'8A8FA3',fontFace:PF});
   });
   pptx.writeFile({fileName:fileBase()+'.pptx'})
-    .then(()=>toast('Đã xuất PowerPoint — '+views.length+' slide, shape sửa được trực tiếp'));
+    .then(()=>toast('PowerPoint exported — '+views.length+' slides of editable shapes'));
 }
 
-/* ═══════════ 12. SỰ KIỆN ═══════════ */
+/* ═══════════ 12. EVENTS ═══════════ */
 const SAMPLE=[
-["BOD-01","Ban Giám đốc","Tổng Giám đốc","Nguyễn Văn An","Hiện tại","",1,"","CEO","Văn phòng"],
-["BOD-02","Ban Giám đốc","Phó Tổng Giám đốc","Trần Thị Bình","Hiện tại","BOD-01",2,"","COO","Văn phòng"],
-["HR-01","Nhân sự","Trưởng phòng Nhân sự","Lê Minh Châu","Hiện tại","BOD-01",4,"","HR Manager","Văn phòng"],
-["HR-02","Nhân sự","Chuyên viên Tuyển dụng","Phạm Thu Dung","Hiện tại","HR-01",7,"","Recruitment Executive","Văn phòng"],
-["HR-03","Nhân sự","Chuyên viên C&B","","New HC","HR-01",7,"","C&B Executive","Văn phòng"],
-["SM-01","Kinh doanh & Marketing","Giám đốc Kinh doanh","Vũ Quốc Đạt","Hiện tại","BOD-01",3,"","Sales Director","Văn phòng"],
-["SM-02","Kinh doanh & Marketing","Giám sát Kinh doanh","Đỗ Hải Giang","Hiện tại","SM-01",5,"SALES","Area Sales Supervisor","Văn phòng"],
-["SM-03","Kinh doanh & Marketing","Chuyên viên Kinh doanh","Ngô Thanh Hà","Hiện tại","SM-01",7,"SALES","Sales Executive","Văn phòng"],
-["SM-04","Kinh doanh & Marketing","Chuyên viên Kinh doanh","Bùi Anh Khoa","Replacement","SM-01",7,"SALES","Sales Executive","Văn phòng"],
-["SM-05","Kinh doanh & Marketing","Trưởng nhóm Marketing","Hoàng Mai Lan","Hiện tại","SM-01",5,"MARKETING","Marketing Lead","Văn phòng"],
-["SM-06","Kinh doanh & Marketing","Chuyên viên Thiết kế","Trịnh Bảo Minh","Hiện tại","SM-05",7,"MARKETING","Designer","Văn phòng"],
-["PRD-01","Sản xuất","Trưởng bộ phận Sản xuất","Đặng Văn Nam","Hiện tại","BOD-02",4,"","Production Manager","Nhà máy"],
-["PRD-02","Sản xuất","Trưởng ca Sản xuất","Lý Thị Oanh","Hiện tại","PRD-01",6,"","Production Supervisor","Nhà máy"],
-["PRD-03","Sản xuất","Công nhân vận hành","Trương Văn Phú","Hiện tại","PRD-02",9,"","Production Operator","Nhà máy"],
-["PRD-04","Sản xuất","Công nhân vận hành","","New HC","PRD-02",9,"","Production Operator","Nhà máy"],
-["QA-01","Chất lượng","Trưởng bộ phận QA","Cao Kim Quy","Hiện tại","BOD-02",4,"","QA Manager","Nhà máy"],
-["QA-02","Chất lượng","Kỹ thuật viên QA","Hồ Sỹ Sơn","Hiện tại","QA-01",7,"","QA Technician","Nhà máy"]];
+["BOD-01","Executive","Chief Executive Officer","Alex Mercer","Active","",1,"","CEO","Head Office"],
+["BOD-02","Executive","Chief Operating Officer","Priya Raman","Active","BOD-01",2,"","COO","Head Office"],
+["HR-01","People & Culture","Head of People","Dana Whitfield","Active","BOD-01",4,"","HR Manager","Head Office"],
+["HR-02","People & Culture","Talent Acquisition Specialist","Marco Silva","Active","HR-01",7,"","Recruiter","Head Office"],
+["HR-03","People & Culture","Compensation & Benefits Specialist","","New HC","HR-01",7,"","C&B Executive","Head Office"],
+["SM-01","Sales & Marketing","Sales Director","Owen Blake","Active","BOD-01",3,"","Sales Director","Head Office"],
+["SM-02","Sales & Marketing","Area Sales Supervisor","Hannah Ortiz","Active","SM-01",5,"SALES","Field Supervisor","Head Office"],
+["SM-03","Sales & Marketing","Account Executive","Liam Novak","Active","SM-01",7,"SALES","Sales Executive","Head Office"],
+["SM-04","Sales & Marketing","Account Executive","Sofia Ibrahim","Replacement","SM-01",7,"SALES","Sales Executive","Head Office"],
+["SM-05","Sales & Marketing","Marketing Lead","Nora Petrov","Active","SM-01",5,"MARKETING","Marketing Lead","Head Office"],
+["SM-06","Sales & Marketing","Graphic Designer","Tomas Reyes","Active","SM-05",7,"MARKETING","Designer","Head Office"],
+["PRD-01","Production","Production Manager","Grace Adeyemi","Active","BOD-02",4,"","Plant Manager","Plant"],
+["PRD-02","Production","Shift Supervisor","Ivan Kowalski","Active","PRD-01",6,"","Line Supervisor","Plant"],
+["PRD-03","Production","Machine Operator","Yuki Tanaka","Active","PRD-02",9,"","Operator","Plant"],
+["PRD-04","Production","Machine Operator","","New HC","PRD-02",9,"","Operator","Plant"],
+["QA-01","Quality","Quality Assurance Manager","Elena Rossi","Active","BOD-02",4,"","QA Manager","Plant"],
+["QA-02","Quality","Quality Technician","Samir Haddad","Active","QA-01",7,"","QA Technician","Plant"]];
 const K=['eid','dept','title','name','status','reports','level','group','title_en','khoi'];
 
 $('#drop').onclick=()=>$('#file').click();
@@ -926,16 +1036,16 @@ $('#file').onchange=e=>{if(e.target.files[0])readFile(e.target.files[0]);e.targe
 $('#drop').addEventListener('drop',e=>{const f=e.dataTransfer.files[0];if(f)readFile(f);});
 $('#btnDemo').onclick=()=>{
   const rows=SAMPLE.map((r,i)=>{const o={xr:i+6};K.forEach((k,j)=>o[k]=r[j]);return o;});
-  loadRows(rows,'Dữ liệu mẫu (công ty giả định)');
+  loadRows(rows,'Sample data (fictional company)');
 };
 $('#btnTpl').onclick=()=>{
   const a=document.createElement('a');
-  a.href='Mau_So_Do_To_Chuc_v2.xlsx'; a.download='Mau_So_Do_To_Chuc.xlsx';
+  a.href='Org_Chart_Template.xlsx'; a.download='Org_Chart_Template.xlsx';
   document.body.appendChild(a); a.click(); a.remove();
-  toast('Đang tải file mẫu — điền xong thì kéo ngược lên đây');
+  toast('Downloading the template — fill it in and drop it back here');
 };
-/* Góp ý — biểu mẫu Tally, cùng cơ chế đang chạy trên trang web.
-   Chỉ nạp iframe lúc user bấm nút, để lúc bình thường app không gọi ra mạng. */
+/* Feedback — Tally form, the same one used on the website. The iframe is only loaded
+   when the button is clicked, so the app makes no network call in normal use. */
 const FB_FORM='QKN7V1';
 $('#btnFb').onclick=()=>{
   const fr=$('#fbfr');
@@ -958,14 +1068,14 @@ $('#stabs').onclick=e=>{const b=e.target.closest('.stab');if(!b)return;
 $('#ckName').onchange=e=>{S.showName=e.target.checked;render();};
 $('#ckEn').onchange=e=>{S.showEn=e.target.checked;render();};
 function undo(){ if(S.hpos<0)return; const cur=JSON.stringify(S.nodes);
-  S.nodes=JSON.parse(S.hist[S.hpos]); S.hist[S.hpos]=cur; S.hpos--; buildMeta(); render(); toast('Đã hoàn tác'); }
+  S.nodes=JSON.parse(S.hist[S.hpos]); S.hist[S.hpos]=cur; S.hpos--; buildMeta(); render(); toast('Undone'); }
 function redo(){ if(S.hpos>=S.hist.length-1)return; const cur=JSON.stringify(S.nodes);
-  S.nodes=JSON.parse(S.hist[S.hpos+1]); S.hist[S.hpos+1]=cur; S.hpos++; buildMeta(); render(); toast('Đã làm lại'); }
+  S.nodes=JSON.parse(S.hist[S.hpos+1]); S.hist[S.hpos+1]=cur; S.hpos++; buildMeta(); render(); toast('Redone'); }
 $('#btnUndo').onclick=undo; $('#btnRedo').onclick=redo;
 $('#btnReset').onclick=()=>{
   snapshot(); const o=JSON.parse(S.orig), m={}; o.forEach(x=>m[x.eid]=x.reports);
   S.nodes.sort((a,b)=>o.findIndex(x=>x.eid===a.eid)-o.findIndex(x=>x.eid===b.eid));
-  S.nodes.forEach(n=>n.reports=m[n.eid]); buildMeta(); render(); toast('Đã trả về cơ cấu gốc trong file Excel');
+  S.nodes.forEach(n=>n.reports=m[n.eid]); buildMeta(); render(); toast('Reset to the structure in the Excel file');
 };
 document.addEventListener('keydown',e=>{
   if(!(e.ctrlKey||e.metaKey))return;
@@ -973,16 +1083,16 @@ document.addEventListener('keydown',e=>{
   if(e.key==='y'||(e.key==='Z'&&e.shiftKey)){e.preventDefault();redo();}
 });
 $('#btnHtml').onclick=exportHTML;
-$('#btnPdf').onclick=()=>exportPDF().catch(err=>{console.error(err);toast('Lỗi khi xuất PDF: '+err.message);});
-$('#btnPptx').onclick=()=>{try{exportPPTX();}catch(err){console.error(err);toast('Lỗi khi xuất PPTX: '+err.message);}};
+$('#btnPdf').onclick=()=>exportPDF().catch(err=>{console.error(err);toast('PDF export failed: '+err.message);});
+$('#btnPptx').onclick=()=>{try{exportPPTX();}catch(err){console.error(err);toast('PPTX export failed: '+err.message);}};
 </script>
 <div class="lmenu" id="lmenu">
   <div class="lmenu-pop" id="lmenuPop" role="menu">
-    <a href="https://luoi-hr.vercel.app/en/org-chart/" hreflang="en" role="menuitem">🌐 English version</a>
-    <a href="https://luoi-hr.vercel.app/" role="menuitem">← Về trang Lười HR</a>
+    <a href="https://luoi-hr.vercel.app/org-chart/" hreflang="vi" role="menuitem">🇻🇳 Tiếng Việt</a>
+    <a href="https://luoi-hr.vercel.app/" role="menuitem">← Back to Lười HR</a>
   </div>
   <button class="lmenu-btn" id="lmenuBtn" type="button" aria-haspopup="true" aria-expanded="false"
-    aria-controls="lmenuPop" aria-label="Mở menu">☰ Menu</button>
+    aria-controls="lmenuPop" aria-label="Open menu">☰ Menu</button>
 </div>
 <script>
 (function(){
@@ -993,7 +1103,7 @@ $('#btnPptx').onclick=()=>{try{exportPPTX();}catch(err){console.error(err);toast
   document.addEventListener('keydown',function(e){if(e.key==='Escape')set(false);});
 })();
 </script>
-<a class="bmc" href="https://luoi-hr.vercel.app/ung-ho" aria-label="Ủng hộ Lười Chúa">
+<a class="bmc" href="https://luoi-hr.vercel.app/ung-ho" aria-label="Support Lười Chúa">
   <svg viewBox="0 0 44 54" width="20" height="25" aria-hidden="true">
     <ellipse cx="22" cy="10" rx="18" ry="5" fill="white" stroke="#1a1a2e" stroke-width="2.5"/>
     <ellipse cx="22" cy="7" rx="14" ry="3" fill="white" stroke="#1a1a2e" stroke-width="2"/>

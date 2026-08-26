@@ -47,6 +47,20 @@ const config = {
       gtag: process.env.NODE_ENV === 'production'
         ? { trackingID: 'G-KELJV9GYP2', anonymizeIP: true }
         : undefined,
+      // Plugin sitemap chỉ liệt kê được route React. File .html nằm trong static/
+      // được copy thẳng vào build, plugin không thấy → không có trong sitemap.
+      // Thêm tay ở đây; file mới trong static/ phải bổ sung vào danh sách này.
+      sitemap: {
+        async createSitemapItems({ defaultCreateSitemapItems, ...rest }) {
+          const routes = await defaultCreateSitemapItems(rest);
+          const statics = [
+            '/org-chart/', '/en/org-chart/', '/kpi-demo/', '/hr-office-sim/',
+            '/certificate/', '/hr-tools/hr_department.html',
+            '/hr-tools/hr_lifecycle_simulation.html', '/demos/hr-ibm-dashboard.html',
+          ].map((p) => ({ url: `https://luoi-hr.vercel.app${p}`, changefreq: 'weekly', priority: 0.7 }));
+          return [...routes, ...statics];
+        },
+      },
     })],
   ],
 
