@@ -5,6 +5,7 @@ const VI = {
   title: 'Không muốn tự build?',
   subtitle: 'Nhắn tin — Lười Chúa tư vấn miễn phí hoặc làm A-Z cho bạn.',
   iframeTitle: 'Form tư vấn Lười HR',
+  tallyId: 'WOpZke', // form tiếng Việt
 };
 
 export default function LeadForm({ t = VI }) {
@@ -22,7 +23,7 @@ export default function LeadForm({ t = VI }) {
         <h2 className={styles.title}>{t.title}</h2>
         <p className={styles.subtitle}>{t.subtitle}</p>
         <iframe
-          data-tally-src="https://tally.so/embed/WOpZke?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1"
+          data-tally-src={`https://tally.so/embed/${t.tallyId}?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1`}
           loading="lazy"
           width="100%"
           height="284"

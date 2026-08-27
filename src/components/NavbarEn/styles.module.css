@@ -7,6 +7,10 @@
   align-items: center;
   gap: 0.25rem;
   margin-left: auto;
+  /* Chừa chỗ cho widget GoogleTranslate — nó là position:fixed, top:0, right:16px,
+     không nằm trong luồng layout nên navbar không tự né. Không chừa thì mục
+     "Tiếng Việt" bị nút GT đè lên. Nút GT rộng ~60px + 16px lề phải. */
+  margin-right: 84px;
   min-width: 0;
   overflow-x: auto;
   scrollbar-width: none;
@@ -44,6 +48,9 @@
 }
 
 .lang {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
   flex: none;
   margin-left: 0.35rem;
   padding: 0.4rem 0.7rem;
@@ -59,6 +66,13 @@
   border-color: var(--ifm-color-primary);
   color: var(--ifm-color-primary);
   text-decoration: none;
+}
+
+.langFlag {
+  width: 18px !important;
+  height: 13px !important;
+  border-radius: 2px;
+  flex: none;
 }
 
 @media (max-width: 996px) {

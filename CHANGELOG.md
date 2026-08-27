@@ -1,5 +1,15 @@
 # CHANGELOG — Lười HR Website
 
+## 2026-08-27 — Fix: nút Google Translate đè lên link "Tiếng Việt" ở navbar EN
+
+- `[DESIGN]` **`.links` trong `NavbarEn` được chừa `margin-right: 84px`.** Widget GoogleTranslate là `position:fixed; top:0; right:16px` (`GoogleTranslate/styles.module.css:1-9`) nên không nằm trong luồng layout — navbar không tự né. Navbar tiếng Việt không dính lỗi này vì mọi item đều `position:'left'`, mép phải bỏ trống. Navbar EN đẩy hàng link sang phải bằng `margin-left:auto` nên mục cuối rơi đúng dưới nút GT.
+- `[DESIGN]` **Bỏ emoji 🇻🇳, dùng `flag-icons` (`fi fi-vn`).** Windows không render flag emoji — 🇻🇳 đổ về đúng hai chữ "VN" đứng cạnh chữ "Tiếng Việt". `flag-icons` đã có sẵn trong dependency vì widget GoogleTranslate đang dùng.
+- **Đo lại sau khi sửa** ở 1280 / 996 / 414 / 360px, tính cả trạng thái xấu nhất là cuộn hàng link hết sang phải: khoảng cách tới nút GT đều là **25px**, không trang nào tràn ngang.
+- `[ARCH]` **`LeadForm` nhận `t.tallyId`** thay vì hardcode `WOpZke`.
+- **Backlog:** form Tally bản tiếng Anh chưa có — phải tạo trong tài khoản Tally của Andy, tôi không tạo hộ được. `/en/` tạm nhúng form tiếng Việt; có ID mới thì đổi `tallyId` trong `src/pages/en/_content.js`.
+
+---
+
 ## 2026-08-26 — Fix: `/en/` phải là bản dịch trang chủ, không phải landing page của Org Chart
 
 - `[CONTENT]` **Làm sai ở lần trước:** `/en/` được viết thành trang giới thiệu riêng tool Org Chart. Đúng ra `/en/` là **bản tiếng Anh của trang chủ** — cùng bố cục Hero → Skills → LeadForm như `/`, chỉ khác ngôn ngữ. Viết lại toàn bộ.

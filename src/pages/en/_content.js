@@ -96,4 +96,7 @@ export const leadForm = {
   title: 'Rather not build it yourself?',
   subtitle: 'Send a message — free advice, or we build the whole thing for you.',
   iframeTitle: 'Lười HR consultation form',
+  // Form Tally tiếng Anh chưa tạo (phải làm trong tài khoản Tally của Andy).
+  // Tạm dùng form tiếng Việt; khi có ID mới chỉ đổi đúng chuỗi này.
+  tallyId: 'WOpZke',
 };

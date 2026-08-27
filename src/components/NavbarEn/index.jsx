@@ -1,4 +1,7 @@
 import React from 'react';
+// Windows không render được flag emoji (🇻🇳 đổ về hai chữ "VN"), dùng flag-icons
+// cho giống widget GoogleTranslate. Webpack dedupe nên import lại không tốn thêm.
+import 'flag-icons/css/flag-icons.min.css';
 import styles from './styles.module.css';
 
 // Menu tiếng Anh — bản dịch 1-1 của navbar trong docusaurus.config.js.
@@ -27,7 +30,10 @@ export default function NavbarEn() {
               {note && <span className={styles.note}>{note}</span>}
             </a>
           ))}
-          <a className={styles.lang} href="/" hrefLang="vi">🇻🇳 Tiếng Việt</a>
+          <a className={styles.lang} href="/" hrefLang="vi">
+            <span className={`fi fi-vn ${styles.langFlag}`} />
+            Tiếng Việt
+          </a>
         </div>
       </div>
     </nav>
