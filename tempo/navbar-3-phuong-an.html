@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lười HR — Demo 3 phương án Navbar</title>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --teal:#0D9488; --teal-dark:#0F766E; --teal-light:#CCFBF1; --teal-lightest:#99F6E4;
+  --slate:#1E293B; --slate-mid:#475569; --slate-light:#94A3B8;
+  --bg:#F1F5F9; --white:#fff; --border:#E2E8F0;
+  --danger:#DC2626; --danger-bg:#FEF2F2; --danger-border:#FECACA;
+  --warn-bg:#FEFCE8; --warn-border:#FDE047; --warn-text:#713F12;
+  --ok-bg:#F0FDF4; --ok-border:#BBF7D0; --ok-text:#15803D;
+  --radius:10px;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Be Vietnam Pro',system-ui,sans-serif;background:var(--bg);color:var(--slate);}
+
+/* ── Thanh điều khiển demo ─────────────────────────────────────── */
+.ctrl{position:sticky;top:0;z-index:9999;background:var(--slate);color:#fff;padding:10px 20px;
+  display:flex;align-items:center;gap:22px;flex-wrap:wrap;box-shadow:0 2px 12px rgba(0,0,0,.25)}
+.ctrl-brand{font-weight:700;font-size:13px;letter-spacing:.3px;white-space:nowrap}
+.ctrl-brand small{display:block;font-weight:400;font-size:10px;color:var(--slate-light);letter-spacing:0}
+.ctrl-group{display:flex;align-items:center;gap:8px}
+.ctrl-label{font-size:11px;color:var(--slate-light);text-transform:uppercase;letter-spacing:.6px;font-weight:600}
+.seg{display:flex;background:rgba(255,255,255,.08);border-radius:8px;padding:3px;gap:2px}
+.seg button{background:none;border:none;color:#cbd5e1;font-family:inherit;font-size:12px;font-weight:600;
+  padding:6px 14px;border-radius:6px;cursor:pointer;transition:.15s;white-space:nowrap}
+.seg button:hover{color:#fff;background:rgba(255,255,255,.08)}
+.seg button.on{background:var(--teal);color:#fff}
+input[type=range]{accent-color:var(--teal);width:130px;cursor:pointer}
+.count-pill{font-size:12px;font-weight:700;background:var(--teal);padding:3px 9px;border-radius:20px;min-width:56px;text-align:center}
+.ctrl-hint{font-size:11px;color:var(--slate-light);margin-left:auto;text-align:right;line-height:1.5}
+
+/* ── Khung trình duyệt giả ─────────────────────────────────────── */
+.stage{padding:26px 20px 60px;display:flex;justify-content:center}
+.browser{width:100%;max-width:1280px;transition:max-width .25s ease;background:#fff;
+  border-radius:12px;overflow:hidden;box-shadow:0 10px 40px rgba(15,23,42,.13)}
+.browser.w-1024{max-width:1024px}
+.browser.w-768{max-width:768px}
+.browser.w-390{max-width:390px}
+.chrome{background:#E2E8F0;padding:9px 14px;display:flex;align-items:center;gap:8px;border-bottom:1px solid #CBD5E1}
+.dot{width:11px;height:11px;border-radius:50%}
+.url{flex:1;background:#fff;border-radius:6px;padding:4px 12px;font-size:11px;color:var(--slate-mid);margin-left:8px}
+.viewport-tag{font-size:10px;font-weight:700;color:var(--slate-mid);background:#fff;padding:3px 8px;border-radius:5px}
+
+/* ── NAVBAR (copy style Docusaurus + token luoi-hr) ────────────── */
+.nav{height:60px;background:#fff;border-bottom:1px solid rgba(0,0,0,.06);
+  box-shadow:0 1px 2px 0 rgba(0,0,0,.1);display:flex;align-items:center;
+  padding:0 20px;gap:6px;position:relative;overflow:visible}
+.nav-title{font-weight:700;font-size:17px;color:var(--slate);white-space:nowrap;margin-right:14px;flex-shrink:0}
+.nav-items{display:flex;align-items:center;gap:2px;min-width:0;flex:1}
+.nav-right{display:flex;align-items:center;gap:8px;margin-left:auto;flex-shrink:0;padding-left:10px}
+.nav-item{font-size:15px;font-weight:500;color:#1c1e21;padding:8px 11px;border-radius:6px;
+  cursor:pointer;white-space:nowrap;text-decoration:none;transition:.12s;display:inline-flex;align-items:center;gap:5px}
+.nav-item:hover{color:var(--teal)}
+.nav-item.cta{background:var(--teal);color:#fff;font-weight:600;padding:7px 15px}
+.nav-item.cta:hover{background:var(--teal-dark);color:#fff}
+.nav-item .caret{font-size:9px;opacity:.55;margin-left:1px}
+.burger{display:none;font-size:22px;cursor:pointer;color:var(--slate);padding:4px 8px}
+
+/* trạng thái tràn */
+.nav.overflow .nav-items{overflow:hidden;flex-wrap:nowrap}
+.nav.overflow{outline:2px dashed var(--danger);outline-offset:-2px}
+.overflow-flag{position:absolute;right:8px;top:50%;transform:translateY(-50%);z-index:60;
+  background:var(--danger);color:#fff;font-size:10px;font-weight:700;padding:4px 9px;border-radius:5px;white-space:nowrap}
+
+/* ── Dropdown (PA A & B) ───────────────────────────────────────── */
+.dd{position:relative}
+.dd-panel{position:absolute;top:calc(100% + 6px);left:0;background:#fff;border:1px solid var(--border);
+  border-radius:10px;box-shadow:0 8px 28px rgba(15,23,42,.15);padding:6px;min-width:270px;
+  display:none;z-index:50;max-height:none}
+.dd.open .dd-panel{display:block}
+.dd-link{display:block;padding:8px 12px;font-size:14px;color:#1c1e21;border-radius:6px;cursor:pointer;
+  text-decoration:none;white-space:nowrap}
+.dd-link:hover{background:var(--teal-light);color:var(--teal-dark)}
+.dd-sep{height:1px;background:var(--border);margin:6px 4px}
+.dd-all{display:block;padding:9px 12px;font-size:13px;font-weight:600;color:var(--teal);
+  border-radius:6px;cursor:pointer;text-decoration:none}
+.dd-all:hover{background:var(--teal-light)}
+.dd-scrollnote{font-size:11px;color:var(--danger);padding:6px 12px;font-style:italic}
+.dd-panel.capped{max-height:288px;overflow-y:auto}
+
+/* ── Mega menu (PA C) ──────────────────────────────────────────── */
+.mega{position:absolute;top:100%;left:0;right:0;background:#fff;border-top:1px solid var(--border);
+  box-shadow:0 14px 34px rgba(15,23,42,.14);padding:22px 26px;display:none;z-index:50}
+.nav.mega-open .mega{display:block}
+.mega-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
+.mega-col h4{margin:0 0 10px;font-size:11px;font-weight:700;color:var(--teal);
+  text-transform:uppercase;letter-spacing:.7px;padding-bottom:7px;border-bottom:1px solid var(--border)}
+.mega-item{display:flex;gap:9px;padding:7px 8px;border-radius:7px;cursor:pointer;margin:0 -8px}
+.mega-item:hover{background:#F8FAFC}
+.mega-ico{font-size:17px;line-height:1.2;flex-shrink:0}
+.mega-name{font-size:13px;font-weight:600;color:var(--slate);line-height:1.35}
+.mega-desc{font-size:11px;color:var(--slate-light);line-height:1.4;margin-top:1px}
+.mega-foot{margin-top:18px;padding-top:13px;border-top:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--slate-mid)}
+
+/* ── Thân trang ────────────────────────────────────────────────── */
+.page{padding:40px 30px 46px;background:#fff;min-height:330px}
+.hero{text-align:center;padding:26px 0 34px}
+.hero h1{font-size:33px;font-weight:800;margin:0 0 12px;line-height:1.25}
+.hero h1 span{color:var(--teal)}
+.hero p{color:var(--slate-mid);font-size:15px;max-width:520px;margin:0 auto;line-height:1.65}
+.hero-cta{margin-top:22px;display:inline-block;background:var(--teal);color:#fff;font-weight:600;
+  font-size:14px;padding:11px 26px;border-radius:8px}
+
+/* trang hub /tools của PA B */
+.hub h1{font-size:27px;font-weight:700;margin:0 0 6px}
+.hub .sub{color:var(--slate-mid);font-size:14px;margin:0 0 20px;line-height:1.6}
+.hub-search{width:100%;padding:11px 15px;border:1px solid var(--border);border-radius:9px;
+  font-family:inherit;font-size:14px;margin-bottom:14px;outline:none}
+.hub-search:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(13,148,136,.1)}
+.chips{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:24px}
+.chip{font-size:12px;font-weight:500;padding:6px 13px;border-radius:20px;border:1px solid var(--border);
+  background:#fff;color:var(--slate-mid);cursor:pointer;font-family:inherit;transition:.12s}
+.chip:hover{border-color:var(--teal);color:var(--teal)}
+.chip.on{background:var(--teal);border-color:var(--teal);color:#fff}
+.cat-title{font-size:12px;font-weight:700;color:var(--teal);text-transform:uppercase;
+  letter-spacing:.7px;margin:26px 0 12px}
+.cat-title:first-of-type{margin-top:0}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));gap:13px}
+.card{border:1px solid var(--border);border-radius:var(--radius);padding:16px;background:#fff;
+  cursor:pointer;transition:.15s;position:relative}
+.card:hover{border-color:var(--teal);transform:translateY(-2px);box-shadow:0 6px 18px rgba(13,148,136,.11)}
+.card-ico{font-size:23px;margin-bottom:9px}
+.card-name{font-size:14px;font-weight:600;margin-bottom:5px;line-height:1.35}
+.card-desc{font-size:12px;color:var(--slate-mid);line-height:1.55}
+.card-tag{position:absolute;top:12px;right:12px;font-size:9px;font-weight:700;padding:3px 7px;
+  border-radius:4px;background:var(--warn-bg);color:var(--warn-text);border:1px solid var(--warn-border)}
+.card-tag.tag-demo{background:#F1F5F9;color:var(--slate-mid);border-color:var(--border)}
+.empty{color:var(--slate-light);font-size:13px;padding:26px 0;text-align:center}
+
+/* ── Panel nhận xét ────────────────────────────────────────────── */
+.notes{max-width:1280px;margin:0 auto;padding:0 20px 70px}
+.verdict{border-radius:var(--radius);padding:17px 20px;margin-bottom:15px;border:1px solid;font-size:14px;line-height:1.65}
+.verdict.bad{background:var(--danger-bg);border-color:var(--danger-border);color:#7F1D1D}
+.verdict.mid{background:var(--warn-bg);border-color:var(--warn-border);color:var(--warn-text)}
+.verdict.good{background:var(--ok-bg);border-color:var(--ok-border);color:#14532D}
+.verdict b{display:block;font-size:15px;margin-bottom:5px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.box{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:17px 19px}
+.box h3{margin:0 0 11px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--slate-mid)}
+.box ul{margin:0;padding-left:17px}
+.box li{font-size:13px;line-height:1.7;color:var(--slate-mid);margin-bottom:5px}
+.box li b{color:var(--slate)}
+.pro li::marker{color:var(--teal)}
+.con li::marker{color:var(--danger)}
+.meta{display:flex;gap:26px;flex-wrap:wrap;margin-top:14px;padding-top:14px;border-top:1px solid var(--border)}
+.meta div{font-size:12px;color:var(--slate-light)}
+.meta strong{display:block;font-size:14px;color:var(--slate);font-weight:600;margin-top:2px}
+@media(max-width:820px){.grid2{grid-template-columns:1fr}.ctrl-hint{display:none}}
+</style>
+</head>
+<body>
+
+<!-- ══ ĐIỀU KHIỂN ══ -->
+<div class="ctrl">
+  <div class="ctrl-brand">🦥 Lười HR — Demo Navbar<small>tempo/navbar-3-phuong-an.html</small></div>
+
+  <div class="ctrl-group">
+    <span class="ctrl-label">Phương án</span>
+    <div class="seg" id="segPlan">
+      <button data-plan="now">Hiện tại</button>
+      <button data-plan="a">A · Dropdown</button>
+      <button data-plan="b" class="on">B · Hub</button>
+      <button data-plan="c">C · Mega</button>
+    </div>
+  </div>
+
+  <div class="ctrl-group">
+    <span class="ctrl-label">Số tool</span>
+    <input type="range" id="rngCount" min="4" max="12" value="8">
+    <span class="count-pill" id="pillCount">8</span>
+  </div>
+
+  <div class="ctrl-group">
+    <span class="ctrl-label">Màn hình</span>
+    <div class="seg" id="segWidth">
+      <button data-w="1280" class="on">1280</button>
+      <button data-w="1024">1024</button>
+      <button data-w="768">768</button>
+      <button data-w="390">Mobile</button>
+    </div>
+  </div>
+
+  <div class="ctrl-hint">Bấm vào mục <b>Tools</b> trên navbar để mở<br>Kéo "Số tool" để xem phương án nào vỡ trước</div>
+</div>
+
+<!-- ══ SÂN KHẤU ══ -->
+<div class="stage">
+  <div class="browser" id="browser">
+    <div class="chrome">
+      <div class="dot" style="background:#FF5F57"></div>
+      <div class="dot" style="background:#FEBC2E"></div>
+      <div class="dot" style="background:#28C840"></div>
+      <div class="url" id="urlBar">luoi-hr.vercel.app</div>
+      <div class="viewport-tag" id="vpTag">1280px</div>
+    </div>
+    <div class="nav" id="nav"></div>
+    <div class="page" id="page"></div>
+  </div>
+</div>
+
+<!-- ══ NHẬN XÉT ══ -->
+<div class="notes" id="notes"></div>
+
+<script>
+/* ─────────────────────────────────────────────────────────────────
+   DỮ LIỆU TOOL
+   8 tool đầu là tool THẬT đang có trong repo (static/ + src/pages/tools/).
+   4 tool cuối là dự phóng để test navbar khi scale — chưa tồn tại.
+   ───────────────────────────────────────────────────────────────── */
+/* kind:'tool' = người dùng nhập liệu được (đã đếm <input>/<textarea> trong file thật)
+   kind:'demo' = chỉ xem, 0 ô nhập — là showcase, KHÔNG phải tool */
+var TOOLS = [
+  {ico:'✨', short:'Tạo CV',          name:'AI Career Wingman',      cat:'recruit', kind:'tool', desc:'Viết & chấm CV theo JD bằng AI',            url:'/tools/ai-career-wingman'},
+  {ico:'🧬', short:'Sơ đồ tổ chức',   name:'Org Chart Generator',    cat:'org',     kind:'tool', desc:'Upload danh sách nhân sự → ra sơ đồ',       url:'/org-chart/'},
+  {ico:'📊', short:'Đánh giá KPI',    name:'PerformOS — Khung KPI',  cat:'perf',    kind:'tool', desc:'Nhập mục tiêu, tự chấm điểm hiệu suất',     url:'/kpi-demo/'},
+  {ico:'🏅', short:'Chứng nhận',      name:'Tạo giấy chứng nhận',    cat:'exp',     kind:'tool', desc:'Điền tên → xuất certificate khóa học',      url:'/certificate/'},
+  {ico:'🏢', short:'Văn phòng số',    name:'HR Office Simulator',    cat:'exp',     kind:'demo', desc:'Dạo quanh phòng nhân sự mô phỏng',          url:'/hr-office-sim/'},
+  {ico:'🗂️', short:'Cơ cấu phòng HR', name:'HR Department Map',      cat:'org',     kind:'demo', desc:'Chức năng từng vị trí trong phòng HR',      url:'/hr-tools/hr_department.html'},
+  {ico:'🔄', short:'Vòng đời NV',     name:'HR Lifecycle Simulation',cat:'org',     kind:'demo', desc:'Từ tuyển vào đến nghỉ việc',                url:'/hr-tools/hr_lifecycle_simulation.html'},
+  {ico:'📈', short:'Dashboard nghỉ việc', name:'Dashboard Chi phí Nhân lực', cat:'perf', kind:'demo', desc:'Phân tích dữ liệu nghỉ việc mẫu',    url:'/demos/hr-ibm-dashboard.html'},
+  {ico:'💰', short:'Gross ↔ Net',     name:'Tính lương Gross-Net',   cat:'perf',    kind:'tool', desc:'Quy đổi lương, BHXH, thuế TNCN',            url:'#', soon:1},
+  {ico:'📝', short:'Viết JD',         name:'Trợ lý viết JD',         cat:'recruit', kind:'tool', desc:'Sinh JD chuẩn từ vài dòng mô tả',           url:'#', soon:1},
+  {ico:'🎯', short:'Khung năng lực',  name:'Competency Framework',   cat:'exp',     kind:'tool', desc:'Dựng khung năng lực theo vị trí',           url:'#', soon:1},
+  {ico:'🧮', short:'Chi phí tuyển',   name:'Cost per Hire',          cat:'recruit', kind:'tool', desc:'Tính chi phí trung bình mỗi tuyển dụng',    url:'#', soon:1}
+];
+
+var CATS = [
+  {id:'recruit', label:'Tuyển dụng'},
+  {id:'org',     label:'Tổ chức & Vận hành'},
+  {id:'perf',    label:'Đánh giá & C&B'},
+  {id:'exp',     label:'Trải nghiệm & Đào tạo'}
+];
+
+var state = {plan:'b', count:8, width:1280, hub:false, filter:'all', kind:'all', q:''};
+var tools = function(){ return TOOLS.slice(0, state.count); };
+
+/* ── NAVBAR ─────────────────────────────────────────────────── */
+function renderNav(){
+  var nav = document.getElementById('nav');
+  var mobile = state.width <= 768;
+  var list = tools();
+  var h = '<div class="nav-title">🦥 Lười HR</div>';
+
+  if (mobile){
+    nav.className = 'nav';
+    nav.innerHTML = h + '<div class="nav-right"><span class="burger" style="display:block">☰</span></div>';
+    return;
+  }
+
+  h += '<div class="nav-items">';
+  h += '<a class="nav-item">Bí Kíp Nhân sự</a>';
+
+  if (state.plan === 'now'){
+    // Trạng thái đang chạy thật: mỗi tool 1 mục, label dài nguyên bản
+    var LIVE = ['✨ Tool tạo CV','🧬 Tool tạo Org Chart','🏢 Văn phòng nhân sự số hóa','📊 Hệ thống đánh giá KPI'];
+    for (var i=0;i<list.length;i++){
+      h += '<a class="nav-item">' + (LIVE[i] || (list[i].ico+' '+list[i].name)) + '</a>';
+    }
+  }
+  else if (state.plan === 'a'){
+    // A: một dropdown phẳng, liệt kê tất cả
+    h += '<div class="dd" id="ddA"><a class="nav-item" onclick="toggleDD(\'ddA\')">Tools<span class="caret">▼</span></a>';
+    h += '<div class="dd-panel' + (list.length > 8 ? ' capped' : '') + '">';
+    for (var i=0;i<list.length;i++) h += '<a class="dd-link">'+list[i].ico+' '+list[i].name+'</a>';
+    if (list.length > 8) h += '<div class="dd-scrollnote">↕ Phải cuộn — panel đã vượt chiều cao thoải mái</div>';
+    h += '</div></div>';
+    h += '<a class="nav-item">Ủng hộ</a>';
+  }
+  else if (state.plan === 'b'){
+    // B: dropdown gọn 4 tool hot + lối vào trang hub
+    h += '<div class="dd" id="ddB"><a class="nav-item" onclick="toggleDD(\'ddB\')">Tools<span class="caret">▼</span></a>';
+    h += '<div class="dd-panel">';
+    for (var i=0;i<Math.min(4,list.length);i++) h += '<a class="dd-link">'+list[i].ico+' '+list[i].name+'</a>';
+    h += '<div class="dd-sep"></div>';
+    h += '<a class="dd-all" onclick="openHub()">→ Xem tất cả '+list.length+' tool</a>';
+    h += '</div></div>';
+    h += '<a class="nav-item">Ủng hộ</a>';
+  }
+  else {
+    // C: mega menu 4 cột
+    h += '<a class="nav-item" onclick="toggleMega()">Tools<span class="caret">▼</span></a>';
+    h += '<a class="nav-item">Ủng hộ</a>';
+  }
+
+  h += '</div><div class="nav-right"><a class="nav-item">EN</a><a class="nav-item cta">☕ Mời cà phê</a></div>';
+
+  if (state.plan === 'c') h += renderMega();
+  nav.className = 'nav';
+  nav.innerHTML = h;
+  requestAnimationFrame(checkOverflow);
+}
+
+function renderMega(){
+  var list = tools(), h = '<div class="mega"><div class="mega-grid">';
+  CATS.forEach(function(c){
+    var inCat = list.filter(function(t){return t.cat===c.id});
+    if (!inCat.length) return;
+    h += '<div class="mega-col"><h4>'+c.label+'</h4>';
+    inCat.forEach(function(t){
+      h += '<div class="mega-item"><div class="mega-ico">'+t.ico+'</div><div>'+
+           '<div class="mega-name">'+t.name+'</div><div class="mega-desc">'+t.desc+'</div></div></div>';
+    });
+    h += '</div>';
+  });
+  h += '</div><div class="mega-foot"><span>Tất cả tool miễn phí, chạy ngay trên trình duyệt</span>'+
+       '<span style="color:var(--teal);font-weight:600">Xem tất cả '+list.length+' tool →</span></div></div>';
+  return h;
+}
+
+/* Đo tràn: tổng chiều rộng thực của các mục so với chỗ trống còn lại */
+function checkOverflow(){
+  var nav = document.getElementById('nav');
+  var items = nav.querySelector('.nav-items');
+  if (!items) return;
+  var kids = items.children, need = 0;
+  for (var i=0;i<kids.length;i++) need += kids[i].getBoundingClientRect().width + 2;
+  var avail = items.getBoundingClientRect().width;
+  var over = Math.round(need - avail);
+  var old = nav.querySelector('.overflow-flag');
+  if (old) old.remove();
+  if (over > 4){
+    nav.classList.add('overflow');
+    var f = document.createElement('div');
+    f.className = 'overflow-flag';
+    f.textContent = '⚠ Navbar tràn ' + over + 'px — mục cuối bị cắt';
+    nav.appendChild(f);
+  } else {
+    nav.classList.remove('overflow');
+  }
+}
+
+function toggleDD(id){
+  var d = document.getElementById(id);
+  var wasOpen = d.classList.contains('open');
+  document.querySelectorAll('.dd').forEach(function(x){x.classList.remove('open')});
+  if (!wasOpen) d.classList.add('open');
+}
+function toggleMega(){ document.getElementById('nav').classList.toggle('mega-open'); }
+function openHub(){ state.hub = true; toggleDD('ddB'); render(); }
+
+/* ── THÂN TRANG ─────────────────────────────────────────────── */
+function renderPage(){
+  var p = document.getElementById('page');
+  if (state.plan === 'b' && state.hub){ document.getElementById('urlBar').textContent = 'luoi-hr.vercel.app/tools'; p.innerHTML = renderHub(); bindHub(); return; }
+  document.getElementById('urlBar').textContent = 'luoi-hr.vercel.app';
+  p.innerHTML = '<div class="hero"><h1>Lười, <span>không ngu</span>.</h1>'+
+    '<p>Dùng AI để làm việc nhân sự nhanh hơn — không cần biết code, không cần mua phần mềm.</p>'+
+    '<div class="hero-cta">Bắt đầu với Bí Kíp →</div></div>';
+}
+
+function renderHub(){
+  var list = tools();
+  var h = '<div class="hub"><h1>Tool cho dân Nhân sự</h1>'+
+    '<p class="sub">'+list.length+' công cụ miễn phí, chạy thẳng trên trình duyệt. Không cần đăng ký, dữ liệu không rời máy bạn.</p>'+
+    '<input class="hub-search" id="hubQ" placeholder="🔍 Tìm tool… (thử gõ &quot;KPI&quot; hoặc &quot;lương&quot;)" value="'+state.q+'">'+
+    '<div class="chips">'+
+    '<button class="chip'+(state.kind==='all'?' on':'')+'" data-k="all">Tất cả</button>'+
+    '<button class="chip'+(state.kind==='tool'?' on':'')+'" data-k="tool">🔧 Tool dùng được</button>'+
+    '<button class="chip'+(state.kind==='demo'?' on':'')+'" data-k="demo">👁 Demo xem tham khảo</button>'+
+    '<span style="width:1px;background:var(--border);margin:2px 6px"></span>';
+  CATS.forEach(function(c){
+    h += '<button class="chip'+(state.filter===c.id?' on':'')+'" data-f="'+c.id+'">'+c.label+'</button>';
+  });
+  h += '</div>';
+
+  var q = state.q.toLowerCase();
+  var hit = list.filter(function(t){
+    var okCat  = state.filter==='all' || t.cat===state.filter;
+    var okKind = state.kind==='all'   || t.kind===state.kind;
+    var okQ = !q || (t.name+' '+t.desc+' '+t.short).toLowerCase().indexOf(q) > -1;
+    return okCat && okKind && okQ;
+  });
+
+  if (!hit.length) return h + '<div class="empty">Không tìm thấy tool nào khớp.</div></div>';
+
+  CATS.forEach(function(c){
+    var inCat = hit.filter(function(t){return t.cat===c.id});
+    if (!inCat.length) return;
+    h += '<div class="cat-title">'+c.label+' · '+inCat.length+'</div><div class="cards">';
+    inCat.forEach(function(t){
+      var tag = t.soon ? '<span class="card-tag">SẮP CÓ</span>'
+              : (t.kind==='demo' ? '<span class="card-tag tag-demo">DEMO</span>' : '');
+      h += '<div class="card">'+tag+
+           '<div class="card-ico">'+t.ico+'</div><div class="card-name">'+t.name+'</div>'+
+           '<div class="card-desc">'+t.desc+'</div></div>';
+    });
+    h += '</div>';
+  });
+  return h + '</div>';
+}
+
+function bindHub(){
+  var q = document.getElementById('hubQ');
+  if (q) q.oninput = function(){ state.q = this.value; var pos = this.selectionStart;
+    document.getElementById('page').innerHTML = renderHub(); bindHub();
+    var n = document.getElementById('hubQ'); n.focus(); n.setSelectionRange(pos,pos); };
+  document.querySelectorAll('.chip').forEach(function(b){
+    b.onclick = function(){
+      if (this.dataset.k) state.kind = this.dataset.k; else state.filter = this.dataset.f;
+      document.getElementById('page').innerHTML = renderHub(); bindHub(); };
+  });
+}
+
+/* ── NHẬN XÉT ───────────────────────────────────────────────── */
+var NOTES = {
+  now: {
+    cls:'bad', head:'Hiện tại — 4 tool trên navbar, 4 tool mồ côi',
+    line:'Repo đang có <b>8 tool thật</b> nhưng navbar chỉ dẫn tới 4. Certificate, HR Department, HR Lifecycle, IBM Dashboard không có lối vào nào ngoài sitemap — người dùng không thể tìm ra. Label lại quá dài ("Văn phòng nhân sự số hóa" = 22 ký tự), nên tràn ngay ở 1024px với đúng 4 mục.',
+    pro:['Không phải viết thêm dòng code nào','Mỗi tool được 1 chỗ đứng riêng, click 1 lần là tới'],
+    con:['<b>Tràn ở 1024px</b> với chỉ 4 tool — kéo slider để thấy','Không có chỗ cho tool thứ 5 trở đi','4/8 tool hiện tại không có lối vào','Navbar không còn chỗ cho "Ủng hộ" và bản EN — cả hai đang tồn tại mà không được link'],
+    effort:'—', ceiling:'4 tool', files:'—'
+  },
+  a: {
+    cls:'mid', head:'Phương án A — Dropdown phẳng',
+    line:'Gom hết vào một mục "Tools". Navbar sạch ngay lập tức và không bao giờ tràn nữa. Nhưng vấn đề chỉ dời từ navbar xuống dropdown: kéo slider lên <b>9+</b> để thấy panel phải cuộn.',
+    pro:['Sửa ~20 dòng trong <code>docusaurus.config.js</code>, xong trong 15 phút','Navbar hết tràn vĩnh viễn, giải phóng chỗ cho "Ủng hộ" + EN','Docusaurus hỗ trợ native (<code>type:\'dropdown\'</code>) — không swizzle'],
+    con:['<b>Chết ở ~9 tool</b> — dropdown vượt chiều cao màn hình, phải cuộn trong panel','Danh sách phẳng, không nhóm được (Docusaurus dropdown không có sub-heading native)','Tool vẫn là orphan page với Google — không có trang mẹ nào link tới','Không có chỗ mô tả tool làm gì, người dùng phải đoán qua tên'],
+    effort:'~15 phút', ceiling:'~8 tool', files:'docusaurus.config.js'
+  },
+  b: {
+    cls:'good', head:'Phương án B — Dropdown gọn + trang hub /tools ★ Khuyến nghị',
+    line:'Dropdown chỉ giữ 4 tool hot nhất, mục cuối dẫn sang <code>/tools</code> — trang gallery có search + lọc theo nghiệp vụ. <b>Bấm "Xem tất cả" trên navbar để vào thử trang hub</b>, gõ "lương" hoặc bấm chip để test lọc.',
+    pro:['<b>Không có trần</b> — tool thứ 30 chỉ là thêm 1 object vào <code>src/data/tools.js</code>, navbar không đổi','<code>/tools</code> là landing page SEO thật, ăn từ khóa "tool nhân sự miễn phí"','<b>Cứu 8 file tĩnh khỏi orphan</b> — có trang mẹ internal-link, Google mới hiểu chúng thuộc site','Mỗi tool có chỗ ghi mô tả 1 dòng + phân nhóm — người dùng chọn đúng tool ngay','Mobile hoạt động tự nhiên: hub là trang thường, không phụ thuộc dropdown'],
+    con:['Phải viết <code>src/pages/tools/index.jsx</code> + <code>src/data/tools.js</code> — khoảng 2-3 tiếng','Tool mới phải khai báo ở <b>2 chỗ</b>: file data và mảng sitemap (<code>docusaurus.config.js:56-60</code>)','Thêm 1 cú click cho tool không nằm trong top 4'],
+    effort:'~2-3 tiếng', ceiling:'Không giới hạn', files:'src/pages/tools/index.jsx · src/data/tools.js · docusaurus.config.js'
+  },
+  c: {
+    cls:'mid', head:'Phương án C — Mega menu 4 cột',
+    line:'Đẹp nhất trong 3 phương án — bấm "Tools" để xem. Nhóm theo nghiệp vụ, có icon và mô tả ngay trong menu. Cái giá là phải swizzle component navbar của Docusaurus.',
+    pro:['Nhìn chuyên nghiệp nhất, ngang tầm Notion / Figma','Thấy toàn bộ tool + mô tả trong 1 lần hover, không cần rời trang','Nhóm theo nghiệp vụ ngay trong menu'],
+    con:['<b>Phải swizzle <code>NavbarItem</code></b> — chắc chắn vượt luật MAX 200 dòng trong CLAUDE.md','Swizzle = gắn chặt vào internal của Docusaurus, nâng cấp 3.x lên bản mới có thể vỡ','<b>Mobile luôn phải fallback về dropdown thường</b> → vẫn phải làm gần hết phần việc của A','Vẫn không giải bài toán SEO: không có trang <code>/tools</code> nào cho Google index','Quá 16 tool thì mega menu cũng phải cuộn'],
+    effort:'~1-2 ngày', ceiling:'~16 tool', files:'src/theme/NavbarItem/* (swizzle) + CSS riêng'
+  }
+};
+
+/* Phát hiện khi soi 8 file tĩnh — áp cho cả 3 phương án */
+var FINDING =
+  '<div class="verdict mid" style="margin-bottom:15px"><b>⚠ Trước khi chọn phương án: 8 thứ đang có không cùng một loại</b>'+
+  'Đếm ô nhập liệu trong từng file: <b>Org Chart</b> (5 input + 1 upload), <b>KPI Demo</b> (17 input + 9 textarea), '+
+  '<b>Certificate</b> (2 input) và <b>AI Career Wingman</b> là tool thật — người dùng nhập được. '+
+  'Còn <b>HR Office Sim</b>, <b>HR Department</b>, <b>HR Lifecycle</b>, <b>Dashboard nghỉ việc</b> có <b>0 ô nhập</b> — chỉ xem, là showcase.<br>'+
+  'Gộp cả 8 vào một tab "Tools" là hứa sai: khách bấm "HR Lifecycle Simulation" tưởng làm được việc gì đó, mở ra chỉ để ngắm. '+
+  'Trong demo này chúng được gắn nhãn <span class="card-tag tag-demo" style="position:static;display:inline-block">DEMO</span> và lọc riêng ở trang hub — '+
+  'thứ chỉ phương án B làm được, A và C đều không có chỗ để phân biệt.</div>';
+
+function renderNotes(){
+  var n = NOTES[state.plan];
+  document.getElementById('notes').innerHTML = FINDING +
+    '<div class="verdict '+n.cls+'"><b>'+n.head+'</b>'+n.line+'</div>'+
+    '<div class="grid2">'+
+      '<div class="box"><h3>Được gì</h3><ul class="pro">'+n.pro.map(function(x){return '<li>'+x+'</li>'}).join('')+'</ul></div>'+
+      '<div class="box"><h3>Mất gì</h3><ul class="con">'+n.con.map(function(x){return '<li>'+x+'</li>'}).join('')+'</ul></div>'+
+    '</div>'+
+    '<div class="box" style="margin-top:14px"><div class="meta">'+
+      '<div>Công sức<strong>'+n.effort+'</strong></div>'+
+      '<div>Trần chịu đựng<strong>'+n.ceiling+'</strong></div>'+
+      '<div>File phải đụng<strong>'+n.files+'</strong></div>'+
+    '</div></div>';
+}
+
+/* ── VÒNG RENDER ────────────────────────────────────────────── */
+function render(){
+  var b = document.getElementById('browser');
+  b.className = 'browser' + (state.width===1280 ? '' : ' w-'+state.width);
+  document.getElementById('vpTag').textContent = state.width===390 ? '390px · mobile' : state.width+'px';
+  renderNav(); renderPage(); renderNotes();
+}
+
+document.getElementById('segPlan').onclick = function(e){
+  if (e.target.tagName !== 'BUTTON') return;
+  this.querySelectorAll('button').forEach(function(b){b.classList.remove('on')});
+  e.target.classList.add('on');
+  state.plan = e.target.dataset.plan; state.hub = false; render();
+};
+document.getElementById('segWidth').onclick = function(e){
+  if (e.target.tagName !== 'BUTTON') return;
+  this.querySelectorAll('button').forEach(function(b){b.classList.remove('on')});
+  e.target.classList.add('on');
+  state.width = +e.target.dataset.w; render();
+};
+document.getElementById('rngCount').oninput = function(){
+  state.count = +this.value;
+  document.getElementById('pillCount').textContent = this.value;
+  render();
+};
+
+// Bấm ra ngoài thì đóng dropdown / mega
+document.addEventListener('click', function(e){
+  if (!e.target.closest('.dd')) document.querySelectorAll('.dd').forEach(function(d){d.classList.remove('open')});
+  if (!e.target.closest('.nav')) document.getElementById('nav').classList.remove('mega-open');
+});
+window.addEventListener('resize', checkOverflow);
+render();
+</script>
+</body>
+</html>

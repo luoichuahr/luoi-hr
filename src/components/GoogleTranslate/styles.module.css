@@ -5,11 +5,35 @@
   height: var(--ifm-navbar-height, 60px);
   display: flex;
   align-items: center;
+  gap: 8px;
   z-index: 300;
 }
 
 .hidden {
   display: none;
+}
+
+/* Lối sang bản tiếng Anh do người viết — cố ý đặc (filled) để phân biệt với
+   nút dịch máy bên cạnh, vốn chỉ có viền. */
+.enLink {
+  display: inline-flex;
+  align-items: center;
+  background: var(--ifm-color-primary);
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  padding: 6px 11px;
+  border-radius: 20px;
+  line-height: 1;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+
+.enLink:hover {
+  background: var(--ifm-color-primary-dark);
+  color: #fff;
+  text-decoration: none;
 }
 
 .btn {

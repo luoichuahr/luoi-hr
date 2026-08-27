@@ -1,5 +1,75 @@
 # CHANGELOG — Lười HR Website
 
+## 2026-08-27 — Feat: Mega menu "Tools" + tầng SEO cho toàn bộ trang tool tĩnh
+
+**Quyết định thiết kế.** Navbar đang liệt kê mỗi tool một mục, label dài ("🏢 Văn phòng nhân sự
+số hóa" = 22 ký tự) → tràn ngay ở 1024px với chỉ 4 mục, và không còn chỗ cho tool thứ 5.
+Đã dựng demo so sánh 3 phương án tại `tempo/navbar-3-phuong-an.html` (có slider mô phỏng
+4→12 tool để đo mốc vỡ của từng phương án). Andy chọn **mega menu**: người dùng thấy ngay
+phân nhóm và mô tả từng tool, không phải click thêm lần nào.
+
+- `[DESIGN]` **Mega menu qua `src/theme/NavbarItem/ComponentTypes.js`, KHÔNG swizzle `NavbarItem`.**
+  Docusaurus cho phép đăng ký navbar item type tùy chỉnh bằng cách extend map `ComponentTypes` —
+  đây là API công khai, không phải swizzle "unsafe" như tôi ước lượng ban đầu khi tư vấn. Nghĩa là
+  không đụng vào internal của theme, nâng cấp Docusaurus 3.x không vỡ. Config chỉ còn
+  `{type:'custom-megaMenu'}` thay cho 4 item tool.
+- `[ARCH]` **`src/data/tools.js` là nguồn dữ liệu duy nhất** — mega menu, sitemap và (sau này)
+  trang `/tools` đều đọc từ đây. Trước đó danh sách tool nằm rải ở 2 chỗ (`navbar.items` và mảng
+  hardcode trong `sitemap.createSitemapItems`) và **đã lệch nhau**: repo có 8 tool, navbar chỉ dẫn
+  tới 4. Certificate, HR Department, HR Lifecycle, Dashboard chi phí là orphan page — không có
+  lối vào nào từ giao diện.
+- `[CONTENT]` **Phân biệt `kind:'tool'` và `kind:'demo'`.** Đếm ô nhập liệu trong từng file tĩnh:
+  Org Chart (5 input + 1 upload), KPI (17 input + 9 textarea), Certificate (2 input) là tool thật;
+  HR Office Sim, HR Department, HR Lifecycle, Dashboard chi phí có **0 ô nhập** — chỉ để xem.
+  Gộp cả 8 dưới một chữ "Tools" là hứa sai với người dùng. Mega menu gắn nhãn `Demo` cho nhóm sau.
+- `[BUSINESS]` **Mega menu là lời giải SEO thật của phương án C** — nó render trong HTML tĩnh của
+  SSG nên Googlebot đọc được link tới toàn bộ tool **từ mọi trang trong site**. Đây là site-wide
+  internal linking, mạnh hơn một trang hub đơn lẻ trong việc kéo orphan page ra khỏi bóng tối.
+  Thứ mega menu KHÔNG thay thế được là landing page nhắm từ khóa "tool nhân sự miễn phí" —
+  ghi vào backlog, không làm lúc này.
+
+**Tầng SEO cho 7 trang tool tĩnh** (trước thay đổi: 0/7 có meta description, 0/7 có OG tag,
+1/7 có canonical — Google đang tự bịa description, share Zalo/Facebook không ra thumbnail):
+
+- `[CONTENT]` **Viết lại `<title>` theo từ khóa người Việt thật sự search.** Title cũ chứa tên
+  khách hàng — "PerformOS · Hệ thống quản trị hiệu suất · XNK NAM PHONG", "HR Lifecycle Simulation ·
+  TechVision Corp", "Certificate — Cotecons HR Automation Workshop". Không ai search tên những công
+  ty đó để tìm tool. Andy duyệt bỏ hết tên công ty.
+- `[CONTENT]` **`/certificate/` chuyển `noindex, follow`** — trang phục vụ đúng một workshop cụ thể,
+  không phải tool chung. Để Google index sẽ kéo sai đối tượng và làm loãng chủ đề site. Bỏ khỏi
+  sitemap và khỏi mega menu; ai có link trực tiếp vẫn mở bình thường.
+- `[ARCH]` **`sitemap.createSitemapItems` đọc `src/data/tools.js` thay vì mảng hardcode.** Thêm
+  tool mới giờ chỉ sửa một file. Kèm `priority` phân tầng (trang chủ 1.0 > tool 0.8 > demo 0.6)
+  thay vì gán đồng loạt 0.7 như trước, và tự loại trang `noindex`.
+- `[ARCH]` **GA4 event `tool_menu_click`** trên mọi mục mega menu, gửi kèm tên tool và nhóm — để
+  biết tool nào thật sự được bấm mà xếp lại thứ tự, thay vì đoán.
+
+**Sửa 4 lỗi Andy phát hiện khi xem thật trên màn hình** (cùng ngày, sau khi mega menu lên local):
+
+- `[DESIGN]` **Panel mega menu tràn ra ngoài mép trái — cột "Tuyển dụng & Nhân tài" biến mất.**
+  `.panel` dùng `position:absolute; left:50%; transform:translateX(-50%)` nên lấy **nút Tools**
+  làm tâm, mà nút nằm lệch trái navbar. Panel rộng 980px → ở viewport ~1064px cột đầu bị đẩy ra
+  ngoài màn hình ~110px. Chữ "ng JD" Andy thấy bên trái không phải lỗi render của menu — đó là
+  nội dung trang bên dưới lộ ra cạnh panel đặt sai chỗ. Đổi sang `position:fixed; top:var(--ifm-navbar-height)`
+  để viewport làm gốc tọa độ → panel luôn nằm trọn trong màn hình ở mọi bề ngang.
+  Kèm `align-self:stretch` cho `.wrap` để nút cao hết navbar, xóa khe hở làm `onMouseLeave`
+  bắn sớm và menu tự đóng khi rê chuột xuống.
+- `[DESIGN]` **Logo navbar: bỏ emoji 🦥, dùng mascot thật** — `static/img/logo-mark.png` (256×256,
+  cắt phần đầu con lười từ `static/img/logo.png` là key visual gốc). Emoji mỗi hệ điều hành vẽ
+  một kiểu; trên Windows ra con lười khác hẳn mascot thương hiệu.
+- `[DESIGN]` **Thêm nút `EN` cạnh nút Google Translate.** Đặt **bên trong cùng flex wrap** với nút
+  GT (`GoogleTranslate/index.jsx`) nên không bao giờ đè lên nhau — đúng bài học từ lỗi hôm qua.
+  Cố ý làm nền đặc (filled) để phân biệt với nút dịch máy chỉ có viền: `/en/` là bản người viết,
+  không phải Google dịch. Tự ẩn khi đang ở `/en/*` vì navbar EN đã có sẵn lối về tiếng Việt.
+- `[DESIGN]` **Mũi tên dropdown to gấp ~3× và đổi sang glyph đặc.** Andy muốn phóng **cái tam giác**,
+  không phải chữ "Tools" — chữ giữ nguyên cỡ mục navbar thường. Mũi tên: `0.6em` (~9.6px) →
+  `0.8rem` (12.8px), màu primary, bỏ `opacity:0.75`. (Thử `1.6rem` trước, Andy xem thật thấy
+  quá to nên giảm một nửa.) Đổi ký tự `▾` → `▼` vì
+  `font-weight` **không tác động tới glyph hình học** — muốn tam giác đậm thì phải dùng ký tự đặc,
+  chỉnh weight vô nghĩa.
+
+---
+
 ## 2026-08-27 — Fix: nút Google Translate đè lên link "Tiếng Việt" ở navbar EN
 
 - `[DESIGN]` **`.links` trong `NavbarEn` được chừa `margin-right: 84px`.** Widget GoogleTranslate là `position:fixed; top:0; right:16px` (`GoogleTranslate/styles.module.css:1-9`) nên không nằm trong luồng layout — navbar không tự né. Navbar tiếng Việt không dính lỗi này vì mọi item đều `position:'left'`, mép phải bỏ trống. Navbar EN đẩy hàng link sang phải bằng `margin-left:auto` nên mục cuối rơi đúng dưới nút GT.

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useLocation } from '@docusaurus/router';
 import 'flag-icons/css/flag-icons.min.css';
 import styles from './styles.module.css';
 
@@ -21,6 +22,8 @@ export default function GoogleTranslate() {
   const [open, setOpen] = useState(false);
   const [current, setCurrent] = useState(LANGS[0]);
   const ref = useRef(null);
+  const { pathname } = useLocation();
+  const isEnPage = pathname === '/en' || pathname.startsWith('/en/');
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -58,6 +61,12 @@ export default function GoogleTranslate() {
   return (
     <div className={styles.wrap} ref={ref}>
       <div id="gt-hidden" className={styles.hidden} />
+      {/* Bản tiếng Anh do người viết, khác hẳn dịch máy của nút bên cạnh.
+          Đặt trong cùng flex wrap với nút GT nên không bao giờ đè lên nhau.
+          Ẩn khi đã ở /en/ — navbar bản EN có sẵn đường về tiếng Việt. */}
+      {!isEnPage && (
+        <a className={styles.enLink} href="/en/" aria-label="Read in English">EN</a>
+      )}
       <button className={styles.btn} onClick={() => setOpen(o => !o)} aria-label="Chọn ngôn ngữ">
         <span className={`fi fi-${current.country} ${styles.flag}`} />
         <span className={styles.chevron}>{open ? '▲' : '▼'}</span>
