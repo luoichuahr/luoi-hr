@@ -1,0 +1,67 @@
+/* Không dùng class .navbar__item của Infima: dưới 996px Infima set
+   `.navbar__item { display: none }` và trông chờ vào hamburger + sidebar drawer.
+   Navbar EN chỉ phục vụ đúng 1 route nên thay drawer bằng hàng link cuộn ngang. */
+
+.links {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-left: auto;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.links::-webkit-scrollbar { display: none; }
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  flex: none;
+  padding: 0.4rem 0.65rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--ifm-navbar-link-color);
+  text-decoration: none;
+}
+.link:hover {
+  color: var(--ifm-navbar-link-hover-color);
+  background: var(--ifm-color-emphasis-100);
+  text-decoration: none;
+}
+
+/* Nhãn (VI) — trang đích chưa có bản tiếng Anh */
+.note {
+  font-size: 0.625rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  padding: 0.05rem 0.3rem;
+  border-radius: 4px;
+  background: var(--ifm-color-emphasis-200);
+  color: var(--ifm-color-emphasis-700);
+}
+
+.lang {
+  flex: none;
+  margin-left: 0.35rem;
+  padding: 0.4rem 0.7rem;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 20px;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  white-space: nowrap;
+  color: var(--ifm-color-emphasis-800);
+  text-decoration: none;
+}
+.lang:hover {
+  border-color: var(--ifm-color-primary);
+  color: var(--ifm-color-primary);
+  text-decoration: none;
+}
+
+@media (max-width: 996px) {
+  .links { margin-left: 0.5rem; }
+  .link { padding: 0.35rem 0.5rem; font-size: 0.8125rem; }
+}

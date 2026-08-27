@@ -1,5 +1,15 @@
 # CHANGELOG — Lười HR Website
 
+## 2026-08-26 — Fix: `/en/` phải là bản dịch trang chủ, không phải landing page của Org Chart
+
+- `[CONTENT]` **Làm sai ở lần trước:** `/en/` được viết thành trang giới thiệu riêng tool Org Chart. Đúng ra `/en/` là **bản tiếng Anh của trang chủ** — cùng bố cục Hero → Skills → LeadForm như `/`, chỉ khác ngôn ngữ. Viết lại toàn bộ.
+- `[ARCH]` **Tách chuỗi ra khỏi `Hero`, `Features3Column`, `LeadForm` thay vì nhân bản component.** Mỗi component nhận prop `t`, mặc định là bản tiếng Việt trong `./content.js` cùng thư mục → trang `/` **không đổi một dòng render nào**. Bản EN chỉ truyền object khác vào. Nhân bản component sẽ đẻ ra ~500 dòng JSX + CSS trùng và chắc chắn lệch nhau sau vài lần sửa.
+- `[ARCH]` **Chuỗi VI để trong `content.js` của từng component, không nhét vào `index.jsx`** — `Hero/index.jsx` đang 179 dòng, gộp thêm object nội dung là vượt luật MAX 200. Toàn bộ chuỗi EN gom về một chỗ: `src/pages/en/content.js`.
+- `[DESIGN]` **Menu tiếng Anh qua `src/theme/Navbar/index.js`** — wrap navbar gốc, `pathname` bắt đầu bằng `/en` thì render `<NavbarEn/>`, còn lại trả nguyên navbar Docusaurus. Chọn cách này thay vì nhét cả 2 bộ item vào `themeConfig` rồi ẩn bằng CSS: cách CSS khiến HTML của trang EN vẫn chứa link tiếng Việt (Googlebot đọc được) và nháy menu Việt trước khi hydrate. Wrapper thì SSG prerender đúng từng route. Footer làm y hệt.
+- `[BUSINESS]` **Menu EN trỏ Org Chart sang `/en/org-chart/`** (tool duy nhất có bản EN thật). Ba tool còn lại chưa dịch nên vẫn trỏ URL tiếng Việt và ghi rõ nhãn `(VI)` — thà nói trước còn hơn để khách EN bấm vào rồi gặp trang tiếng Việt.
+
+---
+
 ## 2026-08-26 — Feat: Trang chủ tiếng Anh tại `/en/`
 
 - `[ARCH]` **`src/pages/en/index.jsx` — React page, KHÔNG bật `locales:['vi','en']` của Docusaurus.** Bật locale sẽ sinh `/en/` cho toàn bộ docs, mà Docusaurus khi thiếu bản dịch thì fallback về nội dung gốc → phục vụ chữ tiếng Việt dưới URL tiếng Anh (duplicate content sai ngôn ngữ) và build gấp đôi. Hiện chỉ có 2 trang EN thật nên không đáng.

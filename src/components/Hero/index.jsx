@@ -1,32 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { VI } from './content';
 import styles from './styles.module.css';
 
-const SCENARIOS = [
-  {
-    user: 'Viết JD cho vị trí HRBP Senior',
-    items: ['📄 JD chuẩn 500 từ, chuẩn SEO', '❓ 12 câu hỏi phỏng vấn', '📊 Scorecard đánh giá ứng viên'],
-  },
-  {
-    user: 'Tạo KPI tháng 4 cho team Talent',
-    items: ['🎯 5 KPI đo lường rõ ràng', '📈 Dashboard theo dõi tiến độ', '📋 Template báo cáo tuần'],
-  },
-  {
-    user: 'Xây hành trình Onboarding 30 ngày',
-    items: ['✅ Checklist nhận việc đầy đủ', '📅 Plan 30/60/90 ngày', '🤝 Assign buddy & mentor'],
-  },
-];
-
-// Các bước demo của Wingman Agent (tên nội bộ)
-const WINGMAN_STEPS = [
-  { icon: '📄', tag: 'Bước 1', text: 'Tải lên CV của bạn...', sub: 'AI đang đọc 11 năm kinh nghiệm', color: '#3B82F6' },
-  { icon: '🔍', tag: 'Bước 2', text: 'Phân tích hồ sơ', sub: 'Tìm thấy 6 thành tích chưa có số', color: '#8B5CF6' },
-  { icon: '📋', tag: 'Bước 3', text: 'Đọc JD: HRBP Manager · Bosch', sub: 'Đối chiếu 14 tiêu chí tuyển dụng', color: '#F59E0B' },
-  { icon: '✨', tag: 'Bước 4', text: 'CV mới khớp 81% với JD này', sub: 'Gap report + STAR stories sẵn sàng', color: '#0D9488' },
-  { icon: '📍', tag: 'Bước 5', text: 'Bosch cách nhà bạn ~22 phút 🛵', sub: 'Giờ cao điểm 7–8h: khoảng 38 phút', color: '#EF4444' },
-];
-
-// Animated chat — 3 kịch bản loop: JD → KPI → Onboarding
-function ChatMockup() {
+// Animated chat — loop qua các kịch bản trong t.scenarios
+function ChatMockup({ t }) {
   const [scene, setScene] = useState(0);
   const [phase, setPhase] = useState('user');
 
@@ -38,20 +15,20 @@ function ChatMockup() {
       timer = setTimeout(() => setPhase('agent'), 1500);
     } else {
       timer = setTimeout(() => {
-        setScene(s => (s + 1) % SCENARIOS.length);
+        setScene(s => (s + 1) % t.scenarios.length);
         setPhase('user');
       }, 2800);
     }
     return () => clearTimeout(timer);
-  }, [phase, scene]);
+  }, [phase, scene, t]);
 
-  const cur = SCENARIOS[scene];
+  const cur = t.scenarios[scene];
 
   return (
     <div className={styles.chatCard}>
       <div className={styles.chatHeader}>
         <div className={styles.chatDots}><span /><span /><span /></div>
-        <span className={styles.chatTitle}>🤖 HR Agent · Đang hoạt động</span>
+        <span className={styles.chatTitle}>{t.chatTitle}</span>
       </div>
       <div className={styles.chatBody}>
         <div className={`${styles.msg} ${styles.msgUser}`}>{cur.user}</div>
@@ -60,7 +37,7 @@ function ChatMockup() {
         )}
         {phase === 'agent' && (
           <div className={`${styles.msg} ${styles.msgAgent}`}>
-            <strong>✓ Xong trong 3 giây!</strong>
+            <strong>{t.chatDone}</strong>
             <div className={styles.msgItems}>
               {cur.items.map(item => <span key={item}>{item}</span>)}
             </div>
@@ -72,7 +49,7 @@ function ChatMockup() {
 }
 
 // Animated flashcard — Wingman Agent (tên nội bộ)
-function WingmanFlashcard() {
+function WingmanFlashcard({ fc }) {
   const [step, setStep] = useState(0);
   const [show, setShow] = useState(true);
 
@@ -81,21 +58,21 @@ function WingmanFlashcard() {
       // Fade out
       setShow(false);
       const next = setTimeout(() => {
-        setStep(s => (s + 1) % WINGMAN_STEPS.length);
+        setStep(s => (s + 1) % fc.steps.length);
         setShow(true);
       }, 350);
       return () => clearTimeout(next);
     }, 2000);
     return () => clearTimeout(hold);
-  }, [step]);
+  }, [step, fc]);
 
-  const cur = WINGMAN_STEPS[step];
+  const cur = fc.steps[step];
 
   return (
-    <a href="/tools/ai-career-wingman" className={styles.flashcard}>
+    <a href={fc.href} className={styles.flashcard}>
       <div className={styles.flashcardTop}>
-        <span className={styles.flashcardLabel}>Tool tạo CV phù hợp JD</span>
-        <span className={styles.flashcardCta}>Thử ngay →</span>
+        <span className={styles.flashcardLabel}>{fc.label}</span>
+        <span className={styles.flashcardCta}>{fc.cta}</span>
       </div>
 
       {/* Animated step */}
@@ -115,7 +92,7 @@ function WingmanFlashcard() {
 
       {/* Progress dots */}
       <div className={styles.flashcardDots}>
-        {WINGMAN_STEPS.map((s, i) => (
+        {fc.steps.map((s, i) => (
           <span
             key={i}
             className={styles.flashcardDot}
@@ -127,7 +104,7 @@ function WingmanFlashcard() {
   );
 }
 
-export default function Hero() {
+export default function Hero({ t = VI }) {
   return (
     <section className={styles.hero}>
       <div className={styles.blob} />
@@ -137,41 +114,39 @@ export default function Hero() {
 
       <div className={styles.container}>
         <div className={styles.left}>
-          <a href="/tools/ai-career-wingman" className={styles.newToolPill}>
+          <a href={t.pill.href} className={styles.newToolPill}>
             <span className={styles.pulseDot} />
-            ✨ Tool mới: <strong>Tool tạo CV phù hợp JD</strong> — Thử ngay →
+            {t.pill.prefix} <strong>{t.pill.strong}</strong> {t.pill.suffix}
           </a>
 
           <h1 className={styles.headline}>
-            HR Agent<br />
-            <em className={styles.highlight}>giúp bạn làm mọi thứ</em><br />
-            trong nhân sự
+            {t.headline[0]}<br />
+            <em className={styles.highlight}>{t.headline[1]}</em><br />
+            {t.headline[2]}
           </h1>
 
-          <p className={styles.sub}>
-            Từ viết JD, Offer, xây dựng KPI, tạo hành trình Onboarding đến báo cáo phân tích nhân sự — giao task là HR Agent xử lý.
-          </p>
+          <p className={styles.sub}>{t.sub}</p>
 
           <div className={styles.ctas}>
-            <a href="/docs/bi-kip/xay-dung-tro-ly-nhan-su-cua-rieng-ban" className={styles.btnPrimary}>Xây Agent ngay →</a>
-            <a href="#skills" className={styles.btnSecondary}>Xem 30+ Skills</a>
+            <a href={t.ctaPrimary.href} className={styles.btnPrimary}>{t.ctaPrimary.label}</a>
+            <a href={t.ctaSecondary.href} className={styles.btnSecondary}>{t.ctaSecondary.label}</a>
           </div>
 
           <div className={styles.proof}>
             <span className={styles.stars}>⭐⭐⭐⭐⭐</span>
-            <span>Được dùng bởi <strong>300+ HR Việt Nam</strong></span>
+            <span>{t.proof[0]} <strong>{t.proof[1]}</strong></span>
           </div>
 
           <div className={styles.tags}>
-            {['HRBP', 'Recruiter', 'C&B', 'HRM', 'Headhunter'].map((t) => (
-              <span key={t} className={styles.tag}>{t}</span>
+            {t.tags.map((tag) => (
+              <span key={tag} className={styles.tag}>{tag}</span>
             ))}
           </div>
         </div>
 
         <div className={styles.right}>
-          <ChatMockup />
-          <WingmanFlashcard />
+          <ChatMockup t={t} />
+          <WingmanFlashcard fc={t.flashcard} />
         </div>
       </div>
     </section>
