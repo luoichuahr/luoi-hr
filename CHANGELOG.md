@@ -1,5 +1,25 @@
 # CHANGELOG — Lười HR Website
 
+## 2026-08-31 — Content: kpi-demo lên bản v10 (thêm Sơ đồ tổ chức)
+
+Nguồn của trang `/kpi-demo/` nằm ngoài repo này: `Sandbox/kpi-system-demo/index_v10.html`.
+Bản đang live dựng từ v6, nay lên v10.
+
+- `[CONTENT]` **Thêm màn "Sơ đồ tổ chức"** (`VIEWS.orgchart`) — cây trực thuộc dọc thụt lề
+  dựng thẳng từ `DB.emps.mgr`, kèm bảng nhân sự theo phòng ban. Mọi vai đều xem được.
+  Thay cho mục menu cũ trỏ ra `../org-chart-builder/index_v2.html` — đường dẫn tương đối
+  đó 404 khi deploy, giờ không còn link ra app ngoài. Kéo theo v7–v9: 4 bộ màu đổi bằng
+  `data-theme`, các màn IDP · 9-box · thử việc.
+
+- `[ARCH]` **`build_public.js` trỏ sang `index_v10.html`.** Script cắt mục "Hướng dẫn đánh giá"
+  khỏi bản public — quy tắc cũ, giữ nguyên: phần hướng dẫn KHÔNG public. Phải sửa 3 chỗ vì
+  v10 đổi định dạng: regex gỡ NAV (dòng menu nay có thêm mảng vai ở cuối), số dòng menu guide
+  chờ 2 thay vì 5, `STORE_KEY` nguồn là `performos_v7`. Bổ sung `g-quen · g-p3 · g-lich` vào
+  danh sách kiểm rò rỉ và chốt chặn `STORE_KEY` phải đổi được thành `performos_public`.
+
+- `[CONTENT]` Lớp SEO/GA4 ở `<head>` của `static/kpi-demo/index.html` giữ nguyên như bản cũ
+  (title, description, canonical, og:*, snippet `G-KELJV9GYP2`) — chỉ phần thân ứng dụng đổi.
+
 ## 2026-08-27 — Feat: Mega menu "Tools" + tầng SEO cho toàn bộ trang tool tĩnh
 
 **Quyết định thiết kế.** Navbar đang liệt kê mỗi tool một mục, label dài ("🏢 Văn phòng nhân sự

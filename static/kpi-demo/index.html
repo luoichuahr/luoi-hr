@@ -33,7 +33,110 @@
   --ok:#3fb98a; --warn:#e8a33d; --bad:#e8736f; --info:#5aa9e6; --neu:#9aa7bd;
   /* thang xếp loại hiệu suất: NI · E · HE · O */
   --ni:#e8736f; --e:#7ba7e8; --he:#3fb98a; --o:#9b7cf0;
+  --line:transparent; --sunk:transparent; --acbg:transparent;
 }
+
+/* ═══════════ 4 BỘ MÀU · đổi bằng thuộc tính data-theme trên thẻ <html> ═══════════
+   Chỉ thay khối token bên dưới - không sửa một dòng HTML nào.
+   Ba bộ phẳng dựng viền 1px bằng box-shadow spread, thay cho bóng đổ nổi khối.
+   Nguồn tham chiếu: SAP Horizon · MISA AMIS · Base.vn · Better HR (màu lấy từ CSS thật).
+   ══════════════════════════════════════════════════════════════════════════════ */
+[data-theme="trungtinh"],[data-theme="cham"],[data-theme="la"]{
+  --sh-out:      0 0 0 1px var(--line), 0 1px 3px rgba(16,24,40,.06);
+  --sh-out-sm:   0 0 0 1px var(--line), 0 1px 2px rgba(16,24,40,.05);
+  --sh-out-xs:   0 0 0 1px var(--line);
+  --sh-in:       inset 0 0 0 1px var(--ac1);
+  --sh-in-sm:    inset 0 0 0 1px var(--line);
+  --r:12px; --r2:10px; --r3:8px; --r4:6px;
+  --lo:#dfe4ec; --hi:#ffffff;
+}
+/* ─── Trung tính · SAP Horizon #0070f2 + MISA AMIS ─── */
+[data-theme="trungtinh"]{
+  --bg:#f5f6f7; --bg2:#f5f6f7; --surf:#ffffff;
+  --text:#475569; --head:#131e29; --muted:#64748b; --dim:#94a3b8;
+  --line:#e2e8f0; --sunk:#f1f5f9; --acbg:#e8f2fe;
+  --ac1:#0070f2; --ac2:#0070f2;
+  --ok:#256f3a; --warn:#e76500; --bad:#aa0808; --info:#0070f2; --neu:#788fa6;
+  --ni:#aa0808; --e:#64748b; --he:#256f3a; --o:#0070f2;
+}
+/* ─── Chàm · Base.vn #4d65ff ─── */
+[data-theme="cham"]{
+  --bg:#efefef; --bg2:#efefef; --surf:#ffffff;
+  --text:#4a5262; --head:#111111; --muted:#6b7280; --dim:#9aa1ae;
+  --line:#e3e5ea; --sunk:#f4f5f8; --acbg:#e2e8ff;
+  --ac1:#4d65ff; --ac2:#4d65ff;
+  --ok:#38c36f; --warn:#f0932b; --bad:#e5484d; --info:#4d65ff; --neu:#8a93a5;
+  --ni:#e5484d; --e:#6b7280; --he:#38c36f; --o:#4d65ff;
+}
+/* ─── Lá · Better HR #12b877 ─── */
+[data-theme="la"]{
+  --bg:#f6f8f7; --bg2:#f6f8f7; --surf:#ffffff;
+  --text:#4a4a4a; --head:#1f2d28; --muted:#6d7a75; --dim:#9aa5a0;
+  --line:#e4e7ed; --sunk:#f1f5f3; --acbg:#e8fff5;
+  --ac1:#12b877; --ac2:#12b877;
+  /* info phải khác hẳn ok: bộ Lá lấy xanh lá làm màu chủ đạo nên info dùng xanh dương */
+  --ok:#12b877; --warn:#e0902a; --bad:#d64545; --info:#2f80ed; --neu:#8a948f;
+  --ni:#d64545; --e:#6d7a75; --he:#12b877; --o:#0f766e;
+}
+/* ─── Bù nền cho ba bộ phẳng: khối nổi = trắng · khối lõm = xám nhạt ─── */
+[data-theme="trungtinh"] .tile,[data-theme="cham"] .tile,[data-theme="la"] .tile,
+[data-theme="trungtinh"] .chip,[data-theme="cham"] .chip,[data-theme="la"] .chip,
+[data-theme="trungtinh"] .btn,[data-theme="cham"] .btn,[data-theme="la"] .btn,
+[data-theme="trungtinh"] .pill,[data-theme="cham"] .pill,[data-theme="la"] .pill,
+[data-theme="trungtinh"] .rate b,[data-theme="cham"] .rate b,[data-theme="la"] .rate b,
+[data-theme="trungtinh"] .step .s i,[data-theme="cham"] .step .s i,[data-theme="la"] .step .s i,
+[data-theme="trungtinh"] .acc .a,[data-theme="cham"] .acc .a,[data-theme="la"] .acc .a,
+[data-theme="trungtinh"] .alert,[data-theme="cham"] .alert,[data-theme="la"] .alert,
+[data-theme="trungtinh"] .casc .kid,[data-theme="cham"] .casc .kid,[data-theme="la"] .casc .kid,
+[data-theme="trungtinh"] .userbox,[data-theme="cham"] .userbox,[data-theme="la"] .userbox,
+[data-theme="trungtinh"] .logo,[data-theme="cham"] .logo,[data-theme="la"] .logo,
+[data-theme="trungtinh"] .backlink,[data-theme="cham"] .backlink,[data-theme="la"] .backlink,
+[data-theme="trungtinh"] .seg .sg,[data-theme="cham"] .seg .sg,[data-theme="la"] .seg .sg,
+[data-theme="trungtinh"] .hlp,[data-theme="cham"] .hlp,[data-theme="la"] .hlp,
+[data-theme="trungtinh"] .tabs b.on,[data-theme="cham"] .tabs b.on,[data-theme="la"] .tabs b.on,
+[data-theme="trungtinh"] .login .box,[data-theme="cham"] .login .box,[data-theme="la"] .login .box{
+  background:var(--surf)}
+[data-theme="trungtinh"] .well,[data-theme="cham"] .well,[data-theme="la"] .well,
+[data-theme="trungtinh"] .inp,[data-theme="cham"] .inp,[data-theme="la"] .inp,
+[data-theme="trungtinh"] .tabs,[data-theme="cham"] .tabs,[data-theme="la"] .tabs,
+[data-theme="trungtinh"] .nb .bx,[data-theme="cham"] .nb .bx,[data-theme="la"] .nb .bx,
+[data-theme="trungtinh"] .casc .co,[data-theme="cham"] .casc .co,[data-theme="la"] .casc .co,
+[data-theme="trungtinh"] .idp .a,[data-theme="cham"] .idp .a,[data-theme="la"] .idp .a,
+[data-theme="trungtinh"] .trk,[data-theme="cham"] .trk,[data-theme="la"] .trk,
+[data-theme="trungtinh"] .stk,[data-theme="cham"] .stk,[data-theme="la"] .stk,
+[data-theme="trungtinh"] .step .ln,[data-theme="cham"] .step .ln,[data-theme="la"] .step .ln,
+[data-theme="trungtinh"] .acc .a .rl,[data-theme="cham"] .acc .a .rl,[data-theme="la"] .acc .a .rl,
+[data-theme="trungtinh"] .btn.ghost,[data-theme="cham"] .btn.ghost,[data-theme="la"] .btn.ghost,
+[data-theme="trungtinh"] .tl .it:not(:last-child):before,
+[data-theme="cham"] .tl .it:not(:last-child):before,
+[data-theme="la"] .tl .it:not(:last-child):before{
+  background:var(--sunk)}
+/* trạng thái "đang chọn": nền tint + chữ màu chủ đạo, thay cho hiệu ứng lõm */
+[data-theme="trungtinh"] .nav-item.active,[data-theme="cham"] .nav-item.active,[data-theme="la"] .nav-item.active,
+[data-theme="trungtinh"] .seg .sg.on,[data-theme="cham"] .seg .sg.on,[data-theme="la"] .seg .sg.on,
+[data-theme="trungtinh"] .step .s.cur i,[data-theme="cham"] .step .s.cur i,[data-theme="la"] .step .s.cur i{
+  background:var(--acbg);color:var(--ac1);box-shadow:inset 0 0 0 1px var(--ac1)}
+[data-theme="trungtinh"] .nav-item:hover,[data-theme="cham"] .nav-item:hover,[data-theme="la"] .nav-item:hover{
+  background:var(--sunk);box-shadow:none;color:var(--text)}
+[data-theme="trungtinh"] .nav-item.active:hover,[data-theme="cham"] .nav-item.active:hover,[data-theme="la"] .nav-item.active:hover{
+  background:var(--acbg);color:var(--ac1)}
+[data-theme="trungtinh"] .btn.primary,[data-theme="cham"] .btn.primary,[data-theme="la"] .btn.primary{
+  background:var(--ac1);box-shadow:0 1px 2px rgba(16,24,40,.12)}
+[data-theme="trungtinh"] .step .ln.done,[data-theme="cham"] .step .ln.done,[data-theme="la"] .step .ln.done,
+[data-theme="trungtinh"] .step .s.done i,[data-theme="cham"] .step .s.done i,[data-theme="la"] .step .s.done i,
+[data-theme="trungtinh"] .rate b.on,[data-theme="cham"] .rate b.on,[data-theme="la"] .rate b.on{
+  background:var(--ac1)}
+[data-theme="trungtinh"] .nav-item .cnt,[data-theme="cham"] .nav-item .cnt,[data-theme="la"] .nav-item .cnt{
+  background:var(--ac1)}
+
+/* ─── Dải chọn bộ màu ở chân thanh bên ─── */
+.thm{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:4px 2px 2px}
+.thm b{height:28px;border-radius:var(--r4);box-shadow:var(--sh-out-xs);cursor:pointer;
+       display:grid;place-items:center;font-size:10.5px;font-weight:700;color:var(--muted)}
+.thm b:hover{box-shadow:var(--sh-out-sm);color:var(--head)}
+.thm b.on{box-shadow:var(--sh-in-sm);color:var(--ac1)}
+[data-theme="trungtinh"] .thm b.on,[data-theme="cham"] .thm b.on,[data-theme="la"] .thm b.on{
+  background:var(--acbg);box-shadow:inset 0 0 0 1px var(--ac1)}
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
 body{
@@ -90,6 +193,9 @@ h3{font-size:13px;font-weight:700;color:var(--head);text-transform:uppercase;let
 .brand span{font-size:10.5px;color:var(--muted);letter-spacing:.4px}
 
 .nav{display:flex;flex-direction:column;gap:6px}
+.navgrp{font-size:9.5px;font-weight:800;letter-spacing:.8px;color:var(--dim);padding:12px 14px 1px}
+.nav>.navgrp:first-child{padding-top:0}
+a.nav-item{text-decoration:none;color:var(--muted)}
 .nav-item{display:flex;align-items:center;gap:11px;padding:11px 14px;border-radius:var(--r3);
           cursor:pointer;font-size:13px;font-weight:600;color:var(--muted);transition:.15s}
 .nav-item i{font-style:normal;font-size:15px;width:19px;text-align:center;flex:none}
@@ -265,6 +371,32 @@ textarea.inp{resize:vertical;min-height:66px;line-height:1.55}
 .idp .a .q{flex:none;font-size:10px;font-weight:700;color:var(--muted)}
 .idp .a .p{width:96px;flex:none}
 .idp .a .v{width:38px;flex:none;text-align:right;font-weight:700;color:var(--head);font-variant-numeric:tabular-nums}
+/* ═══════════ SƠ ĐỒ TỔ CHỨC ═══════════
+   Cây dọc thụt lề thay vì cây ngang: 182 nhân sự trải ngang thì không màn hình
+   nào chứa nổi, mà thụt lề vẫn đọc được ai trực thuộc ai và chạy tốt trên điện thoại. */
+.otree{margin-top:12px}
+.onode{position:relative}
+.okids{margin-left:19px;padding-left:19px;border-left:1px dashed var(--line)}
+.okids>.onode>.ocard::before{content:'';position:absolute;left:-19px;top:50%;
+        width:14px;border-top:1px dashed var(--line)}
+.ocard{position:relative;display:flex;align-items:center;gap:10px;margin:5px 0;
+        padding:9px 13px;border-radius:var(--r3);background:var(--surf);
+        box-shadow:var(--sh-out-sm);transition:box-shadow .15s}
+.ocard.hasKid{cursor:pointer}
+.ocard.hasKid:hover{box-shadow:var(--sh-out)}
+.ocard.me{box-shadow:inset 0 0 0 2px var(--ac1),var(--sh-out-sm)}
+.otw{flex:none;width:15px;text-align:center;font:800 13px/1 inherit;color:var(--muted)}
+.ocard .ava{width:32px;height:32px;font-size:11.5px;flex:none}
+.oi{min-width:0;flex:1}
+.oi b{display:block;font-size:13px;color:var(--head);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.oi span{display:block;font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.odot{width:8px;height:8px;border-radius:50%;flex:none}
+.odep{flex:none;width:178px;font-size:11.5px;color:var(--text)}
+.olv{flex:none;width:116px;font-size:11px;color:var(--muted)}
+.ocnt{flex:none;width:86px;text-align:right;font-size:11px;font-weight:700;color:var(--head);
+        font-variant-numeric:tabular-nums}
+.obar{height:6px;border-radius:3px;background:var(--sunk);box-shadow:var(--sh-in-sm);overflow:hidden}
+.obar i{display:block;height:100%;border-radius:3px}
 /* ═══════════ ĐIỆN THOẠI / MÁY TÍNH BẢNG ═══════════ */
 .navbtn{display:none;position:fixed;top:11px;left:11px;z-index:80;width:44px;height:44px;
         align-items:center;justify-content:center;border:0;border-radius:var(--r3);
@@ -278,6 +410,7 @@ textarea.inp{resize:vertical;min-height:66px;line-height:1.55}
   html,body{height:auto;overflow:auto;-webkit-text-size-adjust:100%}
   #app{flex-direction:column;height:auto;min-height:100vh;overflow:visible}
   .navbtn{display:flex}
+  body.navopen .navbtn{display:none}   /* mở ngăn kéo thì giấu nút, kẻo đè lên logo */
   body.navopen .navdim{display:block}
   .side{position:fixed;top:0;left:0;bottom:0;width:min(84vw,286px);height:auto;z-index:75;
         background:linear-gradient(140deg,var(--bg),var(--bg2));
@@ -285,7 +418,8 @@ textarea.inp{resize:vertical;min-height:66px;line-height:1.55}
         transform:translateX(-104%);transition:transform .3s cubic-bezier(.5,.1,.2,1)}
   body.navopen .side{transform:none}
   .main{padding:12px 12px 34px;overflow:visible}
-  .hdr{padding-left:52px;min-height:44px;gap:10px;margin-bottom:13px}
+  .hdr{padding-left:52px;min-height:44px;gap:10px;margin-bottom:13px;flex-wrap:wrap}
+  .hdr .sp{flex-basis:100%}
   .hdr h1{font-size:18px}
   /* nhiều màn đặt tỉ lệ cột thẳng trong thẻ (style=…) nên phải ép mới về được 1 cột */
   .g2,.g3,.g4{grid-template-columns:1fr!important}
@@ -304,6 +438,10 @@ textarea.inp{resize:vertical;min-height:66px;line-height:1.55}
   .idp .a{flex-wrap:wrap;row-gap:7px}
   .idp .a .n{flex:1 1 100%;min-width:0}
   .idp .a .p{flex:1 1 auto;width:auto}
+  /* sơ đồ tổ chức: bỏ hai cột phụ, thụt lề hẹp lại cho vừa màn hình hẹp */
+  .odep,.olv{display:none}
+  .okids{margin-left:11px;padding-left:11px}
+  .okids>.onode>.ocard::before{left:-11px;width:8px}
   .step{flex-wrap:wrap;gap:8px}
   .step .ln{display:none}
   .login{height:auto;min-height:100vh;padding:16px}
@@ -326,7 +464,7 @@ textarea.inp{resize:vertical;min-height:66px;line-height:1.55}
 
 <script>
 /* ══════════════════════════════════════════════════════════════════════════
-   PerformOS · CẤU HÌNH
+   KPI · CẤU HÌNH
    Công ty giả định: XNK NAM PHONG · thương mại dịch vụ · xuất khẩu trái cây
    sang thị trường châu Phi (Nigeria, Ghana, Bờ Biển Ngà, Nam Phi, Ai Cập, Kenya).
 
@@ -340,6 +478,31 @@ textarea.inp{resize:vertical;min-height:66px;line-height:1.55}
    Toàn bộ nhân sự, số liệu, tên phòng ban là [MOCK] - sinh ngẫu nhiên có seed.
    ══════════════════════════════════════════════════════════════════════════ */
 const STORE_KEY='performos_public';
+
+/* ══════════ BỘ MÀU ══════════
+   4 bộ · đổi bằng data-theme trên thẻ <html>, ghi nhớ trong localStorage.
+   'vui' giữ nguyên 15 màu phòng ban ban đầu · 3 bộ còn lại theo chuẩn 1 màu chủ đạo. */
+const THEME_KEY='performos_theme';
+const THEMES=[['trungtinh','Trung tính'],['cham','Chàm'],['la','Lá'],['vui','Vui']];
+let THEME='trungtinh';
+try{const t=localStorage.getItem(THEME_KEY); if(t&&THEMES.some(x=>x[0]===t)) THEME=t}catch(e){}
+function applyTheme(){document.documentElement.dataset.theme=THEME}
+function setTheme(t){THEME=t;try{localStorage.setItem(THEME_KEY,t)}catch(e){}
+  applyTheme(); if(typeof ME!=='undefined'&&ME) render(); else renderLogin()}
+applyTheme();
+
+/* Thang màu phân biệt dãy dữ liệu - TÁCH RIÊNG khỏi màu ngữ nghĩa đạt/không đạt.
+   Cách SAP Horizon làm (sapChart_OrderedColor_1..5), dùng xoay vòng cho 15 phòng. */
+const ORDERED=['#168eff','#c87b00','#75980b','#df1278','#8b47d7'];
+/* ảnh đại diện chỉ để phân biệt người, không mang ý nghĩa - dùng tông trầm,
+   không lấy màu biểu đồ để tránh tranh chấp với màu đạt/không đạt */
+const AVA_TONES=['#5b6b82','#41627e','#4a6b5f','#6b5b7e','#7a5f52'];
+const dIx=c=>Math.max(0,DEPTS.findIndex(x=>x.c===c));
+/* màu nhận diện phòng ban trên chấm tròn cạnh tên phòng */
+const dcol=d=>THEME==='vui'?d.col:ORDERED[dIx(d.c)%5];
+const ecol=e=>THEME==='vui'?e.col:AVA_TONES[dIx(e.dept)%5];
+/* màu cột trong biểu đồ MỘT dãy dữ liệu - phải là một màu duy nhất, không phải 15 */
+const bcol=d=>THEME==='vui'?d.col:'var(--ac1)';
 const CO={name:'XNK NAM PHONG',full:'Công ty Cổ phần Xuất nhập khẩu Nam Phong',
   biz:'Xuất khẩu trái cây tươi và chế biến sang thị trường châu Phi'};
 const CUR='2026-07';
@@ -1238,27 +1401,70 @@ document.addEventListener('mouseout',e=>{if(e.target.closest('[data-tip]'))TIP.c
 let ME=null,ROLE=null,VIEW=null,SEL=null,TAB=null;
 const ROOT=document.getElementById('root');
 
-const NAV={
- staff:[['home','⌂','Trang chủ'],['meval','✎','Đánh giá tháng'],
-        ['review','◈','Đánh giá kỳ'],['mybonus','₫','Lương thưởng của tôi'],['cokpi','◇','KPI công ty 2026']],
- manager:[['home','⌂','Trang chủ'],['inbox','▤','Hộp duyệt'],['mgreval','✓','Chấm KPI nhân viên'],
-        ['team','◎','Đội của tôi'],['mreview','◈','Duyệt đánh giá kỳ'],['dist','▦','Phân bố xếp loại'],
-        ['mgrprob','◐','Thử việc trong phòng'],['kpilib','☰','Chỉ tiêu của phòng'],
-        ['meval','✎','KPI của tôi'],['cokpi','◇','KPI công ty 2026'],],
- ceo:[['ceohome','⌂','Bảng điều hành'],['overview','◉','Toàn cảnh công ty'],
-      ['ceopnl','◈','P&L và KPI của TGĐ'],
-      ['cokpi','◇','KPI công ty 2026'],['ceocascade','⌸','Cascade xuống phòng ban'],
-      ['inbox','▤','Hộp duyệt Giám đốc Khối'],['mgreval','✓','Chấm KPI trực thuộc'],
-      ['kpichg','⇅','Duyệt thay đổi KPI'],],
- hr:[['hrhome','⌂','Tổng quan công ty'],['overview','◉','Toàn cảnh công ty'],
-     ['hrapprove','✓','Duyệt phiếu tháng'],['hrprob','◐','Nhân viên thử việc'],
-     ['hrcal','⏱','Lịch và cảnh báo'],
-     ['hrpayroll','₫','Bảng thưởng P3'],['hrcalib','▦','Cân chỉnh và phân bố'],
-     ['hr9box','⬚','Lưới 9-box'],['hridp','◔','IDP 2026'],['hrannual','★','Thưởng cuối năm'],
-     ['kpilib','☰','Thư viện chỉ tiêu'],['kpichg','⇅','Duyệt thay đổi KPI'],
-     ['cokpi','◇','KPI công ty 2026'],['ceocascade','⌸','Cascade xuống phòng ban'],]
-};
-NAV.probation=[['probhome','⌂','Trang chủ'],['probeval','✎','Phiếu KPI thử việc'],];
+/* ═══ MENU HỆ THỐNG ═══════════════════════════════════════════════════════
+   Một bảng khai báo duy nhất cho cả hệ thống, thay cho 4 danh sách song song.
+   Mỗi mục: [view, biểu tượng, nhãn, [vai được xem], (link ngoài nếu có)]
+
+   Nhóm theo PHẠM VI (của tôi · chung · nhóm tôi · toàn công ty), KHÔNG theo
+   phân hệ. Vì "chấm công của tôi" và "bảng công toàn công ty" là hai việc
+   khác nhau; xếp chung một nhóm "Chấm công" thì nhân viên thấy 5 nhóm mỗi
+   nhóm 1 mục. Nhóm theo phạm vi thì nhân viên thấy 2 nhóm đầy, HR thấy 5.
+
+   Vai không có quyền thì ẨN HẲN, không làm mờ. Phân hệ chưa làm (chấm công,
+   lương, đào tạo, tuyển dụng) nằm ở docs/2026-08-18-hris-ke-hoach-phan-he-va-menu.md,
+   chưa đưa vào đây. Mọi mục đều là màn hình trong hệ thống, không link ra app ngoài.
+   ══════════════════════════════════════════════════════════════════════ */
+const R_ALL=['staff','probation','manager','ceo','hr'];
+const MENU=[
+ [null,[
+   ['home',    '⌂','Trang chủ',         ['staff','manager']],
+   ['ceohome', '⌂','Bảng điều hành',    ['ceo']],
+   ['hrhome',  '⌂','Tổng quan công ty', ['hr']],
+   ['probhome','⌂','Trang chủ',         ['probation']],
+ ]],
+ ['CỦA TÔI',[
+   ['meval',   '✎','Đánh giá tháng',      ['staff']],
+   ['meval',   '✎','KPI của tôi',         ['manager']],
+   ['probeval','✎','Phiếu KPI thử việc',  ['probation']],
+   ['review',  '◈','Đánh giá kỳ',         ['staff']],
+   ['mybonus', '₫','Lương thưởng của tôi',['staff']],
+   ['ceopnl',  '◈','P&L và KPI của TGĐ',  ['ceo']],
+ ]],
+ ['THÔNG TIN CHUNG',[
+   ['orgchart','⌗','Sơ đồ tổ chức',       R_ALL],
+   ['cokpi',   '◇','KPI công ty 2026',    ['staff','manager','ceo','hr']],
+ ]],
+ ['QUẢN LÝ NHÓM',[
+   ['inbox',  '▤','Hộp duyệt',               ['manager']],
+   ['inbox',  '▤','Hộp duyệt Giám đốc Khối', ['ceo']],
+   ['mgreval','✓','Chấm KPI nhân viên',      ['manager']],
+   ['mgreval','✓','Chấm KPI trực thuộc',     ['ceo']],
+   ['team',   '◎','Đội của tôi',             ['manager']],
+   ['mreview','◈','Duyệt đánh giá kỳ',       ['manager']],
+   ['dist',   '▦','Phân bố xếp loại',        ['manager']],
+   ['mgrprob','◐','Thử việc trong phòng',    ['manager']],
+   ['kpilib', '☰','Chỉ tiêu của phòng',      ['manager']],
+ ]],
+ ['TOÀN CÔNG TY',[
+   ['overview',  '◉','Toàn cảnh công ty',      ['ceo','hr']],
+   ['ceocascade','⌸','Cascade xuống phòng ban',['ceo','hr']],
+   ['kpichg',    '⇅','Duyệt thay đổi KPI',     ['ceo','hr']],
+   ['hrapprove', '✓','Duyệt phiếu tháng',      ['hr']],
+   ['hrprob',    '◐','Nhân viên thử việc',     ['hr']],
+   ['hrcal',     '⏱','Lịch và cảnh báo',       ['hr']],
+   ['hrpayroll', '₫','Bảng thưởng P3',         ['hr']],
+   ['hrcalib',   '▦','Cân chỉnh và phân bố',   ['hr']],
+   ['hr9box',    '⬚','Lưới 9-box',             ['hr']],
+   ['hridp',     '◔','IDP 2026',               ['hr']],
+   ['hrannual',  '★','Thưởng cuối năm',        ['hr']],
+   ['kpilib',    '☰','Thư viện chỉ tiêu',      ['hr']],
+ ]],
+];
+/* lọc mục theo vai -> bỏ nhóm rỗng -> vẽ. Toàn bộ luật hiển thị menu nằm ở đây. */
+function menuFor(role){
+  return MENU.map(([g,items])=>[g,items.filter(it=>it[3].includes(role))])
+             .filter(([,items])=>items.length);
+}
 const HOME={staff:'home',manager:'home',ceo:'ceohome',hr:'hrhome',probation:'probhome'};
 
 function roleOf(e){
@@ -1284,12 +1490,17 @@ function demoAccounts(){
     ceoOf()
   ].filter(Boolean);
 }
+/* dải chọn bộ màu · dùng chung cho màn đăng nhập và thanh bên */
+function themeStrip(){
+  return `<div class="thm">${THEMES.map(([k,n])=>
+    `<b class="${THEME===k?'on':''}" data-thm="${k}" data-tip="Bộ màu ${n}">${n}</b>`).join('')}</div>`;
+}
 function renderLogin(){
   const acc=demoAccounts();
   ROOT.innerHTML=`<div class="login"><div class="box">
     <div class="row" style="gap:16px;margin-bottom:6px">
       <div class="logo" style="width:54px;height:54px;font-size:26px">🍍</div>
-      <div><h1>PerformOS</h1>
+      <div><h1>KPI</h1>
         <div class="mut" style="font-size:13px">${CO.full}</div></div>
       <div class="sp"></div>
       <div class="chip"><i class="dot" style="background:var(--ok)"></i>Chu kỳ ${CUR}</div>
@@ -1298,7 +1509,7 @@ function renderLogin(){
     <div class="acc">${acc.map(e=>{const r=roleOf(e);
       const rn={staff:'Nhân viên',probation:'Thử việc',manager:'Quản lý',hr:'Nhân sự / HR',ceo:'Tổng Giám đốc'}[r];
       return `<div class="a" data-login="${e.id}">
-        <div class="ava" style="background:${e.col}">${initials(e.name)}</div>
+        <div class="ava" style="background:${ecol(e)}">${initials(e.name)}</div>
         <div style="min-width:0"><b>${e.name}</b><span>${e.title}</span>
         <span style="display:block;color:var(--dim)">${DEPT[e.dept].n}</span></div>
         <span class="rl">${rn}</span></div>`}).join('')}
@@ -1309,6 +1520,8 @@ function renderLogin(){
       <div class="sp"></div>
       <span class="mut" style="font-size:11.5px">${DB.emps.length} nhân sự · ${DEPTS.length} phòng ban <span class="mock">· [MOCK]</span></span>
     </div>
+    <div class="lbl" style="margin-top:18px">Bộ màu giao diện</div>
+    ${themeStrip()}
   </div></div>`;
 }
 function login(id){ME=byId(id);ROLE=roleOf(ME);VIEW=HOME[ROLE];SEL=null;TAB=null;render()}
@@ -1340,7 +1553,7 @@ function panelOverview(){
       <h2>Sáu phòng ban dẫn đầu ${CUR}</h2>
       <div class="mut" style="font-size:12px;margin-bottom:12px">Điểm KPI bình quân của phòng</div>
       ${top.map(x=>`<div class="hbar"><div class="nm" title="${x.d.n}">${x.d.n}</div>
-        ${bar(x.s/130*100,x.d.col)}<div class="vl">${x.s}%</div></div>`).join('')}
+        ${bar(x.s/130*100,bcol(x.d))}<div class="vl">${x.s}%</div></div>`).join('')}
     </div>
     <div class="card">
       <h2>Tiến độ chu kỳ ${CUR}</h2>
@@ -1361,24 +1574,30 @@ function panelOverview(){
 
 /* ─── SHELL ─── */
 function render(){
-  const nav=NAV[ROLE];
+  const menu=menuFor(ROLE);
   const cnt=badgeCounts();
   ROOT.innerHTML=`<div id="app">
     <button class="navbtn" data-drawer="tog" aria-label="Mở menu">☰</button>
     <div class="navdim" data-drawer="close"></div>
     <aside class="side">
       <div class="brand"><div class="logo">🍍</div>
-        <div><b>PerformOS</b><span>${CO.name}</span></div></div>
+        <div><b>NAM PHONG HR</b><span>QUẢN TRỊ NHÂN SỰ</span></div></div>
       <a class="nav-item backlink" href="https://luoi-hr.vercel.app/"><i>←</i>Về trang Lười HR</a>
-      <div class="nav">${nav.map(([v,i,n])=>`<div class="nav-item ${VIEW===v?'active':''}" data-nav="${v}">
-        <i>${i}</i>${n}${cnt[v]?`<span class="cnt">${cnt[v]}</span>`:''}</div>`).join('')}</div>
+      <div class="nav">${menu.map(([g,items])=>
+        (g?`<div class="navgrp">${g}</div>`:'')
+        +items.map(([v,i,n,,href])=>href
+          ? `<a class="nav-item" href="${href}"><i>${i}</i>${n}</a>`
+          : `<div class="nav-item ${VIEW===v?'active':''}" data-nav="${v}">
+             <i>${i}</i>${n}${cnt[v]?`<span class="cnt">${cnt[v]}</span>`:''}</div>`).join('')
+        ).join('')}</div>
       <div class="userbox">
-        <div class="ava" style="background:${ME.col}">${initials(ME.name)}</div>
+        <div class="ava" style="background:${ecol(ME)}">${initials(ME.name)}</div>
         <div style="min-width:0;flex:1">
           <b style="font-size:12.5px;color:var(--head);display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${ME.name}</b>
           <span style="font-size:10.5px;color:var(--muted)">${ME.title}</span></div>
         <button class="btn tiny ghost" data-act="logout" data-tip="Đổi tài khoản">⇥</button>
       </div>
+      ${themeStrip()}
     </aside>
     <main class="main"><div id="view"></div></main></div>`;
   paint();
@@ -1488,6 +1707,7 @@ document.addEventListener('click',e=>{
     const box=SG.closest('.seg');
     if(box) box.querySelectorAll('.sg').forEach(b=>b.classList.toggle('on',b===SG));
     return}
+  const TH=e.target.closest('[data-thm]'); if(TH) return setTheme(TH.dataset.thm);
   const L=e.target.closest('[data-login]'); if(L) return login(L.dataset.login);
   const H=e.target.closest('[data-help]');  if(H) return goHelp(H.dataset.help);
   const N=e.target.closest('[data-nav]');   if(N) return go(N.dataset.nav,null,null);
@@ -1796,7 +2016,7 @@ VIEWS.inbox=()=>{
     <table style="margin-top:10px"><thead><tr><th>Nhân sự</th><th>Chức danh</th><th>Trạng thái</th>
       <th class="num">Tự đánh giá</th><th class="num">Bạn chấm</th><th></th></tr></thead><tbody>
     ${t.map(e=>{const a=asm(e.id);return `<tr class="clk"><td>
-        <div class="row" style="gap:9px"><div class="ava" style="background:${e.col};width:30px;height:30px;font-size:11px">${initials(e.name)}</div>
+        <div class="row" style="gap:9px"><div class="ava" style="background:${ecol(e)};width:30px;height:30px;font-size:11px">${initials(e.name)}</div>
         <b class="hd">${e.name}</b></div></td>
       <td class="mut">${e.title}</td><td>${bdgS(a.status)}</td>
       <td class="num tnum" style="color:${clr(a.selfScore)};font-weight:700">${a.selfScore!=null?a.selfScore+'%':'-'}</td>
@@ -1918,7 +2138,7 @@ VIEWS.team=()=>{
     <table style="margin-top:10px"><thead><tr><th>Nhân sự</th><th>Cấp bậc</th><th class="num">T7</th>
       <th class="num">Lũy kế</th><th>Xếp loại ${FY}</th><th class="num">P3 tháng</th><th></th></tr></thead><tbody>
     ${rows.map(r=>{const rr=rev(r.e.id,FY);return `<tr class="clk"><td>
-        <div class="row" style="gap:9px"><div class="ava" style="background:${r.e.col};width:30px;height:30px;font-size:11px">${initials(r.e.name)}</div>
+        <div class="row" style="gap:9px"><div class="ava" style="background:${ecol(r.e)};width:30px;height:30px;font-size:11px">${initials(r.e.name)}</div>
         <div><b class="hd">${r.e.name}</b><div class="mut" style="font-size:11px">${r.e.title}</div></div></div></td>
       <td class="mut">${LEVELS[r.e.lv].n}</td>
       <td class="num tnum" style="color:${clr(r.s)};font-weight:700">${r.s!=null?r.s+'%':'-'}</td>
@@ -1944,7 +2164,7 @@ VIEWS.mreview=()=>{
     <table><thead><tr><th>Nhân sự</th><th class="num">WHAT</th><th class="num">HOW</th><th class="num">Tổng</th>
       <th>Dự kiến</th><th>Trạng thái</th><th class="num">Đề xuất</th><th></th></tr></thead><tbody>
     ${rows.map(({e,r})=>`<tr><td>
-        <div class="row" style="gap:9px"><div class="ava" style="background:${e.col};width:30px;height:30px;font-size:11px">${initials(e.name)}</div>
+        <div class="row" style="gap:9px"><div class="ava" style="background:${ecol(e)};width:30px;height:30px;font-size:11px">${initials(e.name)}</div>
         <div><b class="hd">${e.name}</b><div class="mut" style="font-size:11px">${e.title}</div></div></div></td>
       <td class="num tnum" style="color:${clr(r.what)};font-weight:700">${r.what!=null?r.what+'%':'-'}</td>
       <td class="num tnum">${r.how!=null?r.how+'%':'-'}</td>
@@ -2024,7 +2244,7 @@ VIEWS.hrhome=()=>{
     </div>
     <div class="card"><h2>Xếp hạng phòng ban</h2>
       <div class="mut" style="font-size:12px;margin-bottom:12px">Bình quân điểm KPI đã duyệt tháng ${CUR}</div>
-      ${hbars(rank.map(x=>({n:x.d.c+' · '+x.d.n,v:x.s,c:x.d.col})))}
+      ${hbars(rank.map(x=>({n:x.d.c+' · '+x.d.n,v:x.s,c:bcol(x.d)})))}
     </div>
   </div>
   <div class="g2 sec">
@@ -2070,7 +2290,7 @@ VIEWS.hrapprove=()=>{
     ${list.map(e=>{const a=asm(e.id),R=rateOf(a.mgrScore);
       const p3=Math.round(e.sal*1e6*LEVELS[e.lv].p3*R.m);
       return `<tr><td><div class="row" style="gap:9px">
-          <div class="ava" style="background:${e.col};width:30px;height:30px;font-size:11px">${initials(e.name)}</div>
+          <div class="ava" style="background:${ecol(e)};width:30px;height:30px;font-size:11px">${initials(e.name)}</div>
           <div><b class="hd">${e.name}</b><div class="mut" style="font-size:11px">${e.title}</div></div></div></td>
         <td class="mut">${DEPT[e.dept].n}</td><td class="mut">${e.mgr?empName(e.mgr):'-'}</td>
         <td class="num tnum">${a.selfScore??'-'}%</td>
@@ -2092,7 +2312,7 @@ function hrDetail(e){
   const gap=(a.selfScore!=null&&a.mgrScore!=null)?r1(a.mgrScore-a.selfScore):null;
   return `<div class="card sec">
     <div class="row" style="margin-bottom:12px;flex-wrap:wrap;gap:10px">
-      <div class="ava" style="background:${e.col};width:34px;height:34px;font-size:12px">${initials(e.name)}</div>
+      <div class="ava" style="background:${ecol(e)};width:34px;height:34px;font-size:12px">${initials(e.name)}</div>
       <div><h2 style="margin:0">${e.name}</h2>
         <div class="mut" style="font-size:12px">${e.title} · ${d.n} · Quản lý: ${e.mgr?empName(e.mgr):'-'} · Lương CB ${e.sal} triệu</div></div>
       <div class="sp"></div>${bdgR(R.k)}
@@ -2164,13 +2384,13 @@ VIEWS.hrpayroll=()=>{
     <table style="margin-top:10px"><thead><tr><th>Phòng ban</th><th class="num">Nhân sự</th><th class="num">Đã duyệt</th>
       <th class="num">Điểm BQ</th><th class="num">Quỹ P3</th><th class="num">Tỷ trọng</th><th></th></tr></thead><tbody>
     ${rows.map(r=>`<tr class="clk" data-go="hrpayroll|${r.d.c}"><td>
-        <div class="row" style="gap:9px"><i class="dot" style="background:${r.d.col};width:10px;height:10px"></i>
+        <div class="row" style="gap:9px"><i class="dot" style="background:${dcol(r.d)};width:10px;height:10px"></i>
         <b class="hd">${r.d.n}</b></div></td>
       <td class="num tnum">${r.hc}</td><td class="num tnum">${r.done}</td>
       <td class="num tnum" style="font-weight:700;color:${clr(r.avg)}">${r.avg!=null?r.avg+'%':'-'}</td>
       <td class="num tnum" style="font-weight:700">${fmtVnd(r.fund)}</td>
       <td class="num tnum">${r1(r.fund/tot*100)}%</td>
-      <td style="width:110px">${bar(r.fund/Math.max(...rows.map(x=>x.fund))*100,r.d.col)}</td></tr>`).join('')}
+      <td style="width:110px">${bar(r.fund/Math.max(...rows.map(x=>x.fund))*100,bcol(r.d))}</td></tr>`).join('')}
     </tbody></table>
   </div>
   ${flt?`<div class="card sec"><div class="row"><h2>Chi tiết ${DEPT[flt].n}</h2><div class="sp"></div>
@@ -2223,7 +2443,7 @@ VIEWS.hrcalib=()=>{
     <table><thead><tr><th>Phòng ban</th><th class="num">n</th>
       ${RATINGS.slice().reverse().map(r=>`<th class="num">${r.sh}</th>`).join('')}
       <th style="width:120px">Phân bố</th><th class="num">Điểm BQ</th><th>Trưởng phòng</th><th>Ràng buộc</th></tr></thead><tbody>
-    ${rows.map(r=>`<tr><td><div class="row" style="gap:9px"><i class="dot" style="background:${r.d.col};width:10px;height:10px"></i>
+    ${rows.map(r=>`<tr><td><div class="row" style="gap:9px"><i class="dot" style="background:${dcol(r.d)};width:10px;height:10px"></i>
         <b class="hd">${r.d.n}</b></div></td>
       <td class="num tnum">${r.n}</td>
       ${RATINGS.slice().reverse().map(R=>`<td class="num tnum" style="color:${r.c[R.k]?R.col:'var(--dim)'};font-weight:${r.c[R.k]?700:400}">${r.c[R.k]}</td>`).join('')}
@@ -2264,7 +2484,7 @@ VIEWS.hr9box=()=>{
         <div style="flex:1">
           <div class="nb">${cells.map((row,ri)=>row.map((ppl,ci)=>{const b=NBOX[ri][ci];
             return `<div class="bx"><div class="t" style="color:${b.c}">${b.i}. ${b.n}</div>
-              <div class="ppl">${ppl.slice(0,14).map(e=>`<div class="p" style="background:${e.col}"
+              <div class="ppl">${ppl.slice(0,14).map(e=>`<div class="p" style="background:${ecol(e)}"
                 data-tip="${e.name} · ${e.title} · ${DEPT[e.dept].n}">${initials(e.name)}</div>`).join('')}
                 ${ppl.length>14?`<div class="p" style="background:var(--dim)">+${ppl.length-14}</div>`:''}</div>
               <div style="position:absolute;right:9px;bottom:7px;font-size:10px;font-weight:700;color:var(--dim)">${ppl.length}</div></div>`}).join('')).join('')}</div>
@@ -2366,7 +2586,7 @@ VIEWS.hrannual=()=>{
   <div class="g2 sec">
     <div class="card"><h2>Tổng chi trả theo phòng ban</h2>
       <div class="mut" style="font-size:12px;margin-bottom:12px">Thưởng năm cộng lương tháng 13</div>
-      ${hbars(byDept.slice().sort((a,b)=>b.v-a.v).map(x=>({n:x.d.n,v:Math.round(x.v/1e6),c:x.d.col})),' tr')}
+      ${hbars(byDept.slice().sort((a,b)=>b.v-a.v).map(x=>({n:x.d.n,v:Math.round(x.v/1e6),c:bcol(x.d)})),' tr')}
     </div>
     <div class="card"><h2>Phân bổ quỹ theo xếp loại</h2>
       <div class="mut" style="font-size:12px;margin-bottom:12px">Đòn bẩy C.1 quyết định chênh lệch giữa các nhóm</div>
@@ -2495,7 +2715,7 @@ VIEWS.ceocascade=()=>{
       <div class="kids">
       ${r.kids.map(x=>`<div class="kid">
         <span class="sh">${x.share}%</span>
-        <div class="dn" style="color:${x.d?x.d.col:'var(--dim)'}">${x.dc}</div>
+        <div class="dn" style="color:${x.d?dcol(x.d):'var(--dim)'}">${x.dc}</div>
         <div class="kn">${x.dk?x.dk.c:'<span style="color:var(--bad)">chỉ tiêu không tồn tại</span>'}</div>
         ${x.avg!=null?bar(x.avg/130*100,clr(x.avg))+`<div class="mut" style="font-size:10.5px;margin-top:3px;font-weight:700;color:${clr(x.avg)}">${x.avg}% bình quân phòng</div>`
           :`<div class="mut" style="font-size:10.5px">chưa có phiếu duyệt trong ${CUR}</div>`}
@@ -2547,7 +2767,7 @@ VIEWS.hrcal=()=>{
     </div>
     <div class="card"><h2>Phòng ban có nhân sự trễ hạn</h2>
       <div class="mut" style="font-size:12px;margin-bottom:14px">Tính cả người đã bị khoá phiếu</div>
-      ${byDept.length?hbars(byDept.map(x=>({n:x.d.n,v:x.n,c:x.d.col})),' người'):'<div class="empty">Không có ai trễ hạn</div>'}
+      ${byDept.length?hbars(byDept.map(x=>({n:x.d.n,v:x.n,c:bcol(x.d)})),' người'):'<div class="empty">Không có ai trễ hạn</div>'}
     </div>
   </div>
 
@@ -3627,6 +3847,91 @@ Object.assign(ACT,{
     save();toast('Đã duyệt · áp dụng cho '+empName(o.emp)+' từ chu kỳ '+o.eff);paint()},
   optNo(id){const o=optList().find(x=>x.id===id);o.st='no';o.by=ME.id;
     save();toast('Đã từ chối đăng ký của '+empName(o.emp));paint()}
+});
+
+/* ══════════════════════════════════════════════════════════════════════════
+   SƠ ĐỒ TỔ CHỨC · màn hình CHỈ XEM cơ cấu Nhân sự đã duyệt
+   Dựng thẳng từ DB.emps qua trường mgr - không nhập file, không kéo thả,
+   không sửa được ở đây. Công cụ dựng sơ đồ là app riêng nằm ngoài hệ thống.
+   Ai cũng xem được vì đây là thông tin chung của công ty.
+   ══════════════════════════════════════════════════════════════════════════ */
+let OX=null;                                   /* tập nút đang mở */
+const orgTop=()=>DB.emps.find(e=>e.lv==='X');
+function orgInit(){
+  if(OX) return;
+  OX=new Set();
+  const t=orgTop(); if(t) OX.add(t.id);
+  let p=ME&&ME.mgr;                            /* mở sẵn đường từ mình lên tới TGĐ */
+  while(p){OX.add(p);const u=byId(p);p=u&&u.mgr}
+}
+const orgKids=id=>teamOf(id).slice()
+  .sort((a,b)=>LVORDER.indexOf(a.lv)-LVORDER.indexOf(b.lv)
+             ||dIx(a.dept)-dIx(b.dept)||a.name.localeCompare(b.name,'vi'));
+const orgSub=id=>{const c=teamOf(id);return c.reduce((s,e)=>s+1+orgSub(e.id),0)};
+const orgInTree=()=>!!(ME&&DB.emps.some(e=>e.id===ME.id));
+
+function orgNode(e){
+  const kids=orgKids(e.id),open=OX.has(e.id),me=ME&&e.id===ME.id,d=DEPT[e.dept],n=orgSub(e.id);
+  return `<div class="onode">
+    <div class="ocard${kids.length?' hasKid':''}${me?' me':''}"${kids.length?` data-act="orgTog|${e.id}"`:''}>
+      <span class="otw">${kids.length?(open?'−':'+'):'·'}</span>
+      <div class="ava" style="background:${ecol(e)}">${initials(e.name)}</div>
+      <div class="oi"><b>${e.name}</b><span>${e.title}</span></div>
+      ${me?'<span class="pill v">bạn ở đây</span>':''}
+      <span class="odot" style="background:${dcol(d)}"></span>
+      <span class="odep">${d.n}</span>
+      <span class="olv">${LEVELS[e.lv].n}</span>
+      <span class="ocnt">${n?n+' cấp dưới':''}</span>
+    </div>
+    ${open&&kids.length?`<div class="okids">${kids.map(orgNode).join('')}</div>`:''}
+  </div>`;
+}
+VIEWS.orgchart=()=>{
+  orgInit();
+  const top=orgTop(),mx=Math.max(...DEPTS.map(d=>d.hc));
+  const rows=DEPTS.map(d=>{
+    const list=deptOf(d.c),head=list.find(e=>e.lv==='X')||list.find(e=>e.lv==='D');
+    return {d,list,head,mgr:list.filter(e=>e.lv==='M').length};
+  });
+  return `<div class="hdr"><div><h1>Sơ đồ tổ chức</h1>
+      <div class="sub">${CO.full} · cơ cấu Nhân sự đã duyệt, áp dụng ${FY26}</div></div>
+    <div class="sp"></div>
+    ${orgInTree()?'<button class="btn" data-act="orgMe">Tìm vị trí của tôi</button>':''}
+    <button class="btn ghost" data-act="orgAll">Mở hết</button>
+    <button class="btn ghost" data-act="orgNone">Thu gọn</button></div>
+  <div class="g4 sec">
+    ${tile('Tổng nhân sự',DB.emps.length,'Đang làm việc chính thức')}
+    ${tile('Phòng ban',DEPTS.length,'Trực thuộc Tổng Giám đốc')}
+    ${tile('Cấp quản lý',DB.emps.filter(e=>e.lv==='D'||e.lv==='M').length,'Giám đốc Khối và Trưởng phòng')}
+    ${tile('Cấp bậc',LVORDER.length,'Từ Tổng Giám đốc tới Nhân viên')}
+  </div>
+  <div class="card sec"><h2>Cây trực thuộc</h2>
+    <div class="mut" style="font-size:12px;margin-bottom:2px">Bấm vào thẻ để mở cấp dưới.
+      Đây là bản chỉ xem — thay đổi cơ cấu do phòng Nhân sự cập nhật.</div>
+    <div class="otree">${top?orgNode(top):'<div class="empty">Chưa có dữ liệu cơ cấu</div>'}</div>
+  </div>
+  <div class="card sec"><h2>Nhân sự theo phòng ban</h2>
+    <table style="margin-top:10px"><thead><tr><th>Phòng ban</th><th>Người đứng đầu</th>
+      <th class="num">Quản lý</th><th class="num">Nhân sự</th><th style="width:150px">Tỉ trọng</th></tr></thead><tbody>
+    ${rows.map(r=>`<tr><td><div class="row" style="gap:8px">
+        <span class="odot" style="background:${dcol(r.d)}"></span>
+        <b class="hd">${r.d.n}</b></div></td>
+      <td>${r.head?`<b class="hd">${r.head.name}</b><div class="mut" style="font-size:11px">${r.head.title}</div>`:'<span class="dim">—</span>'}</td>
+      <td class="num tnum">${r.mgr}</td>
+      <td class="num tnum" style="font-weight:700">${r.list.length}</td>
+      <td><div class="obar"><i style="width:${Math.round(r.list.length/mx*100)}%;background:${dcol(r.d)}"></i></div></td></tr>`).join('')}
+    </tbody></table>
+    <div class="mut" style="font-size:12px;margin-top:10px">Tổng ${DB.emps.length} nhân sự chính thức.
+      Nhân viên đang thử việc chưa nằm trong cơ cấu chính thức nên không hiển thị ở đây.</div>
+  </div>`;
+};
+Object.assign(ACT,{
+  orgTog(id){orgInit();OX.has(id)?OX.delete(id):OX.add(id);paint()},
+  orgAll(){OX=new Set(DB.emps.map(e=>e.id));paint()},
+  orgNone(){OX=new Set();const t=orgTop();if(t)OX.add(t.id);paint()},
+  orgMe(){OX=null;orgInit();paint();
+    const el=document.querySelector('.ocard.me');
+    if(el) el.scrollIntoView({block:'center',behavior:'smooth'})}
 });
 
 /* ══════════ KHỞI ĐỘNG ══════════ */
