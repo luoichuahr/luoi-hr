@@ -1,5 +1,16 @@
 # CHANGELOG — Lười HR Website
 
+## 2026-09-03 — Fix: mega menu "Tools" tắt trước khi kịp click item
+
+- `[ARCH]` **`MegaMenu`: đóng menu bằng timeout huỷ được, không đóng ngay khi `mouseleave`.**
+  Panel dùng `position: fixed`, căn giữa viewport (`left: 50%`) — không nằm ngay dưới nút
+  Tools, nên giữa nút và panel luôn có khoảng hở không thuộc DOM con của `.wrap`. Rê chuột
+  xuống panel để click, chuột băng qua khoảng hở đó khiến `mouseleave` bắn ngay lập tức,
+  đóng menu; panel lúc đó `pointer-events: none` nên chuột chạm tới cũng không mở lại được.
+  Sửa: `mouseleave` trên `.wrap` hẹn giờ đóng sau 200ms thay vì đóng ngay, và panel có thêm
+  `onMouseEnter`/`onMouseLeave` riêng để huỷ lệnh đóng khi chuột kịp chạm tới panel trong
+  lúc đang băng qua khoảng hở. `src/components/MegaMenu/index.jsx`.
+
 ## 2026-08-31 — Content: kpi-demo lên bản v10 (thêm Sơ đồ tổ chức)
 
 Nguồn của trang `/kpi-demo/` nằm ngoài repo này: `Sandbox/kpi-system-demo/index_v10.html`.

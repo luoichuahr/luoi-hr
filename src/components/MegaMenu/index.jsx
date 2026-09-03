@@ -81,10 +81,33 @@ function MobileMenu({ onNavigate }) {
 export default function MegaMenu({ mobile, onClick }) {
   const [open, setOpen] = useState(false);
   const wrapRef = useRef(null);
+  const closeTimerRef = useRef(null);
   const { pathname } = useLocation();
+
+  const cancelClose = () => {
+    if (closeTimerRef.current) {
+      clearTimeout(closeTimerRef.current);
+      closeTimerRef.current = null;
+    }
+  };
+  // Panel là position:fixed và căn giữa viewport, không nằm ngay dưới nút Tools
+  // → giữa nút và panel luôn có khoảng hở không thuộc DOM con của wrap. Đóng
+  // ngay khi rời nút khiến chuột "rớt" khỏi menu trước khi chạm tới panel, panel
+  // lúc đó đã pointer-events:none nên không mở lại được. Trễ 200ms, huỷ nếu
+  // chuột kịp vào lại wrap hoặc panel, để có thời gian băng qua khoảng hở.
+  const scheduleClose = () => {
+    cancelClose();
+    closeTimerRef.current = setTimeout(() => setOpen(false), 200);
+  };
+  const openNow = () => {
+    cancelClose();
+    setOpen(true);
+  };
 
   // Đóng menu khi đổi route — bấm vào tool React mà menu còn mở thì rất khó chịu
   useEffect(() => { setOpen(false); }, [pathname]);
+
+  useEffect(() => cancelClose, []);
 
   useEffect(() => {
     if (!open) return undefined;
@@ -106,8 +129,8 @@ export default function MegaMenu({ mobile, onClick }) {
     <div
       className={styles.wrap}
       ref={wrapRef}
-      onMouseEnter={() => setOpen(true)}
-      onMouseLeave={() => setOpen(false)}
+      onMouseEnter={openNow}
+      onMouseLeave={scheduleClose}
     >
       <button
         type="button"
@@ -121,8 +144,14 @@ export default function MegaMenu({ mobile, onClick }) {
       </button>
 
       {/* Luôn render trong DOM (chỉ ẩn bằng CSS) để Googlebot đọc được toàn bộ
-          link tool từ mọi trang — đây là phần internal linking của mega menu. */}
-      <div className={`${styles.panel} ${open ? styles.panelOpen : ''}`}>
+          link tool từ mọi trang — đây là phần internal linking của mega menu.
+          onMouseEnter/Leave riêng trên panel để chuột băng qua khoảng hở tới
+          panel vẫn huỷ được lệnh đóng đã hẹn giờ ở trên. */}
+      <div
+        className={`${styles.panel} ${open ? styles.panelOpen : ''}`}
+        onMouseEnter={openNow}
+        onMouseLeave={scheduleClose}
+      >
         <div className={styles.grid}>
           {TOOLS_BY_CATEGORY.map((cat) => (
             <div className={styles.col} key={cat.id}>
